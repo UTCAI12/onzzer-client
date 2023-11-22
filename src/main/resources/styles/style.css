@@ -1,0 +1,62 @@
+/* global styles */
+* {
+	-fx-color-white: #FFFFFF;
+	-fx-color-black: #181818;
+	-fx-color-gray: #E8E8E8;
+	-fx-color-purple: #8A2BE2;
+}
+
+.separator .line {
+	-fx-border-color: null;
+	-fx-pref-height: 1;
+}
+
+/* light controls styles */
+.input-light {
+	-fx-border-color: -fx-color-black;
+	-fx-background-color: -fx-color-gray;
+	-fx-border-width: 1px
+}
+
+.button-light, .button-light * {
+	-fx-color: -fx-color-white;
+	-fx-background-color: -fx-color-purple;
+	-fx-text-fill: -fx-color-white;
+	-fx-font-weight: bold;
+	-fx-background-radius: 0;
+}
+
+/* dark controls styles */
+.separator-dark .line {
+	-fx-background-color: -fx-color-black;
+}
+
+/* reusable styles */
+.h1 {
+	-fx-font-size: 18px;
+	-fx-font-weight: bold;
+}
+
+.link {
+	-fx-text-fill: -fx-color-purple;
+	-fx-font-weight: bold;
+	-fx-underline: true;
+	-fx-cursor: hand;
+}
+
+.button {
+	-fx-cursor: hand;
+}
+
+.submit-button {
+	-fx-min-height: 30;
+	-fx-min-width: 175;
+	-fx-background-radius: 50;
+	-fx-font-weight: bold;
+}
+
+.icon-medium {
+    -fx-fit-width: 100;
+    -fx-fit-height: 100;
+    -fx-preserve-ratio: true;
+}
