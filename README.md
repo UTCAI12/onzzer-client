@@ -39,10 +39,10 @@ Remarque : Le fichier `pom.xml` présent dans les arborescences correspond à l'
 
 **version-module/fonctionnalité**
 
-Exemple: 
-  Fonctionnalité de lecture de musique pour ihm-music
-  2.a-ihm-music/play
-  Fonctionnalité de création de compte ihm-main
-  1.a-ihm-main/register
+Exemples:
+
+  - Fonctionnalité de lecture de musique pour ihm-music : **2.a-ihm-music/play**
+  
+  - Fonctionnalité de création de compte ihm-main : **1.a-ihm-main/register**
 
 Seuls les resps dev ont le droit le merge une branche **version-module/fonctionnalité** dans **version-module**
