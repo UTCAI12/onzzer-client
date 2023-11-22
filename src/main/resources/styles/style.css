@@ -60,3 +60,11 @@
     -fx-fit-height: 100;
     -fx-preserve-ratio: true;
 }
+
+.scroll-pane,
+.scroll-pane:focused{
+    -fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 5, 4, 3;
+    -fx-border-color: null;
+}
