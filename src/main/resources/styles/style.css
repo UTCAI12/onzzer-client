@@ -26,6 +26,10 @@
 	-fx-background-radius: 0;
 }
 
+.date-picker.input-light .text-field {
+    -fx-control-inner-background: -fx-color-gray;
+}
+
 /* dark controls styles */
 .separator-dark .line {
 	-fx-background-color: -fx-color-black;
@@ -59,12 +63,4 @@
     -fx-fit-width: 100;
     -fx-fit-height: 100;
     -fx-preserve-ratio: true;
-}
-
-.scroll-pane,
-.scroll-pane:focused{
-    -fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;
-    -fx-background-insets: 0, 1, 2;
-    -fx-background-radius: 5, 4, 3;
-    -fx-border-color: null;
 }

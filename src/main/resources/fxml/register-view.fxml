@@ -6,7 +6,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<ScrollPane fitToHeight="true" fitToWidth="true" styleClass="edge-to-edge" stylesheets="@../styles/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.utc.onzzer.onzzerclient.main.RegisterViewController">
+<ScrollPane fitToHeight="true" fitToWidth="true" focusTraversable="false" styleClass="edge-to-edge" stylesheets="@../styles/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.utc.onzzer.onzzerclient.main.RegisterViewController">
    <content>
       <BorderPane>
          <center>
@@ -43,7 +43,7 @@
                </VBox>
                <VBox>
                   <Label text="Date de naissance :" />
-                  <DatePicker maxWidth="1.7976931348623157E308" styleClass="input-light" />
+                  <DatePicker fx:id="dp" focusTraversable="false" maxWidth="1.7976931348623157E308" styleClass="input-light" />
                </VBox>
                <VBox>
                   <Label text="Mot de passe " />
@@ -53,7 +53,7 @@
                   <Label text="Confirmer le mot de passe :" />
                   <PasswordField styleClass="input-light" />
                </VBox>
-               <Button mnemonicParsing="false" text="S'INSCRIRE" onMouseClicked="#onRegistrationButtonClick">
+               <Button mnemonicParsing="false" onMouseClicked="#onRegistrationButtonClick" text="S'INSCRIRE">
                   <styleClass>
                      <String fx:value="button-light" />
                      <String fx:value="submit-button" />
