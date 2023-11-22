@@ -53,7 +53,7 @@
                   <Label text="Confirmer le mot de passe :" />
                   <PasswordField styleClass="input-light" />
                </VBox>
-               <Button mnemonicParsing="false" text="S'INSCRIRE">
+               <Button mnemonicParsing="false" text="S'INSCRIRE" onMouseClicked="#onRegistrationButtonClick">
                   <styleClass>
                      <String fx:value="button-light" />
                      <String fx:value="submit-button" />
