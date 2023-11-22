@@ -4,6 +4,7 @@
 	-fx-color-black: #181818;
 	-fx-color-gray: #E8E8E8;
 	-fx-color-purple: #8A2BE2;
+	-fx-color-red: #D22D37;
 }
 
 .separator .line {
@@ -63,4 +64,8 @@
     -fx-fit-width: 100;
     -fx-fit-height: 100;
     -fx-preserve-ratio: true;
+}
+
+.error {
+    -fx-text-fill: -fx-color-red;
 }

@@ -25,33 +25,75 @@
                   <Label text="Déjà un compte sur Onzzer ?" textAlignment="CENTER" />
                   <Label fx:id="connectionLabel" onMouseClicked="#onConnectionLabelClick" styleClass="link" text="Connexion" />
                </HBox>
-               <VBox maxWidth="500.0">
+               <VBox fx:id="inputGroupEmail" styleClass="input-group">
                   <Label text="Adresse mail :" />
-                  <TextField styleClass="input-light" />
+                  <TextField onKeyTyped="#onEmailChange">
+                     <styleClass>
+                        <String fx:value="input" />
+                        <String fx:value="input-light" />
+                     </styleClass>
+                  </TextField>
+                  <Label managed="false" styleClass="error" text="Adresse email invalide." visible="false" />
                </VBox>
-               <VBox maxWidth="500.0">
+               <VBox fx:id="inputGroupFirstName" prefWidth="400.0" styleClass="input-group">
                   <Label text="Nom :" />
-                  <TextField styleClass="input-light" />
+                  <TextField onKeyTyped="#onFirstNameChange">
+                     <styleClass>
+                        <String fx:value="input" />
+                        <String fx:value="input-light" />
+                     </styleClass>
+                  </TextField>
+                  <Label managed="false" styleClass="error" text="Nom invalide." visible="false" />
                </VBox>
-               <VBox>
+               <VBox fx:id="inputGroupLastName" styleClass="input-group">
                   <Label text="Prénom :" />
-                  <TextField styleClass="input-light" />
+                  <TextField onKeyTyped="#onLastNameChange">
+                     <styleClass>
+                        <String fx:value="input" />
+                        <String fx:value="input-light" />
+                     </styleClass>
+                  </TextField>
+                  <Label managed="false" styleClass="error" text="Prénom invalide." visible="false" />
                </VBox>
-               <VBox>
+               <VBox fx:id="inputGroupPseudo" styleClass="input-group">
                   <Label text="Pseudo :" />
-                  <TextField styleClass="input-light" />
+                  <TextField onKeyTyped="#onPseudoChange">
+                     <styleClass>
+                        <String fx:value="input" />
+                        <String fx:value="input-light" />
+                     </styleClass>
+                  </TextField>
+                  <Label managed="false" styleClass="error" text="Pseudo invalide." visible="false" />
                </VBox>
-               <VBox>
+               <VBox fx:id="inputGroupBirthDate" styleClass="input-group">
                   <Label text="Date de naissance :" />
-                  <DatePicker focusTraversable="false" maxWidth="1.7976931348623157E308" styleClass="input-light" />
+                  <DatePicker maxWidth="1.7976931348623157E308" onAction="#onBirthdateChange">
+                     <styleClass>
+                        <String fx:value="input" />
+                        <String fx:value="input-light" />
+                     </styleClass>
+                  </DatePicker>
+                  <Label managed="false" styleClass="error" text="Date de naissance invalide." visible="false" />
                </VBox>
-               <VBox>
-                  <Label text="Mot de passe " />
-                  <PasswordField styleClass="input-light" />
+               <VBox fx:id="inputGroupPassword" styleClass="input-group">
+                  <Label text="Mot de passe :" />
+                  <PasswordField onKeyTyped="#onPasswordChange">
+                     <styleClass>
+                        <String fx:value="input" />
+                        <String fx:value="input-light" />
+                     </styleClass>
+                  </PasswordField>
+                  <Label managed="false" styleClass="error" text="Mot de passe invalide." visible="false" />
                </VBox>
-               <VBox>
+               <VBox fx:id="inputGroupConfirmPassword" styleClass="input-group">
                   <Label text="Confirmer le mot de passe :" />
-                  <PasswordField styleClass="input-light" />
+                  <PasswordField onKeyTyped="#onPasswordChange">
+                     <styleClass>
+                        <String fx:value="input" />
+                        <String fx:value="input-light" />
+                     </styleClass>
+                  </PasswordField>
+                  <Label managed="false" styleClass="error" text="Mot de passe différent." visible="false" />
                </VBox>
                <Button mnemonicParsing="false" onMouseClicked="#onRegistrationButtonClick" text="S'INSCRIRE">
                   <styleClass>
