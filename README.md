@@ -37,7 +37,10 @@ Remarque : Le fichier `pom.xml` présent dans les arborescences correspond à l'
 
 ## Nommage des Branches
 
-**version-module/fonctionnalité**
+3 types de branches:
+ - main
+ - module : **version-module**
+ - fonctionnalité : **version-module/fonctionnalité**
 
 Exemples:
 
@@ -45,4 +48,10 @@ Exemples:
   
   - Fonctionnalité de création de compte ihm-main : **1.a-ihm-main/register**
 
-Seuls les resps dev ont le droit le merge une branche **version-module/fonctionnalité** dans **version-module**
+Le developpement s'effectue uniquement sur une branche **fonctionnalité**.
+
+On ne développe **JAMAIS** sur une branche **module**
+
+Seuls les resps dev ont le droit de merge une branche **version-module/fonctionnalité** dans **version-module**.
+
+
