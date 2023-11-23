@@ -38,6 +38,12 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>fr.utc.onzzer</groupId>
+            <artifactId>onzzer-common</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -60,7 +66,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>fr.utc.onzzer.onzzerclient/fr.utc.onzzer.onzzerclient.MainClient
+                            <mainClass>fr.utc.onzzer.onzzerclient/fr.utc.onzzer.client.MainClient
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
