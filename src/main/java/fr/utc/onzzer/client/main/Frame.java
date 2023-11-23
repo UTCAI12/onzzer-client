@@ -11,7 +11,7 @@ public class Frame extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main-demo.fxml"));
         loader.setController(controller);
         Parent root = loader.load();
         Scene scene = new Scene(root);

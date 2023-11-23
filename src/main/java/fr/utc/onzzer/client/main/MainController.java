@@ -2,6 +2,7 @@ package fr.utc.onzzer.client.main;
 
 import fr.utc.onzzer.client.common.communication.ClientCommunicationController;
 import fr.utc.onzzer.common.dataclass.*;
+import fr.utc.onzzer.common.dataclass.communication.SocketMessagesTypes;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -19,6 +20,8 @@ public class MainController {
     @FXML // Adding this annotation (@) means that the Node after will be injected by the FXML Loader.
     private Button buttonAddTrack; // !! The name of the variable (buttonAddTrack) MUST be the same that the name defined in sceneBuilder for this node (fx:id="buttonAddTrack")
 
+    @FXML
+    private Label errorPublishTrack;
     @FXML
     private Text username;
 
@@ -162,16 +165,23 @@ public class MainController {
                     .toString();
 
             // Creating new "track"
-            // TODO utiliser un cast (si heritage?)
+            // TODO Use a cast here (if User inherits from UserLite)
             final User u = this.model.getUser();
             final UserLite ul = new UserLite(u.getId(), u.getUsername());
-            final TrackLite newTrackLite = new TrackLite(UUID.randomUUID(), ul, trackName, "michel");
 
-//            // adding track to local model
-//            this.model.addTrack(newTrackLite);
-//
-//            // Notifying server that a track has been added
-//            comm.sendServer(SocketMessagesTypes.PUBLISH_TRACK, newTrackLite);
+            // TODO Use a cast here (if Track inherits from TrackLite)
+            final Track track = new Track(UUID.randomUUID(), ul.getId(), trackName, "michel");
+            final TrackLite newTrackLite = new TrackLite(track.getId(), ul, trackName, "michel");
+
+            // adding track to local model
+            this.model.addTrack(newTrackLite);
+
+            // Notifying server that a track has been added
+            try {
+                comm.publishTrack(newTrackLite);
+            } catch (Exception ex) {
+                this.errorPublishTrack.setText("Error:" + ex);
+            }
         });
 
 
