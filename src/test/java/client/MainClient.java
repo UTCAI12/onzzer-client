@@ -1,8 +1,8 @@
-package fr.utc.onzzer.client;
+package client;
 
+import client.main.Frame;
+import client.main.MainController;
 import fr.utc.onzzer.client.common.communication.ClientCommunicationController;
-import fr.utc.onzzer.client.main.Frame;
-import fr.utc.onzzer.client.main.MainController;
 import fr.utc.onzzer.common.dataclass.ClientModel;
 import fr.utc.onzzer.common.dataclass.User;
 import fr.utc.onzzer.common.dataclass.UserLite;
@@ -14,8 +14,8 @@ import java.util.Random;
 import java.util.UUID;
 
 
-public class MainClientDemo {
-    public MainClientDemo(String[] args) throws ConnectException {
+public class MainClient {
+    public MainClient(String[] args) throws ConnectException {
         String[] names = {
                 "Ilian",
                 "Clement",
@@ -57,6 +57,6 @@ public class MainClientDemo {
     }
 
     public static void main(String[] args) throws ConnectException {
-        new MainClientDemo(args);
+        new MainClient(args);
     }
 }

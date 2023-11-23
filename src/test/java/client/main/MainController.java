@@ -1,4 +1,4 @@
-package fr.utc.onzzer.client.main;
+package client.main;
 
 import fr.utc.onzzer.client.common.communication.ClientCommunicationController;
 import fr.utc.onzzer.common.dataclass.*;
