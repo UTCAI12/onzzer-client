@@ -49,7 +49,6 @@ public class LoginViewController {
 
     @FXML
     private void onLoginButtonClick() throws IOException {
-
         // TODO temporairement pour voir si ca marche bien. A terme faire une méthode à côté
         User user = new User(UUID.randomUUID(), txtUserPseudo.getText(), "mail", "mdp");
         UserLite userLite = new UserLite(user.getId(), user.getUsername());
