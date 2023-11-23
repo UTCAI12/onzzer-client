@@ -1,4 +1,7 @@
-import onzzer-common.src.main.java.fr.utc.onzzer.common.dataclass
+package fr.utc.onzzer.client.common.services;
+
+import fr.utc.onzzer.common.dataclass.User;
+import fr.utc.onzzer.common.dataclass.UserLite;
 
 interface DataUserServices {
     User importProfile(String filePath) throws Exception;
