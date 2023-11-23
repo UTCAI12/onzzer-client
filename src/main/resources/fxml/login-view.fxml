@@ -1,68 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Rectangle2D?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
-<?import java.lang.String?>
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../styles/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.utc.onzzer.client.main.LoginViewController">
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../styles/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.utc.onzzer.client.main.LoginViewController">
    <center>
       <VBox alignment="CENTER" maxWidth="500.0" spacing="15.0" BorderPane.alignment="CENTER">
          <padding>
-            <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
+            <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
          </padding>
          <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
             <viewport>
-               <Rectangle2D/>
+               <Rectangle2D />
             </viewport>
-            <Image url="@../img/onzzer.png"/>
+            <Image url="@../img/onzzer.png" />
          </ImageView>
-         <Label styleClass="h1" text="Connecte-toi"/>
+         <Label styleClass="h1" text="Connecte-toi" />
          <HBox alignment="CENTER" spacing="2.0">
-            <Label text="Tu n'as pas encore de compter Onzzer ?"/>
-            <Label fx:id="registerLabel" onMouseClicked="#onRegisterLabelClick" styleClass="link"
-                   text="Inscription"/>
+            <Label text="Tu n'as pas encore de compter Onzzer ?" />
+            <Label fx:id="registerLabel" onMouseClicked="#onRegisterLabelClick" styleClass="link" text="Inscription" />
          </HBox>
          <VBox>
-            <Label text="Serveur :"/>
+            <Label text="Serveur :" />
             <HBox alignment="TOP_CENTER" spacing="15.0">
-               <TextField promptText="Adresse IP" styleClass="input-light" HBox.hgrow="ALWAYS"/>
-               <TextField promptText="Port serveur" styleClass="input-light" HBox.hgrow="ALWAYS"/>
+               <TextField fx:id="txtServerIp" promptText="Adresse IP" styleClass="input-light" text="localhost" HBox.hgrow="ALWAYS" />
+               <TextField fx:id="txtServerPort" promptText="Port serveur" styleClass="input-light" text="8000" HBox.hgrow="ALWAYS" />
             </HBox>
          </VBox>
-         <Separator prefWidth="200.0" styleClass="separator-dark"/>
+         <Separator prefWidth="200.0" styleClass="separator-dark" />
          <VBox>
-            <Label text="Pseudo :"/>
-            <TextField styleClass="input-light"/>
+            <Label text="Pseudo :" />
+            <TextField fx:id="txtUserPseudo" styleClass="input-light" text="ptdr t ki?" />
          </VBox>
          <VBox>
-            <Label text="Mot de passe :"/>
-            <PasswordField styleClass="input-light"/>
+            <Label text="Mot de passe :" />
+            <PasswordField styleClass="input-light" />
          </VBox>
          <HBox alignment="CENTER">
-            <Separator styleClass="separator-dark" HBox.hgrow="ALWAYS"/>
+            <Separator styleClass="separator-dark" HBox.hgrow="ALWAYS" />
             <Label style="-fx-font-weight: bold;" text="OU">
                <padding>
-                  <Insets left="10.0" right="10.0"/>
+                  <Insets left="10.0" right="10.0" />
                </padding>
             </Label>
-            <Separator styleClass="separator-dark" HBox.hgrow="ALWAYS"/>
+            <Separator styleClass="separator-dark" HBox.hgrow="ALWAYS" />
          </HBox>
          <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="button-light">
             <graphic>
                <HBox>
-                  <Label maxWidth="1.7976931348623157E308" text="Importer un fichier" HBox.hgrow="ALWAYS"/>
-                  <Label text="+"/>
+                  <Label maxWidth="1.7976931348623157E308" text="Importer un fichier" HBox.hgrow="ALWAYS" />
+                  <Label text="+" />
                </HBox>
             </graphic>
          </Button>
-         <Button mnemonicParsing="false" fx:id="loginButton" onMouseClicked="#onLoginButtonClick" text="SE CONNECTER">
+         <Button fx:id="loginButton" mnemonicParsing="false" onMouseClicked="#onLoginButtonClick" text="SE CONNECTER">
             <styleClass>
-               <String fx:value="rounded"/>
-               <String fx:value="button-light"/>
-               <String fx:value="submit-button"/>
+               <String fx:value="rounded" />
+               <String fx:value="button-light" />
+               <String fx:value="submit-button" />
             </styleClass>
          </Button>
       </VBox>
