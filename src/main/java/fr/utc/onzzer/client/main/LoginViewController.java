@@ -59,7 +59,6 @@ public class LoginViewController {
         comMainServices.connect(userLite, new ArrayList<>());
         // TODO Fin
 
-
         Stage stage = MainClient.getStage();
         Scene current = stage.getScene();
 
