@@ -9,6 +9,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.cell.TextFieldListCell?>
 
 <BorderPane fx:controller="fr.utc.onzzer.client.main.MainViewController" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <left>
@@ -52,10 +53,11 @@
          <children>
             <Label maxWidth="1.7976931348623157E308" text="Utilisateurs" />
             <Separator prefWidth="200.0" styleClass="separator-dark" />
-            <ListView>
+            <ListView fx:id="usersList">
                <VBox.margin>
-                  <Insets top="25.0" />
-               </VBox.margin></ListView>
+                  <Insets top="25.0"  />
+               </VBox.margin>
+            </ListView>
          </children>
          <padding>
             <Insets left="25.0" right="25.0" />
