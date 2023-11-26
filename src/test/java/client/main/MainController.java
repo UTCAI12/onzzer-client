@@ -1,8 +1,7 @@
 package client.main;
 
-import fr.utc.onzzer.client.common.communication.ClientCommunicationController;
+import fr.utc.onzzer.client.communication.impl.ClientCommunicationController;
 import fr.utc.onzzer.common.dataclass.*;
-import fr.utc.onzzer.common.dataclass.communication.SocketMessagesTypes;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;

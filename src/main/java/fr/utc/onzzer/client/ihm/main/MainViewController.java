@@ -1,4 +1,4 @@
-package fr.utc.onzzer.client.main;
+package fr.utc.onzzer.client.ihm.main;
 
 public class MainViewController {
 

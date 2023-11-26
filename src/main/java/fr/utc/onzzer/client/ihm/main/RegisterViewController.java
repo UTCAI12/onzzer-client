@@ -1,8 +1,8 @@
-package fr.utc.onzzer.client.main;
+package fr.utc.onzzer.client.ihm.main;
 
 import fr.utc.onzzer.client.MainClient;
-import fr.utc.onzzer.client.common.util.ValidationResult;
-import fr.utc.onzzer.client.common.util.ValidationUtil;
+import fr.utc.onzzer.client.ihm.util.ValidationResult;
+import fr.utc.onzzer.client.ihm.util.ValidationUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
