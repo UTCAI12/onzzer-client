@@ -1,10 +1,8 @@
-package fr.utc.onzzer.client.main;
+package fr.utc.onzzer.client.ihm.main;
 
 import fr.utc.onzzer.client.MainClient;
-import fr.utc.onzzer.client.common.util.ValidationResult;
-import fr.utc.onzzer.client.common.util.ValidationUtil;
-import fr.utc.onzzer.client.common.services.*;
-import fr.utc.onzzer.common.dataclass.User;
+import fr.utc.onzzer.client.ihm.util.ValidationResult;
+import fr.utc.onzzer.client.ihm.util.ValidationUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -15,74 +13,79 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.UUID;
 
 public class RegisterViewController {
 
-    // TODO : Provide instance from the constructor.
-    private final DataUserServices service = null;
+    @FXML
+    private Label connectionLabel;
 
     @FXML
-    private VBox inputGroupEmail;
+    private Button registrationButton;
 
     @FXML
-    private VBox inputGroupFirstName;
+    public VBox inputGroupEmail;
 
     @FXML
-    private VBox inputGroupLastName;
+    public VBox inputGroupFirstName;
 
     @FXML
-    private VBox inputGroupPseudo;
+    public VBox inputGroupLastName;
 
     @FXML
-    private VBox inputGroupBirthDate;
+    public VBox inputGroupPseudo;
 
     @FXML
-    private VBox inputGroupPassword;
+    public VBox inputGroupBirthDate;
 
     @FXML
-    private VBox inputGroupConfirmPassword;
+    public VBox inputGroupPassword;
 
     @FXML
-    private Label registerError;
+    public VBox inputGroupConfirmPassword;
 
     @FXML
     private void onConnectionLabelClick() throws IOException {
 
-        // Opening login view.
-        this.openLoginView();
+        Stage stage = MainClient.getStage();
+        Scene current = stage.getScene();
+
+        FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/login-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), current.getWidth(), current.getHeight());
+
+        stage.setScene(scene);
     }
 
     @FXML
     private void onRegistrationButtonClick() throws IOException {
 
-        // Removing old errors.
-        this.registerError.setVisible(false);
-        this.registerError.setManaged(false);
-
-        ValidationResult<User> result = checkErrors(MainClient.getStage().getScene().getRoot());
+        boolean hasErrors = checkErrors(MainClient.getStage().getScene().getRoot());
 
         // If the form has error, do not do anything.
-        if(result.hasError()) return;
+        if(hasErrors) return;
 
-        User user = result.value();
+        Stage stage = MainClient.getStage();
+        Scene current = stage.getScene();
 
-        try {
+        FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/main-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), current.getWidth(), current.getHeight());
 
-            // Creating a user profile.
-            this.service.createProfile(user);
+        stage.setScene(scene);
+    }
 
-            // Opening the login view.
-            this.openLoginView();
+    private boolean checkErrors(Node parent) {
 
-        } catch (Exception exception) {
+        // Hiding errors if there are ones.
+        ValidationUtil.hideErrors(parent);
 
-            exception.printStackTrace();
+        // Validating inputs.
+        ValidationResult<String> email = this.onEmailChange();
+        ValidationResult<String> firstName = this.onFirstNameChange();
+        ValidationResult<String> lastName = this.onLastNameChange();
+        ValidationResult<String> pseudo = this.onPseudoChange();
+        ValidationResult<LocalDate> birthDate = this.onBirthdateChange();
+        ValidationResult<String> password = this.onPasswordChange();
 
-            // Showing an error message.
-            this.registerError.setVisible(true);
-            this.registerError.setManaged(true);
-        }
+        return email.hasError() || firstName.hasError() || lastName.hasError() || pseudo.hasError() || birthDate.hasError() || password.hasError();
     }
 
     @FXML
@@ -214,43 +217,5 @@ public class RegisterViewController {
         }
 
         return new ValidationResult<>(password, hasErrors);
-    }
-
-    private void openLoginView() throws IOException {
-
-        // Opening the login view.
-        Stage stage = MainClient.getStage();
-        Scene current = stage.getScene();
-
-        FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/login-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), current.getWidth(), current.getHeight());
-
-        stage.setScene(scene);
-    }
-
-    private ValidationResult<User> checkErrors(Node parent) {
-
-        // Hiding errors if there are ones.
-        ValidationUtil.hideErrors(parent);
-
-        // Validating inputs.
-        ValidationResult<String> email = this.onEmailChange();
-        ValidationResult<String> firstName = this.onFirstNameChange();
-        ValidationResult<String> lastName = this.onLastNameChange();
-        ValidationResult<String> pseudo = this.onPseudoChange();
-        ValidationResult<LocalDate> birthDate = this.onBirthdateChange();
-        ValidationResult<String> password = this.onPasswordChange();
-
-        // Creating user.
-        User user = new User(UUID.randomUUID(), pseudo.value(), email.value(), password.value());
-
-        boolean hasErrors = email.hasError() ||
-                firstName.hasError() ||
-                lastName.hasError() ||
-                pseudo.hasError() ||
-                birthDate.hasError() ||
-                password.hasError();
-
-        return new ValidationResult<>(user, hasErrors);
     }
 }

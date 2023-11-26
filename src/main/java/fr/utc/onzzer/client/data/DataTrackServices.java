@@ -1,4 +1,4 @@
-package fr.utc.onzzer.client.common.services;
+package fr.utc.onzzer.client.data;
 
 import fr.utc.onzzer.common.dataclass.Track;
 
