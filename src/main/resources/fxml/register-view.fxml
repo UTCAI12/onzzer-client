@@ -6,7 +6,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<ScrollPane fitToHeight="true" fitToWidth="true" focusTraversable="false" styleClass="edge-to-edge" stylesheets="@../styles/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.utc.onzzer.client.ihm.main.RegisterViewController">
+<ScrollPane fitToHeight="true" fitToWidth="true" focusTraversable="false" styleClass="edge-to-edge" stylesheets="@../styles/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.utc.onzzer.client.hmi.main.RegisterViewController">
    <content>
       <BorderPane>
          <center>

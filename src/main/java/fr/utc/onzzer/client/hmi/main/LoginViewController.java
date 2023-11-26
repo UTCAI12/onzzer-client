@@ -1,4 +1,4 @@
-package fr.utc.onzzer.client.ihm.main;
+package fr.utc.onzzer.client.hmi.main;
 
 import fr.utc.onzzer.client.MainClient;
 import fr.utc.onzzer.client.communication.impl.ClientCommunicationController;
