@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.ListView;
 import javafx.scene.control.Button;
 import java.util.Arrays;
 import java.util.List;
@@ -47,12 +46,6 @@ public class MainViewController {
         musicViewContainer.getChildren().clear();
         loadEnfant(item);
         enfantAffiche = true;
-    }
-
-    @FXML
-    public void closeEnfant() {
-        musicViewContainer.getChildren().clear();
-        enfantAffiche = false;
     }
 
     private void loadEnfant(String item) {

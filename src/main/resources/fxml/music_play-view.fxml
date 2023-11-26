@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.control.Button?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="fr.utc.onzzer.client.music.PlayViewController">
+<AnchorPane fx:id="playContainer" xmlns:fx="http://javafx.com/fxml" fx:controller="fr.utc.onzzer.client.music.PlayViewController">
    <HBox alignment="TOP_CENTER" minWidth="250.0" styleClass="h1" BorderPane.alignment="CENTER">
       <children>
          <VBox alignment="TOP_CENTER" minWidth="250.0" styleClass="h1" BorderPane.alignment="CENTER">
@@ -37,6 +37,10 @@
             <padding>
                <Insets left="25.0" right="25.0" />
             </padding>
+         </VBox>
+         <VBox alignment="TOP_CENTER" minWidth="250.0" styleClass="h1" BorderPane.alignment="CENTER">
+            <Button text="Fermer" onAction="#closeView" />
+
          </VBox>
       </children>
       <padding>
