@@ -27,7 +27,10 @@
                <Label onMouseClicked="#onConnectionLabelClick" styleClass="link" text="Connexion"/>
             </HBox>
             <VBox fx:id="inputGroupEmail" styleClass="input-group">
-               <Label text="Adresse mail :"/>
+               <HBox>
+                  <Label text="Adresse mail :"/>
+                  <Label text="*" styleClass="required"/>
+               </HBox>
                <TextField onKeyTyped="#onEmailChange">
                   <styleClass>
                      <String fx:value="input"/>
@@ -37,7 +40,10 @@
                <Label managed="false" styleClass="error" text="Adresse email invalide." visible="false"/>
             </VBox>
             <VBox fx:id="inputGroupFirstName" prefWidth="400.0" styleClass="input-group">
-               <Label text="Nom :"/>
+               <HBox>
+                  <Label text="Nom :"/>
+                  <Label text="*" styleClass="required"/>
+               </HBox>
                <TextField onKeyTyped="#onFirstNameChange">
                   <styleClass>
                      <String fx:value="input"/>
@@ -47,7 +53,10 @@
                <Label managed="false" styleClass="error" text="Nom invalide." visible="false"/>
             </VBox>
             <VBox fx:id="inputGroupLastName" styleClass="input-group">
-               <Label text="Prénom :"/>
+               <HBox>
+                  <Label text="Prénom :"/>
+                  <Label text="*" styleClass="required"/>
+               </HBox>
                <TextField onKeyTyped="#onLastNameChange">
                   <styleClass>
                      <String fx:value="input"/>
@@ -57,7 +66,10 @@
                <Label managed="false" styleClass="error" text="Prénom invalide." visible="false"/>
             </VBox>
             <VBox fx:id="inputGroupPseudo" styleClass="input-group">
-               <Label text="Pseudo :"/>
+               <HBox>
+                  <Label text="Pseudo :"/>
+                  <Label text="*" styleClass="required"/>
+               </HBox>
                <TextField onKeyTyped="#onPseudoChange">
                   <styleClass>
                      <String fx:value="input"/>
@@ -67,7 +79,10 @@
                <Label managed="false" styleClass="error" text="Pseudo invalide." visible="false"/>
             </VBox>
             <VBox fx:id="inputGroupBirthDate" styleClass="input-group">
-               <Label text="Date de naissance :"/>
+               <HBox>
+                  <Label text="Date de naissance :"/>
+                  <Label text="*" styleClass="required"/>
+               </HBox>
                <DatePicker maxWidth="1.7976931348623157E308" onAction="#onBirthdateChange">
                   <styleClass>
                      <String fx:value="input"/>
@@ -77,7 +92,10 @@
                <Label managed="false" styleClass="error" text="Date de naissance invalide." visible="false"/>
             </VBox>
             <VBox fx:id="inputGroupPassword" styleClass="input-group">
-               <Label text="Mot de passe :"/>
+               <HBox>
+                  <Label text="Mot de passe :"/>
+                  <Label text="*" styleClass="required"/>
+               </HBox>
                <PasswordField onKeyTyped="#onPasswordChange">
                   <styleClass>
                      <String fx:value="input"/>
@@ -87,7 +105,10 @@
                <Label managed="false" styleClass="error" text="Mot de passe invalide." visible="false"/>
             </VBox>
             <VBox fx:id="inputGroupConfirmPassword" styleClass="input-group">
-               <Label text="Confirmer le mot de passe :"/>
+               <HBox>
+                  <Label text="Confirmer le mot de passe :"/>
+                  <Label text="*" styleClass="required"/>
+               </HBox>
                <PasswordField onKeyTyped="#onPasswordChange">
                   <styleClass>
                      <String fx:value="input"/>
@@ -102,7 +123,7 @@
                   <String fx:value="submit-button"/>
                </styleClass>
             </Button>
-            <Label fx:id="registerError" text="Une erreur est survenue." visible="false" managed="false" styleClass="error"/>
+            <Label fx:id="registerError" text="Une erreur est survenue. Veuillez réessayer." visible="false" managed="false" styleClass="error"/>
          </VBox>
       </center>
    </BorderPane>
