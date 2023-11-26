@@ -4,11 +4,13 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Pane?>
 
 <BorderPane fx:controller="fr.utc.onzzer.client.main.MainViewController" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <left>
@@ -22,7 +24,7 @@
          </BorderPane.margin></VBox>
    </left>
    <center>
-      <VBox alignment="TOP_CENTER" style="-fx-border-width: 1; -fx-border-color: gray; -fx-border-style: hidden solid hidden solid;" BorderPane.alignment="CENTER">
+      <VBox alignment="TOP_CENTER" style="-fx-border-width: 1; -fx-border-color: grey; -fx-border-style: hidden solid hidden solid;" BorderPane.alignment="CENTER">
          <children>
             <Label styleClass="h1" text="Vos musiques" />
             <Separator prefWidth="200.0" styleClass="separator-dark" />
@@ -46,6 +48,16 @@
             <Insets left="25.0" right="25.0" />
          </padding>
       </VBox>
+      <VBox fx:id="buttonsContainer">
+         <children>
+         </children>
+         <Pane>
+            <Button text="Fermer" onAction="#closeEnfant">
+
+            </Button>
+         </Pane>
+      </VBox>
+
    </center>
    <right>
       <VBox alignment="TOP_CENTER" minWidth="250.0" styleClass="h1" BorderPane.alignment="CENTER">
@@ -62,9 +74,13 @@
          </padding>
       </VBox>
    </right>
-   <padding>
-      <Insets bottom="25.0" top="25.0" />
-   </padding>
+   <bottom>
+      <VBox fx:id="musicViewContainer" xmlns:fx="http://javafx.com/fxml" style="-fx-background-color: #336699;">
+         <children>
+            <fx:include  source="./music_play-view.fxml" />
+         </children>
+      </VBox>
+   </bottom>
    <stylesheets>
       <URL value="@../styles/style.css" />
       <URL value="@../styles/main-view.css" />

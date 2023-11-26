@@ -18,7 +18,7 @@ public class MainClient extends Application {
 
         MainClient.stage = stage;
 
-        FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/login-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle(APP_TITLE);
         stage.setScene(scene);
