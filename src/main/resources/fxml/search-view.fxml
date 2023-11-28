@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -12,19 +13,31 @@
    <children>
       <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="h1" text="Recherche" />
       <Separator prefWidth="200.0" styleClass="separator-dark" />
-      <HBox alignment="TOP_CENTER" spacing="30.0" VBox.vgrow="NEVER">
+      <HBox spacing="25.0" VBox.vgrow="NEVER">
          <children>
-            <TextField fx:id="txtTitle" onAction="#onSearchFieldChanged" promptText="Titre" styleClass="input-light" />
-            <TextField fx:id="txtAuthor" layoutX="10.0" layoutY="10.0" onAction="#onSearchFieldChanged" promptText="Artiste" styleClass="input-light" />
-            <TextField fx:id="txtAlbum" layoutX="159.0" layoutY="10.0" onAction="#onSearchFieldChanged" promptText="Album" styleClass="input-light" />
+            <TextField fx:id="txtTitle" onAction="#onSearchFieldChanged" promptText="Titre">
+               <styleClass>
+                  <String fx:value="input-primary" />
+                  <String fx:value="search-field" />
+               </styleClass></TextField>
+            <TextField fx:id="txtAuthor" layoutX="10.0" layoutY="10.0" onAction="#onSearchFieldChanged" promptText="Artiste">
+               <styleClass>
+                  <String fx:value="input-primary" />
+                  <String fx:value="search-field" />
+               </styleClass></TextField>
+            <TextField fx:id="txtAlbum" layoutX="159.0" layoutY="10.0" onAction="#onSearchFieldChanged" promptText="Album">
+               <styleClass>
+                  <String fx:value="input-primary" />
+                  <String fx:value="search-field" />
+               </styleClass></TextField>
          </children>
       </HBox>
-      <TableView fx:id="tableTracks" prefHeight="200.0" prefWidth="200.0">
+      <TableView fx:id="tableTracks" prefWidth="200.0">
          <columns>
-            <TableColumn fx:id="columnTitle" prefWidth="75.0" text="Titre" />
-            <TableColumn fx:id="columnAuthor" prefWidth="75.0" text="Artiste" />
-            <TableColumn fx:id="columnAlbum" prefWidth="75.0" text="Album" />
-            <TableColumn fx:id="columnActions" prefWidth="75.0" text="Actions" />
+            <TableColumn fx:id="columnTitle" prefWidth="100.0" text="Titre" />
+            <TableColumn fx:id="columnAuthor" prefWidth="100.0" text="Artiste" />
+            <TableColumn fx:id="columnAlbum" prefWidth="100.0" text="Album" />
+            <TableColumn fx:id="columnActions" prefWidth="100.0" text="Actions" />
          </columns>
       </TableView>
    </children>
