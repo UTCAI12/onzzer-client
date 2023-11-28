@@ -2,7 +2,7 @@ package fr.utc.onzzer.client.data;
 
 import fr.utc.onzzer.common.dataclass.*;
 
-interface EVENTS {
+public interface EVENTS {
     void NEW_USER(User user);
 
     void UPDATE_USER(User user);
