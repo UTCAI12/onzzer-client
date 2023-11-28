@@ -1,6 +1,5 @@
 package fr.utc.onzzer.client.data;
 
-import fr.utc.onzzer.common.User;
 import fr.utc.onzzer.common.dataclass.User;
 import fr.utc.onzzer.common.dataclass.UserLite;
 

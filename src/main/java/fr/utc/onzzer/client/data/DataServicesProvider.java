@@ -1,9 +1,6 @@
 package fr.utc.onzzer.client.data;
 
-import fr.utc.onzzer.client.data.impl.DataCommentServicesImpl;
-import fr.utc.onzzer.client.data.impl.DataRatingServicesImpl;
-import fr.utc.onzzer.client.data.impl.DataTrackServicesImpl;
-import fr.utc.onzzer.client.data.impl.DataUserServicesImpl;
+import fr.utc.onzzer.client.data.impl.*;
 
 public class DataServicesProvider {
 
@@ -15,34 +12,34 @@ public class DataServicesProvider {
 
     private DataRatingServices dataRatingServices;
 
-    private DataCommentServices dataCommentService;
+    private DataCommentServices dataCommentServices;
 
     public DataServicesProvider() {
 
         this.dataRepository = new DataRepository();
-        this.dataUserService = new DataUserServicesImpl();
-        this.dataTrackService = new DataTrackServicesImpl();
-        this.dataRatingService = new DataRatingServicesImpl();
-        this.dataCommentService = new DataCommentServicesImpl();
+        this.dataUserServices = new DataUserServicesImpl();
+        this.dataTrackServices = new DataTrackServicesImpl();
+        this.dataRatingServices = new DataRatingServicesImpl();
+        this.dataCommentServices = new DataCommentServicesImpl();
     }
 
     public DataRepository getDataRepository() {
-        return dataRepository;
+        return this.dataRepository;
     }
 
     public DataUserServices getDataUserServices() {
-        return dataUserServices;
+        return this.dataUserServices;
     }
 
     public DataTrackServices getDataTrackServices() {
-        return dataTrackServices;
+        return this.dataTrackServices;
     }
 
     public DataRatingServices getDataRatingServices() {
-        return dataRatingServices;
+        return this.dataRatingServices;
     }
 
     public DataCommentServices getDataCommentService() {
-        return dataCommentServices;
+        return this.dataCommentServices;
     }
 }

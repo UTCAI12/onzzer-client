@@ -1,7 +1,8 @@
 package fr.utc.onzzer.client.data.impl;
 
 import fr.utc.onzzer.client.data.DataUserServices;
-import fr.utc.onzzer.common.User;
+import fr.utc.onzzer.common.dataclass.User;
+import fr.utc.onzzer.common.dataclass.UserLite;
 
 public class DataUserServicesImpl implements DataUserServices {
 
