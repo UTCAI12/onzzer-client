@@ -4,6 +4,6 @@ import fr.utc.onzzer.common.dataclass.Comment;
 
 import java.util.UUID;
 
-interface DataCommentServices {
+public interface DataCommentServices {
     void addComment(UUID uuid, Comment comment) throws Exception;
 }
