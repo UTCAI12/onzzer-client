@@ -8,7 +8,7 @@
 
 <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="edge-to-edge" stylesheets="@../styles/style.css"
             xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="fr.utc.onzzer.client.main.RegisterViewController">
+            fx:controller="fr.utc.onzzer.client.hmi.main.RegisterViewController">
    <BorderPane>
       <center>
          <VBox alignment="CENTER" maxWidth="500.0" minWidth="500.0" spacing="15.0" BorderPane.alignment="CENTER">
