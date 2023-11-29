@@ -73,10 +73,20 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
                 TrackLite trackLite = (TrackLite) message.object;
                 this.clientRequestHandler.publishTrack(trackLite);
             }
+            case SERVER_STOPPED -> {
+                System.out.println("Received message indicating the server has stopped.");
+                this.clientRequestHandler.serverStopped();
+            }
 
             default ->
                     System.out.println("Unhandled message");
         }
+
+        /* To be used when replacing switch case with hashmap
+        messageHandlers.put(SocketMessagesTypes.SERVER_STOPPED, (message, sender) -> {
+            ClientRequestHandler.serverStopped(message, sender);
+        });
+         */
     }
 
     public void sendServer(SocketMessagesTypes messageType, Serializable object) {

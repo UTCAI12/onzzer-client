@@ -29,4 +29,9 @@ public class ClientRequestHandler {
     void publishTrack(final TrackLite trackLite) {
 //        this.dataServicesProvider.getDataTrackServices().addTrack(trackLite);
     }
+
+    void serverStopped() {
+        //TODO disconnect client from server (to be discussed with HMI-Main in order to display a popup)
+        System.out.println("I am executing serverStopped method");
+    }
 }
