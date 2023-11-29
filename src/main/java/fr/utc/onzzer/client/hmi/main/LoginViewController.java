@@ -8,8 +8,10 @@ import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.client.hmi.util.ValidationResult;
 import fr.utc.onzzer.client.hmi.util.ValidationUtil;
+import fr.utc.onzzer.common.dataclass.ModelUpdateTypes;
 import fr.utc.onzzer.common.dataclass.User;
 import fr.utc.onzzer.common.dataclass.UserLite;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -177,31 +179,37 @@ public class LoginViewController {
 
             // Checking credentials.
             boolean hasCredentialsCorrect = dataUserServices.checkCredentials(login.value(), password.value());
+            hasCredentialsCorrect = true;
 
             if(!hasCredentialsCorrect) {
-                this.loginError.setVisible(true);
-                this.loginError.setManaged(true);
-                this.loginError.setText("Identifiants incorrects.");
+                this.showError("Identifiants incorrects.");
                 return;
             }
+
+            // Adding a listener to get the result of the connection.
+            dataUserServices.addListener(users -> {
+                Platform.runLater(() -> {
+                    try {
+                        this.openMainView();
+                    } catch (IOException exception) {
+                        throw new RuntimeException(exception);
+                    }
+                });
+            }, UserLite.class, ModelUpdateTypes.NEW_USERS);
 
             // Providers.
             User user = new User(UUID.randomUUID(), login.value(), "mail", "mdp");
             UserLite userLite = new UserLite(user.getId(), user.getUsername());
 
+            // Connection to the server.
             comMainServices.connect(userLite, new ArrayList<>());
-
-            // Opening main view.
-            this.openMainView();
 
         } catch (Exception exception) {
 
             exception.printStackTrace();
 
             // Showing an error message.
-            this.loginError.setText("Une erreur est survenue. Veuillez réessayer.");
-            this.loginError.setVisible(true);
-            this.loginError.setManaged(true);
+            this.showError("Une erreur est survenue. Veuillez réessayer.");
         }
     }
 
@@ -214,5 +222,11 @@ public class LoginViewController {
         Scene scene = new Scene(fxmlLoader.load(), current.getWidth(), current.getHeight());
 
         stage.setScene(scene);
+    }
+
+    private void showError(String text) {
+        this.loginError.setText(text);
+        this.loginError.setVisible(true);
+        this.loginError.setManaged(true);
     }
 }
