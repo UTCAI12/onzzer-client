@@ -1,4 +1,4 @@
-package fr.utc.onzzer.client.common.util;
+package fr.utc.onzzer.client.hmi.util;
 
 import javafx.scene.Node;
 
