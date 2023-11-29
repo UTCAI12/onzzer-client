@@ -35,4 +35,13 @@ public class ValidationUtil {
         node.setVisible(true);
         node.setManaged(true);
     }
+
+    public static boolean isInt(String str) {
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (NumberFormatException ignored) {
+            return false;
+        }
+    }
 }
