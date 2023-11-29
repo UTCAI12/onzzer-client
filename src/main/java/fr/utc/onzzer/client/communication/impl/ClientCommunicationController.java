@@ -85,7 +85,7 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
     }
 
     @Override
-    public void connect(UserLite user, List<Track> trackList) throws ConnectException {
+    public void connect(UserLite user, List<TrackLite> trackList) throws ConnectException {
         this.sendServer(SocketMessagesTypes.USER_CONNECT, user);
     }
 
