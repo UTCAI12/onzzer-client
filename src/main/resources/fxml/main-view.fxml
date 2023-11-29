@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane fx:controller="fr.utc.onzzer.client.hmi.main.MainViewController" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.utc.onzzer.client.hmi.main.MainViewController">
    <left>
       <VBox alignment="TOP_CENTER" minWidth="250.0" BorderPane.alignment="CENTER">
          <children>
@@ -26,13 +21,13 @@
          <children>
             <Label styleClass="h1" text="Vos musiques" />
             <Separator prefWidth="200.0" styleClass="separator-dark" />
-            <TableView>
+            <TableView fx:id="tableau">
               <columns>
-                <TableColumn maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="Titre" />
-                <TableColumn maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="Artiste" />
-                  <TableColumn maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="Album" />
-                  <TableColumn editable="false" prefWidth="-1.0" sortable="false" text="Partagé" />
-                  <TableColumn prefWidth="-1.0" text="Actions" />
+                <TableColumn fx:id="colonneTitre" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Titre" />
+                <TableColumn fx:id="colonneAuteur" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Artiste" />
+                  <TableColumn maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Album" />
+                  <TableColumn editable="false" minWidth="50.0" prefWidth="-1.0" sortable="false" text="Partagé" />
+                  <TableColumn minWidth="50.0" prefWidth="-1.0" text="Actions" />
               </columns>
                <VBox.margin>
                   <Insets top="25.0" />
