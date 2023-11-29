@@ -1,5 +1,7 @@
 package fr.utc.onzzer.client;
 
+import fr.utc.onzzer.client.hmi.GlobalController;
+import fr.utc.onzzer.client.hmi.main.LoginViewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,9 +18,18 @@ public class MainClient extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
+        // Global controller that contains services references.
+        GlobalController controller = new GlobalController();
+
+        // Global variable for stage.
         MainClient.stage = stage;
 
+        // Loading the view.
         FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/login-view.fxml"));
+
+        LoginViewController loginViewController = new LoginViewController(controller);
+        fxmlLoader.setController(loginViewController);
+
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle(APP_TITLE);
         stage.setScene(scene);

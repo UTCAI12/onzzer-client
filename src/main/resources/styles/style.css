@@ -69,3 +69,8 @@
 .error {
     -fx-text-fill: -fx-color-red;
 }
+
+.required {
+    -fx-text-fill: -fx-color-red;
+    -fx-font-weight: bold;
+}
