@@ -10,22 +10,22 @@
       <Pane layoutY="765.0" prefHeight="260.0" prefWidth="1441.0" style="-fx-background-color: #8A2BE2;">
          <children>
             <Button fx:id="btnDownload" layoutX="614.0" layoutY="46.0" mnemonicParsing="false" onAction="#onClickDownload" prefHeight="56.0" prefWidth="205.0" text="Télécharger" />
-            <Text fx:id="txtTitle" layoutX="623.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Somebody First">
+            <Text fx:id="txtTitle" fill="WHITE" layoutX="623.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Somebody First">
                <font>
                   <Font size="28.0" />
                </font>
             </Text>
-            <Text fx:id="txtAuthor" layoutX="585.0" layoutY="183.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Charlotte Cardin">
+            <Text fx:id="txtAuthor" fill="WHITE" layoutX="585.0" layoutY="183.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Charlotte Cardin">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text layoutX="732.0" layoutY="183.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-">
+            <Text fill="WHITE" layoutX="732.0" layoutY="183.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-">
                <font>
                   <Font size="20.0" />
                </font>
             </Text>
-            <Text fx:id="txtAlbum" layoutX="750.0" layoutY="183.0" strokeType="OUTSIDE" strokeWidth="0.0" text="99 Nights">
+            <Text fx:id="txtAlbum" fill="WHITE" layoutX="750.0" layoutY="183.0" strokeType="OUTSIDE" strokeWidth="0.0" text="99 Nights">
                <font>
                   <Font size="20.0" />
                </font>
