@@ -1,4 +1,4 @@
-package fr.utc.onzzer.client.music;
+package fr.utc.onzzer.client.hmi.music;
 
 import fr.utc.onzzer.common.dataclass.TrackLite;
 import fr.utc.onzzer.common.dataclass.UserLite;
