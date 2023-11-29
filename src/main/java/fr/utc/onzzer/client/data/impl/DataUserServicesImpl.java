@@ -1,6 +1,7 @@
 package fr.utc.onzzer.client.data.impl;
 
 import fr.utc.onzzer.client.data.DataUserServices;
+import fr.utc.onzzer.common.dataclass.ModelUpdateTypes;
 import fr.utc.onzzer.common.dataclass.TrackLite;
 import fr.utc.onzzer.common.dataclass.User;
 import fr.utc.onzzer.common.dataclass.UserLite;
@@ -103,7 +104,7 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
 
     @Override
     public void addUser(UserLite userLite) throws Exception {
-        this.dataRepository.getConnectedUsers().put(userLite.getId(),);
+        this.dataRepository.getConnectedUsers().put(userLite,null);
         this.notify(userLite, UserLite.class, ModelUpdateTypes.NEW_USER);
     }
 
@@ -111,7 +112,7 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
     public void setConnectedUsers(List<UserLite> newConnectedUsers) {
         final HashMap<UserLite, List<TrackLite>> connectedUsers = this.dataRepository.getConnectedUsers();
         connectedUsers.clear();
-        connectedUsers.put(newConnectedUsers);
+        connectedUsers.put((UserLite) newConnectedUsers,null);
 
         // TODO change here, to be able to notify without data OR to notify with an array
         final UserLite u = new UserLite(UUID.randomUUID(), "");
@@ -129,5 +130,5 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
     @Override
     public void deleteAllUsers() {}
 
- */
+
 }
