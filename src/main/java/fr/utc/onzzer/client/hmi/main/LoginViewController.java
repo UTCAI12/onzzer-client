@@ -206,7 +206,7 @@ public class LoginViewController {
         userServices.addListener(this::onLoginSucceeded, UserLite.class, ModelUpdateTypes.NEW_USERS);
 
         // Connecting to the server.
-        comServices.connect(userLite, user.getTrackList()); // TODO Change to TrackLite.
+        comServices.connect(userLite, trackLiteList);
     }
 
     private void onLoginSucceeded(UserLite user) {
