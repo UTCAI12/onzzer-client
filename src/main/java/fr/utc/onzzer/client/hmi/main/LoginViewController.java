@@ -143,6 +143,8 @@ public class LoginViewController {
         Node parent = MainClient.getStage().getScene().getRoot();
 
         // Hiding errors if there are ones.
+        this.hideGlobalError();
+
         ValidationUtil.hideErrors(parent);
 
         // Validating inputs.
@@ -173,7 +175,7 @@ public class LoginViewController {
             boolean hasCredentialsCorrect = userServices.checkCredentials(login.value(), password.value());
 
             if(!hasCredentialsCorrect) {
-                this.showError("Identifiants incorrects.");
+                this.showGlobalError("Identifiants incorrects.");
                 return;
             }
 
@@ -185,7 +187,7 @@ public class LoginViewController {
             exception.printStackTrace();
 
             // Showing an error message.
-            this.showError("Une erreur est survenue. Veuillez réessayer.");
+            this.showGlobalError("Une erreur est survenue. Veuillez réessayer.");
         }
     }
 
@@ -231,9 +233,14 @@ public class LoginViewController {
         stage.setScene(scene);
     }
 
-    private void showError(String text) {
+    private void showGlobalError(String text) {
         this.loginError.setText(text);
         this.loginError.setVisible(true);
         this.loginError.setManaged(true);
+    }
+
+    private void hideGlobalError() {
+        this.loginError.setVisible(false);
+        this.loginError.setManaged(false);
     }
 }
