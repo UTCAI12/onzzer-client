@@ -1,4 +1,4 @@
-package fr.utc.onzzer.client.common.services;
+package fr.utc.onzzer.client.communication;
 
 import fr.utc.onzzer.common.dataclass.Comment;
 import fr.utc.onzzer.common.dataclass.Rating;

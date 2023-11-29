@@ -1,8 +1,8 @@
 package client.main;
 
-import fr.utc.onzzer.client.common.communication.ClientCommunicationController;
+import fr.utc.onzzer.client.communication.impl.ClientCommunicationController;
+import fr.utc.onzzer.client.data.DataServicesProvider;
 import fr.utc.onzzer.common.dataclass.*;
-import fr.utc.onzzer.common.dataclass.communication.SocketMessagesTypes;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,7 +14,7 @@ import java.util.Random;
 import java.util.UUID;
 
 public class MainController {
-    private final ClientModel model;
+    private final DataServicesProvider dataServicesProvider;
     private final ClientCommunicationController comm;
 
     @FXML // Adding this annotation (@) means that the Node after will be injected by the FXML Loader.
@@ -59,8 +59,8 @@ public class MainController {
 
 //    private Media sound;
 
-    public MainController(final ClientModel model, final ClientCommunicationController comm) {
-        this.model = model;
+    public MainController(final DataServicesProvider dataServicesProvider, final ClientCommunicationController comm) {
+        this.dataServicesProvider = dataServicesProvider;
         this.comm = comm;
     }
 
@@ -166,7 +166,7 @@ public class MainController {
 
             // Creating new "track"
             // TODO Use a cast here (if User inherits from UserLite)
-            final User u = this.model.getUser();
+            final User u = this.dataServicesProvider.getDataUserServices().getUser();
             final UserLite ul = new UserLite(u.getId(), u.getUsername());
 
             // TODO Use a cast here (if Track inherits from TrackLite)
@@ -174,7 +174,7 @@ public class MainController {
             final TrackLite newTrackLite = new TrackLite(track.getId(), ul, trackName, "michel");
 
             // adding track to local model
-            this.model.addTrack(newTrackLite);
+//            this.dataServicesProvider.getDataTrackServices().addTrack(newTrackLite);
 
             // Notifying server that a track has been added
             try {
@@ -187,31 +187,31 @@ public class MainController {
 
         // When an event "ModelUpdateTypes.NEW_TRACK" is sent by the server, get the title of this track and display it to "trackList"
         // The function (1st argument) takes in parameter the new track, so we are able to get its name with track.getName()
-        this.model.addListener(newTrackLite ->
-                        trackList.appendText("-" + newTrackLite.getTitle() + "\n")
-                , TrackLite.class, ModelUpdateTypes.NEW_TRACK);
+//        this.dataServicesProvider.getDataTrackServices().addListener(newTrackLite ->
+//                        trackList.appendText("-" + newTrackLite.getTitle() + "\n")
+//                , TrackLite.class, ModelUpdateTypes.NEW_TRACK);
 
 
         // If the model triggers an "NEW_USER" event, call the "updateAllUsers" method
-        this.model.addListener(newUser -> this.updateUsersView(), UserLite.class, ModelUpdateTypes.NEW_USER);
+//        this.dataServicesProvider.getDataTrackServices().addListener(newUser -> this.updateUsersView(), UserLite.class, ModelUpdateTypes.NEW_USER);
 
         // If the model triggers an "DELETE_USER" event, call the "updateAllUsers" method
-        this.model.addListener(newUser -> this.updateUsersView(), UserLite.class, ModelUpdateTypes.DELETE_USER);
+//        this.dataServicesProvider.getDataTrackServices().addListener(newUser -> this.updateUsersView(), UserLite.class, ModelUpdateTypes.DELETE_USER);
 
         // initialize the content with all users in the model by calling the "updateAllUsers" method
         this.updateUsersView();
 
         // set the username
-        this.username.setText(this.model.getUser().getUsername());
+        this.username.setText(this.dataServicesProvider.getDataUserServices().getUser().getUsername());
     }
 
     private void updateUsersView() {
         // Unlike the "new track", here we clear the displayed content and iterate over all users to recreate the text for each one
         // in order to be able to call this function, no matters if it's delete, create or update user
         this.onlineUsersList.setText("");
-        this.model.others.forEach(user ->
-                this.onlineUsersList.setText(this.onlineUsersList.getText() + " -" + user.getUsername() + "\n")
-        );
+//        this.dataServicesProvider.getUsers().forEach(user ->
+//                this.onlineUsersList.setText(this.onlineUsersList.getText() + " -" + user.getUsername() + "\n")
+//        );
     }
 
 

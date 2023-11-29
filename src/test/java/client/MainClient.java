@@ -2,7 +2,8 @@ package client;
 
 import client.main.Frame;
 import client.main.MainController;
-import fr.utc.onzzer.client.common.communication.ClientCommunicationController;
+import fr.utc.onzzer.client.communication.impl.ClientCommunicationController;
+import fr.utc.onzzer.client.data.DataServicesProvider;
 import fr.utc.onzzer.common.dataclass.ClientModel;
 import fr.utc.onzzer.common.dataclass.User;
 import fr.utc.onzzer.common.dataclass.UserLite;
@@ -36,10 +37,10 @@ public class MainClient {
         final User user = new User(UUID.randomUUID(), names[index], "mail", "password");
 
         // Initializing the Model
-        final ClientModel m = new ClientModel(user);
+        final DataServicesProvider dataServicesProvider = new DataServicesProvider();
 
         // Initializing the communication
-        final ClientCommunicationController comm = new ClientCommunicationController("localhost", 8000, m);
+        final ClientCommunicationController comm = new ClientCommunicationController("localhost", 8000, dataServicesProvider);
 
         // Connect to the server
 
@@ -47,7 +48,7 @@ public class MainClient {
         final UserLite userLite = new UserLite(user.getId(), user.getUsername());
         comm.connect(userLite, new ArrayList<>());
 
-        final MainController controller = new MainController(m, comm);
+        final MainController controller = new MainController(dataServicesProvider, comm);
 
         // Set the controller in MyApp
         Frame.setController(controller);
