@@ -2,6 +2,7 @@ package fr.utc.onzzer.client.hmi.main;
 
 import fr.utc.onzzer.client.MainClient;
 import fr.utc.onzzer.client.data.DataUserServices;
+import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.client.hmi.util.ValidationResult;
 import fr.utc.onzzer.client.hmi.util.ValidationUtil;
 import fr.utc.onzzer.common.dataclass.User;
@@ -22,8 +23,13 @@ import java.util.UUID;
 
 public class RegisterViewController {
 
-    // TODO : Provide instance from the constructor.
-    private final DataUserServices service = null;
+    private final GlobalController controller;
+    private final DataUserServices services;
+
+    public RegisterViewController(GlobalController controller) {
+        this.controller = controller;
+        this.services = this.controller.getDataServicesProvider().getDataUserServices();
+    }
 
     @FXML
     private VBox inputGroupEmail;
@@ -73,7 +79,7 @@ public class RegisterViewController {
         try {
 
             // Creating a user profile.
-            this.service.createProfile(user);
+            this.services.createProfile(user);
 
             // Opening the login view.
             this.openLoginView();
@@ -226,6 +232,9 @@ public class RegisterViewController {
         Scene current = stage.getScene();
 
         FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/login-view.fxml"));
+        LoginViewController loginViewController = new LoginViewController(this.controller);
+        fxmlLoader.setController(loginViewController);
+
         Scene scene = new Scene(fxmlLoader.load(), current.getWidth(), current.getHeight());
 
         stage.setScene(scene);

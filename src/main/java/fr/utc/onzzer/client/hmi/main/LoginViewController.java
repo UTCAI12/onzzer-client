@@ -2,10 +2,8 @@ package fr.utc.onzzer.client.hmi.main;
 
 import fr.utc.onzzer.client.MainClient;
 import fr.utc.onzzer.client.communication.ComServicesProvider;
-import fr.utc.onzzer.client.communication.impl.ClientCommunicationController;
-import fr.utc.onzzer.client.communication.ComMainServices;
-import fr.utc.onzzer.client.data.DataCommentServices;
 import fr.utc.onzzer.client.data.DataServicesProvider;
+import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.common.dataclass.ClientModel;
 import fr.utc.onzzer.common.dataclass.User;
 import fr.utc.onzzer.common.dataclass.UserLite;
@@ -22,6 +20,12 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class LoginViewController {
+
+    private final GlobalController controller;
+
+    public LoginViewController(GlobalController controller) {
+        this.controller = controller;
+    }
 
     @FXML
     private Button loginButton;
@@ -45,6 +49,10 @@ public class LoginViewController {
         Scene current = stage.getScene();
 
         FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/register-view.fxml"));
+
+        RegisterViewController registerViewController = new RegisterViewController(this.controller);
+        fxmlLoader.setController(registerViewController);
+
         Scene scene = new Scene(fxmlLoader.load(), current.getWidth(), current.getHeight());
 
         stage.setScene(scene);
