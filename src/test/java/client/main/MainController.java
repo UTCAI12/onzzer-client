@@ -66,8 +66,12 @@ public class MainController {
 
     @FXML
     private void initialize() {
-        this.initComponents();
-        this.initListeners();
+        try {
+            this.initComponents();
+            this.initListeners();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
@@ -156,7 +160,7 @@ public class MainController {
     /**
      * This method must be called AFTER the initialization of the FXML file. Listeners can't be set before because FXML Nodes will be null.
      */
-    void initListeners() {
+    void initListeners() throws Exception {
         this.buttonAddTrack.setOnAction((e) -> {
             // generating random string
             String trackName = new Random().ints(97, 122 + 1)
@@ -166,7 +170,12 @@ public class MainController {
 
             // Creating new "track"
             // TODO Use a cast here (if User inherits from UserLite)
-            final User u = this.dataServicesProvider.getDataUserServices().getUser();
+            final User u;
+            try {
+                u = this.dataServicesProvider.getDataUserServices().getUser();
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
             final UserLite ul = new UserLite(u.getId(), u.getUsername());
 
             // TODO Use a cast here (if Track inherits from TrackLite)
