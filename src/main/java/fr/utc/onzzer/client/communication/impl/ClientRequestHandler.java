@@ -6,6 +6,7 @@ import fr.utc.onzzer.common.dataclass.TrackLite;
 import fr.utc.onzzer.common.dataclass.UserLite;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ClientRequestHandler {
     private final DataServicesProvider dataServicesProvider;
@@ -17,8 +18,8 @@ public class ClientRequestHandler {
         this.dataServicesProvider.getDataUserServices().addUser(userLite);
     }
 
-    void userConnected(final ArrayList<UserLite> usersLite) {
-//        this.dataServicesProvider.getDataUserServices().addUsers(usersLite);
+    void userConnected(final List<UserLite> usersLite) {
+        this.dataServicesProvider.getDataUserServices().setConnectedUsers(usersLite);
     }
 
     void userDisconnect(final UserLite userLite) throws Exception {

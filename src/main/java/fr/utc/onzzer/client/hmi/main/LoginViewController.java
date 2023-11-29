@@ -2,11 +2,7 @@ package fr.utc.onzzer.client.hmi.main;
 
 import fr.utc.onzzer.client.MainClient;
 import fr.utc.onzzer.client.communication.ComServicesProvider;
-import fr.utc.onzzer.client.communication.impl.ClientCommunicationController;
-import fr.utc.onzzer.client.communication.ComMainServices;
-import fr.utc.onzzer.client.data.DataCommentServices;
 import fr.utc.onzzer.client.data.DataServicesProvider;
-import fr.utc.onzzer.common.dataclass.ClientModel;
 import fr.utc.onzzer.common.dataclass.User;
 import fr.utc.onzzer.common.dataclass.UserLite;
 import javafx.fxml.FXML;
@@ -55,8 +51,6 @@ public class LoginViewController {
         // TODO temporairement pour voir si ca marche bien. A terme faire une méthode à côté
         User user = new User(UUID.randomUUID(), txtUserPseudo.getText(), "mail", "mdp");
         UserLite userLite = new UserLite(user.getId(), user.getUsername());
-        ClientModel clientModel = new ClientModel(user);
-
         final DataServicesProvider dataServicesProvider = new DataServicesProvider();
         final ComServicesProvider comServicesProvider = new ComServicesProvider(
                 this.txtServerIp.getText(), Integer.parseInt(this.txtServerPort.getText()), dataServicesProvider);
