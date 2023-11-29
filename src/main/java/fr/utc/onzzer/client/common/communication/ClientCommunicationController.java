@@ -1,7 +1,7 @@
-package fr.utc.onzzer.client.communication.impl;
+package fr.utc.onzzer.client.common.communication;
 
-import fr.utc.onzzer.client.communication.ComMainServices;
-import fr.utc.onzzer.client.communication.ComMusicServices;
+import fr.utc.onzzer.client.common.services.ComMainServices;
+import fr.utc.onzzer.client.common.services.ComMusicServices;
 import fr.utc.onzzer.common.dataclass.*;
 import fr.utc.onzzer.common.dataclass.communication.SocketMessage;
 import fr.utc.onzzer.common.dataclass.communication.SocketMessagesTypes;
