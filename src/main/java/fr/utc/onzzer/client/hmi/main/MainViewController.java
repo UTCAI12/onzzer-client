@@ -1,5 +1,6 @@
 package fr.utc.onzzer.client.hmi.main;
 
+import fr.utc.onzzer.client.hmi.GlobalController;
 import javafx.fxml.FXML;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
@@ -11,6 +12,11 @@ import javafx.scene.layout.VBox;
 
 public class MainViewController {
 
+    private final GlobalController controller;
+
+    public MainViewController(GlobalController controller) {
+        this.controller = controller;
+    }
 
     @FXML
     private ListView<String> usersList;

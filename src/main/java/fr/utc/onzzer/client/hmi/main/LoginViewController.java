@@ -219,6 +219,9 @@ public class LoginViewController {
         Scene current = stage.getScene();
 
         FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/main-view.fxml"));
+        MainViewController mainViewController = new MainViewController(this.controller);
+        fxmlLoader.setController(mainViewController);
+
         Scene scene = new Scene(fxmlLoader.load(), current.getWidth(), current.getHeight());
 
         stage.setScene(scene);
