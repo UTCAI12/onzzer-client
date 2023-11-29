@@ -17,10 +17,10 @@ public class DataServicesProvider {
     public DataServicesProvider() {
 
         this.dataRepository = new DataRepository();
-        this.dataUserServices = new DataUserServicesImpl();
-        this.dataTrackServices = new DataTrackServicesImpl();
-        this.dataRatingServices = new DataRatingServicesImpl();
-        this.dataCommentServices = new DataCommentServicesImpl();
+        this.dataUserServices = new DataUserServicesImpl(this.dataRepository);
+        this.dataTrackServices = new DataTrackServicesImpl(); // this.dataRepository en parametre
+        this.dataRatingServices = new DataRatingServicesImpl(); // this.dataRepository en parametre
+        this.dataCommentServices = new DataCommentServicesImpl(); // this.dataRepository en parametre
     }
 
     public DataRepository getDataRepository() {
