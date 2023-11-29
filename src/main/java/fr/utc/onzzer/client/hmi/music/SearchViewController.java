@@ -1,5 +1,6 @@
 package fr.utc.onzzer.client.hmi.music;
 
+import fr.utc.onzzer.client.hmi.component.IconButton;
 import fr.utc.onzzer.common.dataclass.TrackLite;
 import fr.utc.onzzer.common.dataclass.UserLite;
 import javafx.beans.property.SimpleStringProperty;
@@ -102,17 +103,14 @@ public class SearchViewController {
             @Override
             public TableCell<TrackLite, Void> call(final TableColumn<TrackLite, Void> param) {
                 return new TableCell<>() {
-                    private final Button btn = new Button();
                     private final HBox hbox = new HBox();
 
                     {
+                        IconButton btn = new IconButton(IconButton.ICON_DOWNLOAD);
                         btn.setOnAction((ActionEvent event) -> {
                             TrackLite track = getTableView().getItems().get(getIndex());
                             onDownloadButtonClick(track);
                         });
-                        btn.getStyleClass().add("icon-button");
-                        btn.getStyleClass().add("download-icon");
-                        btn.setPickOnBounds(true);
 
                         hbox.setAlignment(Pos.CENTER);
                         hbox.getChildren().add(btn);
