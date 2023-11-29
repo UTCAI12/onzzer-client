@@ -1,34 +1,21 @@
 package fr.utc.onzzer.client.hmi.main;
 
 import fr.utc.onzzer.client.MainClient;
-import fr.utc.onzzer.client.communication.ComServicesProvider;
-import fr.utc.onzzer.client.data.DataServicesProvider;
 import fr.utc.onzzer.client.hmi.GlobalController;
-import fr.utc.onzzer.client.common.communication.ClientCommunicationController;
-import fr.utc.onzzer.client.common.services.ComMainServices;
-import fr.utc.onzzer.client.common.util.ValidationResult;
-import fr.utc.onzzer.client.common.util.ValidationUtil;
-import fr.utc.onzzer.common.dataclass.ClientModel;
-import fr.utc.onzzer.common.dataclass.User;
-import fr.utc.onzzer.common.dataclass.UserLite;
+import fr.utc.onzzer.client.hmi.util.ValidationResult;
+import fr.utc.onzzer.client.hmi.util.ValidationUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.scene.Node;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.UUID;
 
 public class LoginViewController {
 
