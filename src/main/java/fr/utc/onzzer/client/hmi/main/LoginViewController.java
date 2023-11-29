@@ -1,9 +1,15 @@
 package fr.utc.onzzer.client.hmi.main;
 
 import fr.utc.onzzer.client.MainClient;
+import fr.utc.onzzer.client.communication.ComMainServices;
+import fr.utc.onzzer.client.communication.ComServicesProvider;
+import fr.utc.onzzer.client.data.DataServicesProvider;
+import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.client.hmi.util.ValidationResult;
 import fr.utc.onzzer.client.hmi.util.ValidationUtil;
+import fr.utc.onzzer.common.dataclass.User;
+import fr.utc.onzzer.common.dataclass.UserLite;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -11,11 +17,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class LoginViewController {
 
@@ -26,19 +33,19 @@ public class LoginViewController {
     }
 
     @FXML
-    public HBox inputGroupIp;
+    private VBox inputGroupIp;
 
     @FXML
-    public HBox inputGroupPort;
+    private VBox inputGroupPort;
 
     @FXML
-    public VBox inputGroupPseudo;
+    private VBox inputGroupPseudo;
 
     @FXML
-    public VBox inputGroupPassword;
+    private VBox inputGroupPassword;
 
     @FXML
-    private Label registerError;
+    private Label loginError;
 
     @FXML
     private void onRegisterLabelClick() throws IOException {
@@ -97,7 +104,7 @@ public class LoginViewController {
     }
 
     @FXML
-    private ValidationResult<String> onPortChange() {
+    private ValidationResult<Integer> onPortChange() {
 
         boolean hasErrors = false;
         String port = ((TextField) this.inputGroupPort.lookup(".input")).getText();
@@ -113,7 +120,7 @@ public class LoginViewController {
             ValidationUtil.hideErrors(this.inputGroupPort);
         }
 
-        return new ValidationResult<>(port, hasErrors);
+        return new ValidationResult<>(Integer.parseInt(port), hasErrors);
     }
 
     @FXML
@@ -138,50 +145,8 @@ public class LoginViewController {
 
     @FXML
     private void onLoginButtonClick() throws IOException {
-        // TODO temporairement pour voir si ca marche bien. A terme faire une méthode à côté
 
-
-
-        //User user = new User(UUID.randomUUID(), txtUserPseudo.getText(), "mail", "mdp");
-        boolean hasErrors = checkErrors(MainClient.getStage().getScene().getRoot());
-
-        // If the form has error, do not do anything.
-        if(hasErrors) return;
-
-
-        //UserLite userLite = new UserLite(user.getId(), user.getUsername());
-
-
-        //ClientModel clientModel = new ClientModel(user);
-
-        try
-        {
-
-
-            /*ComMainServices comMainServices = new ClientCommunicationController(
-                    this.txtServerIp.getText(), Integer.parseInt(this.txtServerPort.getText()), clientModel);
-            comMainServices.connect(userLite, new ArrayList<>());*/
-
-            Stage stage = MainClient.getStage();
-            Scene current = stage.getScene();
-
-            FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/main-view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), current.getWidth(), current.getHeight());
-
-            stage.setScene(scene);
-        }
-        catch (Exception exception)
-        {
-            exception.printStackTrace();
-
-            // Showing an error message.
-            this.registerError.setVisible(true);
-            this.registerError.setManaged(true);
-        }
-
-    }
-
-    private boolean checkErrors(Node parent)  {
+        Node parent = MainClient.getStage().getScene().getRoot();
 
         // Hiding errors if there are ones.
         ValidationUtil.hideErrors(parent);
@@ -189,16 +154,65 @@ public class LoginViewController {
         // Validating inputs.
         ValidationResult<String> ip = this.onIpChange();
         ValidationResult<String> login = this.onLoginChange();
-        ValidationResult<String> port = this.onPortChange();
+        ValidationResult<Integer> port = this.onPortChange();
         ValidationResult<String> password = this.onPasswordChange();
 
-        boolean hasErrors = ip.hasError() ||
-                login.hasError() ||
-                port.hasError() ||
-                password.hasError();
+        boolean hasErrors = ip.hasError() || login.hasError() || port.hasError() || password.hasError();
 
-        return  hasErrors;
+        // If the form has error, do not do anything.
+        if(hasErrors) return;
 
+        // Login.
+        try {
+
+            // Initializing controller.
+            this.controller.initialize(ip.value(), port.value());
+
+            // Providers.
+            ComServicesProvider comServicesProvider = this.controller.getComServicesProvider();
+            ComMainServices comMainServices = comServicesProvider.getComMainServices();
+
+            DataServicesProvider dataServicesProvider = this.controller.getDataServicesProvider();
+            DataUserServices dataUserServices = dataServicesProvider.getDataUserServices();
+
+            // Checking credentials.
+            boolean hasCredentialsCorrect = dataUserServices.checkCredentials(login.value(), password.value());
+
+            if(!hasCredentialsCorrect) {
+                this.loginError.setVisible(true);
+                this.loginError.setManaged(true);
+                this.loginError.setText("Identifiants incorrects.");
+                return;
+            }
+
+            // Providers.
+            User user = new User(UUID.randomUUID(), login.value(), "mail", "mdp");
+            UserLite userLite = new UserLite(user.getId(), user.getUsername());
+
+            comMainServices.connect(userLite, new ArrayList<>());
+
+            // Opening main view.
+            this.openMainView();
+
+        } catch (Exception exception) {
+
+            exception.printStackTrace();
+
+            // Showing an error message.
+            this.loginError.setText("Une erreur est survenue. Veuillez réessayer.");
+            this.loginError.setVisible(true);
+            this.loginError.setManaged(true);
+        }
     }
 
+    private void openMainView() throws IOException {
+
+        Stage stage = MainClient.getStage();
+        Scene current = stage.getScene();
+
+        FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/main-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), current.getWidth(), current.getHeight());
+
+        stage.setScene(scene);
+    }
 }
