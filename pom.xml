@@ -13,14 +13,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.9.2</junit.version>
     </properties>
-
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -46,9 +38,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.UTCAI12</groupId>
+            <groupId>fr.utc.onzzer</groupId>
             <artifactId>onzzer-common</artifactId>
-            <version>dev-SNAPSHOT</version>
+            <version>1.0.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
