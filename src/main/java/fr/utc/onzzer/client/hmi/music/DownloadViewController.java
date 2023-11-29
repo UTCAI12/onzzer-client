@@ -8,6 +8,7 @@ import fr.utc.onzzer.common.dataclass.TrackLite;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 public class DownloadViewController{
@@ -36,11 +37,20 @@ public class DownloadViewController{
     private Button btnDownload;
 
     @FXML
+    private Label downloadError;
+
+    @FXML
     public void onClickDownload(ActionEvent actionEvent) {
+        // Removing old errors.
+        this.downloadError.setVisible(false);
+        this.downloadError.setManaged(false);
+
         try {
             services.downloadTrack(track.getId());
         } catch (Exception exception){
             exception.printStackTrace();
+            this.downloadError.setVisible(true);
+            this.downloadError.setManaged(true);
         }
     }
 }
