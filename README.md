@@ -13,14 +13,12 @@ onzzer-client
 │   │	│	├── fr.utc.onzzer.client
 │   │	│	│	├── data
 │   │	│	│	├── communication
-│   │	│	│	├── hmi
-│   │	│	│	│	├── main
-│   │	│	│	│	├── music
+│   │	│	│	├── ihmmain
+│   │	│	│	├── ihmmusic
 │   │	│	│	├── MainClient.java
 │   │	├── resources
 │   │	│	├── fxml
 │   │	│	├── css
-│   │	│	├── img
 │   ├── test
 │   │	├── java
 │   │	│	├── fr.utc.onzzer.client

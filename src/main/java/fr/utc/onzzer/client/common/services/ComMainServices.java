@@ -1,4 +1,4 @@
-package fr.utc.onzzer.client.communication;
+package fr.utc.onzzer.client.common.services;
 
 import fr.utc.onzzer.common.dataclass.Track;
 import fr.utc.onzzer.common.dataclass.UserLite;

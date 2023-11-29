@@ -2,7 +2,7 @@ package client;
 
 import client.main.Frame;
 import client.main.MainController;
-import fr.utc.onzzer.client.communication.impl.ClientCommunicationController;
+import fr.utc.onzzer.client.common.communication.ClientCommunicationController;
 import fr.utc.onzzer.common.dataclass.ClientModel;
 import fr.utc.onzzer.common.dataclass.User;
 import fr.utc.onzzer.common.dataclass.UserLite;
