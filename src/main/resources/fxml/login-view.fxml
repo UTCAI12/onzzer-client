@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../styles/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.utc.onzzer.client.hmi.main.LoginViewController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../styles/style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <VBox alignment="CENTER" maxWidth="500.0" spacing="15.0" BorderPane.alignment="CENTER">
          <padding>
@@ -34,18 +34,46 @@
          <VBox>
             <Label text="Serveur :" />
             <HBox alignment="TOP_CENTER" spacing="15.0">
-               <TextField fx:id="txtServerIp" promptText="Adresse IP" styleClass="input-light" text="localhost" HBox.hgrow="ALWAYS" />
-               <TextField fx:id="txtServerPort" promptText="Port serveur" styleClass="input-light" text="8000" HBox.hgrow="ALWAYS" />
+               <VBox fx:id="inputGroupIp" maxWidth="1.7976931348623157E308" styleClass="input-group" HBox.hgrow="ALWAYS">
+                  <TextField fx:id="txtServerIp" promptText="Adresse IP" text="localhost" HBox.hgrow="ALWAYS" onKeyTyped="#onIpChange">
+                     <styleClass>
+                        <String fx:value="input" />
+                        <String fx:value="input-light" />
+                     </styleClass>
+                  </TextField>
+                  <Label styleClass="error" text="Adresse invalide." managed="false" visible="false" />
+               </VBox>
+               <VBox fx:id="inputGroupPort" maxWidth="1.7976931348623157E308" styleClass="input-group" HBox.hgrow="ALWAYS">
+                  <TextField fx:id="txtServerPort" maxWidth="1.7976931348623157E308" promptText="Port serveur" text="8000" HBox.hgrow="ALWAYS" onKeyTyped="#onPortChange">
+                     <styleClass>
+                        <String fx:value="input" />
+                        <String fx:value="input-light" />
+                     </styleClass>
+                  </TextField>
+                  <Label styleClass="error" text="Port invalide." managed="false" visible="false" />
+               </VBox>
             </HBox>
          </VBox>
          <Separator prefWidth="200.0" styleClass="separator-dark" />
-         <VBox>
+         <VBox fx:id="inputGroupPseudo" styleClass="input-group">
             <Label text="Pseudo :" />
-            <TextField fx:id="txtUserPseudo" styleClass="input-light" text="ptdr t ki?" />
+            <TextField onKeyTyped="#onLoginChange">
+               <styleClass>
+                  <String fx:value="input" />
+                  <String fx:value="input-light" />
+               </styleClass>
+            </TextField>
+            <Label managed="false" styleClass="error" text="Pseudo invalide." visible="false" />
          </VBox>
-         <VBox>
+         <VBox fx:id="inputGroupPassword" styleClass="input-group">
             <Label text="Mot de passe :" />
-            <PasswordField styleClass="input-light" />
+            <PasswordField onKeyTyped="#onPasswordChange">
+               <styleClass>
+                  <String fx:value="input" />
+                  <String fx:value="input-light" />
+               </styleClass>
+            </PasswordField>
+            <Label managed="false" styleClass="error" text="Mot de passe invalide." visible="false" />
          </VBox>
          <HBox alignment="CENTER">
             <Separator styleClass="separator-dark" HBox.hgrow="ALWAYS" />
@@ -71,6 +99,7 @@
                <String fx:value="submit-button" />
             </styleClass>
          </Button>
+         <Label fx:id="loginError" managed="false" styleClass="error" text="Une erreur est survenue. Veuillez réessayer." visible="false" />
       </VBox>
    </center>
 </BorderPane>
