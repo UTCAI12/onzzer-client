@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class DataUserServicesImpl extends Listenable implements DataUserServices, Serializable {
 
-    private DataRepository dataRepository;
+    private final DataRepository dataRepository;
 
     public DataUserServicesImpl(final DataRepository dataRepository) {
         this.dataRepository = dataRepository;
