@@ -1,9 +1,6 @@
 package fr.utc.onzzer.client.hmi.main;
 
-import fr.utc.onzzer.client.MainClient;
 import fr.utc.onzzer.client.hmi.GlobalController;
-import fr.utc.onzzer.client.hmi.music.services.ViewMusicServices;
-import fr.utc.onzzer.client.hmi.music.services.ViewMusicServicesImpl;
 import javafx.fxml.FXML;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
@@ -68,10 +65,6 @@ public class MainViewController {
         for (String element : filteredList) {
             this.usersList.getItems().add(element);
         }
-        try{
-            new ViewMusicServicesImpl().openSearchTracks(MainClient.getStage().getScene());
-        }catch (Exception e){}
-
 
     }
 
