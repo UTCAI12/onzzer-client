@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="onzzer-client [clean,javafx:run]" type="MavenRunConfiguration" factoryName="Maven" singleton="false" nameIsGenerated="true">
+  <configuration default="false" name="RUN onzzer-client " type="MavenRunConfiguration" factoryName="Maven" singleton="false">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings" />
@@ -10,8 +10,7 @@
           </option>
           <option name="goals">
             <list>
-              <option value="clean" />
-              <option value="javafx:run" />
+              <option value="exec:java" />
             </list>
           </option>
           <option name="pomFileName" />
