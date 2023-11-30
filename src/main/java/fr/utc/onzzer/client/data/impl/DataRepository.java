@@ -4,20 +4,27 @@ import fr.utc.onzzer.common.dataclass.User;
 import fr.utc.onzzer.common.dataclass.UserLite;
 import fr.utc.onzzer.common.dataclass.TrackLite;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 
 public class DataRepository {
 
-    private ArrayList<TrackLite> trackLites;
+    public ArrayList<TrackLite> trackLites = new ArrayList<>();
 
     public HashMap<UserLite, List<TrackLite>> connectedUsers = new HashMap<>();
 
     public User user;
 
-    ArrayList<TrackLite> getTracks(){return this.trackLites;}
+
+    TrackLite getTrackByID(UUID trackId){
+        int track = 0;
+        for (int i =0; i<trackLites.size();i++){
+            if(trackLites.get(i).getId()==trackId){
+                track = i;
+            }
+        }
+        return this.trackLites.get(track);
+    }
 
     HashMap<UserLite, List<TrackLite>> getConnectedUsers() {
         return this.connectedUsers;
@@ -28,26 +35,3 @@ public class DataRepository {
 
 }
 
-/*
-public class DataRepository {
-
-    private User user;
-    private ArrayList<UserLite> connectedUsers;
-    private ArrayList<TrackLite> trackLites;
-
-
-    public DataRepository() {
-        this.connectedUsers = new ArrayList<UserLite>();
-    }
-
-    User getUser() {
-        return this.me;
-    }
-
-    ArrayList<UserLite> getConnectedUsers() {
-        return this.connectedUsers;
-    }
-
-    ArrayList<TrackLite> getTracks(){return this.trackLites;}
-}
-*/
