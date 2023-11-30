@@ -112,7 +112,12 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
     public void setConnectedUsers(List<UserLite> newConnectedUsers) {
         final HashMap<UserLite, List<TrackLite>> connectedUsers = this.dataRepository.getConnectedUsers();
         connectedUsers.clear();
-        connectedUsers.put((UserLite) newConnectedUsers,null);
+
+        for (final UserLite userLite: newConnectedUsers) {
+            connectedUsers.put(userLite, null);
+        }
+
+//        connectedUsers.put((UserLite) newConnectedUsers, null);
 
         // TODO change here, to be able to notify without data OR to notify with an array
         final UserLite u = new UserLite(UUID.randomUUID(), "");
