@@ -30,8 +30,8 @@ public class ClientRequestHandler {
 //        this.dataServicesProvider.getDataTrackServices().addTrack(trackLite);
     }
 
-    void serverStopped() {
-        //TODO disconnect client from server (to be discussed with HMI-Main in order to display a popup)
-        System.out.println("I am executing serverStopped method");
+    void serverStopped(){
+        // TODO a popup should be added to warn the user that the server stopped. To be discussed with HMI-main
+        System.out.println("I am executing serverStopped method.");
     }
 }
