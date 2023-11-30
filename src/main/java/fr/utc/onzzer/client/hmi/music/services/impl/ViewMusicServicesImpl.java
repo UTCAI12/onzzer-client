@@ -1,9 +1,10 @@
-package fr.utc.onzzer.client.hmi.music.services;
+package fr.utc.onzzer.client.hmi.music.services.impl;
 
 import fr.utc.onzzer.client.MainClient;
 import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.client.hmi.main.LoginViewController;
 
+import fr.utc.onzzer.client.hmi.music.services.ViewMusicServices;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
