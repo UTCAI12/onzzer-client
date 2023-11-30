@@ -8,10 +8,7 @@ import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.client.hmi.util.ValidationResult;
 import fr.utc.onzzer.client.hmi.util.ValidationUtil;
-import fr.utc.onzzer.common.dataclass.ModelUpdateTypes;
-import fr.utc.onzzer.common.dataclass.TrackLite;
-import fr.utc.onzzer.common.dataclass.User;
-import fr.utc.onzzer.common.dataclass.UserLite;
+import fr.utc.onzzer.common.dataclass.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -196,10 +193,10 @@ public class LoginViewController {
         // Preparing data to send.
         User user = userServices.getUser();
 
-        UserLite userLite = new UserLite(user.getId(), user.getUsername());
+        UserLite userLite = user.toUserLite();
 
         List<TrackLite> trackLiteList = user.getTrackList().stream()
-                .map(track -> new TrackLite(track.getId(), userLite, "", ""))
+                .map(Track::toTrackLite)
                 .toList();
 
         // Adding a listener to get the result of the connection.
