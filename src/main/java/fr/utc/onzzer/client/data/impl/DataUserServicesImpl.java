@@ -123,6 +123,27 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
     @Override
     public void deleteUser(UserLite userLite) throws Exception {
         this.dataRepository.getConnectedUsers().remove(userLite);
+        // Si le fichier existe dans le dossier profiles alors on le supprime
+        String profilesDirectory = "profiles";
+        File directory = new File(profilesDirectory);
+        if (directory.isDirectory()) {
+            File[] files = directory.listFiles(); // Liste des fichiers du répertoire
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isFile()) {
+                        // Manipulation de chaque fichier
+                        System.out.println("Nom du fichier : " + file.getName());
+                        if (file.getName().equals(userLite.getId() + ".ser")) {
+                            file.delete();
+                        }
+                    }
+                }
+            }
+        }
+        //Si l'utilisateur supprimé est connecté, alors on le déconnecte
+        if (this.dataRepository.getUser().getId().equals(userLite.getId())) {
+            this.dataRepository.user = null;
+        }
         this.notify(userLite, UserLite.class, ModelUpdateTypes.DELETE_USER);
     }
     @Override

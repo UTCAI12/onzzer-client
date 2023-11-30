@@ -86,5 +86,32 @@ public class DataUserServicesTest {
         }
     }
 
+    @Test
+    void testDeleteUser() {
+        // Création d'un nouvel utilisateur pour le test
+        User user = new User(UUID.randomUUID(), "username", "mail", "password");
+
+        try {
+            // Appel de la méthode createProfile avec l'utilisateur créé
+            dataUserServices.createProfile(user);
+        } catch (Exception e) {
+            Assertions.fail("Erreur lors de la création du profil : " + e.getMessage());
+        }
+
+        try {
+            dataUserServices.checkCredentials(user.getUsername(), user.getPassword());
+        }catch (Exception e) {
+            Assertions.fail("Erreur lors de la vérification des identifiants : " + e.getMessage());
+        }
+
+        try {
+            // Appel de la méthode deleteUser avec l'utilisateur créé
+            dataUserServices.deleteUser(user.toUserLite());
+            Assertions.assertNull(dataUserServices.getUser());
+        } catch (Exception e) {
+            Assertions.fail("Erreur lors de la suppression du profil : " + e.getMessage());
+        }
+    }
+
 }
 
