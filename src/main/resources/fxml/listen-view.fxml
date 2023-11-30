@@ -12,7 +12,7 @@
       <HBox alignment="CENTER" layoutX="569.0" layoutY="160.0" prefHeight="40.0" prefWidth="336.0">
          <children>
             <Button fx:id="btnPrevious" mnemonicParsing="false" onAction="#onClickPreviousTrack" text="previous button" />
-            <Button fx:id="btnPlayPause" mnemonicParsing="false" onAction="#onClickPlayPause" text="play pause button" />
+            <Button fx:id="buttonPlayTrack" mnemonicParsing="false" onAction="#onClickPlayPause" text="play pause button" />
             <Button fx:id="btnNext" mnemonicParsing="false" onAction="#onClickNextTrack" text="next button" />
          </children>
       </HBox>
@@ -46,6 +46,6 @@
             <Font size="23.0" />
          </font>
       </Text>
-      <Slider fx:id="sliderTrack" layoutX="83.0" layoutY="40.0" prefHeight="14.0" prefWidth="1313.0" />
+      <Slider fx:id="sliderTrackDuration" layoutX="83.0" layoutY="40.0" prefHeight="14.0" prefWidth="1313.0" />
    </children>
 </Pane>
