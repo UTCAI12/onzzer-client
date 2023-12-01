@@ -8,3 +8,11 @@
 .table-view:focus {
     outline: none;
 }
+
+/* make the list view fully transparent */
+.list-cell {
+    -fx-background-color: transparent;
+}
+.list-view {
+    -fx-background-color: transparent;
+}
