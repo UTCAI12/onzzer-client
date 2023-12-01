@@ -57,6 +57,10 @@ public class MainViewController {
                 this.usersList.getItems().remove(user.getUsername());
             });
         }, UserLite.class, ModelUpdateTypes.DELETE_USER);
+
+        // Removing focus on list view.
+        this.usersList.setMouseTransparent(true);
+        this.usersList.setFocusTraversable(false);
     }
 
     private void refreshUsersList() {
