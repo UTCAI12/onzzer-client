@@ -4,6 +4,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
+<?import javafx.util.Callback?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import java.lang.String?>
 <BorderPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
    <left>
       <VBox alignment="TOP_CENTER" minWidth="250.0" BorderPane.alignment="CENTER">
@@ -45,14 +49,26 @@
          <padding>
             <Insets left="25.0" right="25.0"/>
          </padding>
-         <Label maxWidth="1.7976931348623157E308" text="Utilisateurs"/>
-         <VBox>
-            <TextField fx:id="searchField" promptText="Rechercher..."/>
-            <Button onAction="#handleSearch" text="Rechercher"/>
-         </VBox>
-         <Separator prefWidth="200.0" styleClass="separator-dark"/>
-         <ListView fx:id="usersList" VBox.vgrow="ALWAYS">
-            <VBox.margin>
+         <HBox>
+            <Label maxWidth="1.7976931348623157E308" text="Utilisateurs"/>
+            <Separator maxWidth="10.0"/>
+            <TextField maxWidth="100.0" fx:id="searchField" promptText="Rechercher...">
+               <styleClass>
+                  <String fx:value="-fx-border-height : 1 px" />
+               </styleClass>
+            </TextField>
+            <Separator maxWidth="10.0"/>
+            <Button maxHeight="20" maxWidth="15" onAction="#handleSearch">
+               <graphic>
+                  <ImageView fitHeight="20" fitWidth="15" preserveRatio="true">
+                     <Image url="@../img/icone-loupe-gris.png"/>
+                  </ImageView>
+               </graphic>
+            </Button>
+         </HBox>
+         <Separator  maxWidth="200.0"  styleClass="separator-dark"/>
+         <ListView  style="list-cell" fx:id="usersList" VBox.vgrow="ALWAYS">
+            <VBox.margin >
                <Insets top="25.0"/>
             </VBox.margin>
          </ListView>
