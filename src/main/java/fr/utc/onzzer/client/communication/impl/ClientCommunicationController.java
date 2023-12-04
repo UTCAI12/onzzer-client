@@ -63,6 +63,10 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
             TrackLite trackLite = (TrackLite) message.object;
             this.clientRequestHandler.publishTrack(trackLite);
         });
+        messageHandlers.put(SocketMessagesTypes.SERVER_STOPPED, (message, sender) -> {
+            System.out.println("I have received a SERVER_STOPPED message from server!");
+            this.clientRequestHandler.serverStopped();
+        });
 
         try  {
             this.socket =  new Socket(serverAddress, serverPort);
@@ -108,7 +112,15 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
 
     @Override
     public void downloadTrack(UUID trackId) throws Exception {
-
+        try {
+            // Create a new SocketMessage with the type GET_TRACK and the track's UUID as the object.
+            SocketMessage message = new SocketMessage(SocketMessagesTypes.GET_TRACK, trackId);
+            // Use the clientSocketManager to send the message to the server.
+            this.clientSocketManager.send(message);
+        } catch (Exception e) {
+            // Handle any exceptions that may occur during the process.
+            throw new Exception("Error sending download track request: " + e.getMessage(), e);
+        }
     }
 
     @Override
