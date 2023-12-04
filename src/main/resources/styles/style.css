@@ -17,7 +17,7 @@
 /* primary color controls style */
 .input-primary {
 	-fx-color: -fx-color-purple;
-	-fx-prompt-text-fill: derive(-fx-color-purple,65%);
+	-fx-prompt-text-fill: derive(-fx-color-purple, 65%);
 	-fx-text-fill: -fx-color-purple;
 	-fx-font-weight: bold;
 	-fx-border-width: 1px;

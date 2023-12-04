@@ -1,19 +1,26 @@
 package fr.utc.onzzer.client.hmi.music;
 
+import fr.utc.onzzer.client.MainClient;
+import fr.utc.onzzer.client.data.DataTrackServices;
+import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.client.hmi.component.IconButton;
 import fr.utc.onzzer.common.dataclass.TrackLite;
 import fr.utc.onzzer.common.dataclass.UserLite;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.util.UUID;
 
 public class SearchViewController {
@@ -34,10 +41,18 @@ public class SearchViewController {
     @FXML
     private TableColumn<TrackLite, Void> columnActions;
 
-    private final ObservableList<TrackLite> tracks = FXCollections.observableArrayList();
+    private final GlobalController globalController;
+    private final DataTrackServices dataTrackServices;
+    private ObservableList<TrackLite> tracks;
 
-    public void initialize() {
+    public SearchViewController(GlobalController globalController) {
+        this.globalController = globalController;
+        this.dataTrackServices = globalController.getDataServicesProvider().getDataTrackServices();
+        //this.tracks = FXCollections.observableArrayList(dataTrackServices.getTracks());
+
+        // =============== DEBUG =============== //
         // TODO get all the tracks available on the network and keep it updated
+        tracks = FXCollections.observableArrayList();
         UserLite user = new UserLite(UUID.randomUUID(), "Styx");
         UserLite user2 = new UserLite(UUID.randomUUID(), "Batman");
         tracks.add(new TrackLite(UUID.randomUUID(), user, "Cool title", "Me"));
@@ -45,7 +60,10 @@ public class SearchViewController {
         tracks.add(new TrackLite(UUID.randomUUID(), user, "Best of", "The author !"));
         tracks.add(new TrackLite(UUID.randomUUID(), user2, "Silence 10 hours", "That's me"));
         tracks.add(new TrackLite(UUID.randomUUID(), user2, "YES", "Me"));
+        // =============== DEBUG =============== //
+    }
 
+    public void initialize() {
         // Automatically resize the columns
         tableTracks.widthProperty().addListener((ov, t, t1) -> {
             final int columnNumber = 3;
@@ -94,8 +112,18 @@ public class SearchViewController {
     }
 
     private void onDownloadButtonClick(TrackLite track) {
-        // TODO open the download scene
-        System.out.println("selectedTrack: " + track);
+        try {
+            // Load the download view
+            FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/download-view.fxml"));
+            DownloadViewController downloadViewController = new DownloadViewController(globalController);
+            fxmlLoader.setController(downloadViewController);
+
+            // Set the download view in the scene
+            BorderPane borderPane = (BorderPane) MainClient.getStage().getScene().getRoot();
+            borderPane.setBottom(fxmlLoader.load());
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
     private Callback<TableColumn<TrackLite, Void>, TableCell<TrackLite, Void>> getActionCellFactory() {

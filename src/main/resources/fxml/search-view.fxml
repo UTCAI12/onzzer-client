@@ -31,7 +31,7 @@
                   <String fx:value="input-primary" />
                   <String fx:value="search-field" />
                </styleClass></TextField>
-            <Button mnemonicParsing="false" onAction="#onClearButtonClicked" text="Effacer" />
+            <Button mnemonicParsing="false" onAction="#onClearButtonClicked" styleClass="icon-button" text="Effacer" />
          </children>
       </HBox>
       <TableView fx:id="tableTracks" prefWidth="200.0" VBox.vgrow="ALWAYS">
