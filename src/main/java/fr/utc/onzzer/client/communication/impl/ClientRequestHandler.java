@@ -32,6 +32,6 @@ public class ClientRequestHandler {
 
     void serverStopped(){
         // TODO a popup should be added to warn the user that the server stopped. To be discussed with HMI-main
-        System.out.println("I am executing serverStopped method.");
+        this.dataServicesProvider.getDataUserServices().logOut();
     }
 }
