@@ -84,14 +84,17 @@
             </Label>
             <Separator styleClass="separator-dark" HBox.hgrow="ALWAYS" />
          </HBox>
-         <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="button-light">
-            <graphic>
-               <HBox>
-                  <Label maxWidth="1.7976931348623157E308" text="Importer un fichier" HBox.hgrow="ALWAYS" />
-                  <Label text="+" />
-               </HBox>
-            </graphic>
-         </Button>
+         <VBox styleClass="input-group">
+            <Button fx:id="importButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#onImportButtonClick" styleClass="button-light">
+               <graphic>
+                  <HBox>
+                     <Label maxWidth="1.7976931348623157E308" text="Importer un fichier" HBox.hgrow="ALWAYS" />
+                     <Label text="+" />
+                  </HBox>
+               </graphic>
+            </Button>
+         </VBox>
+         <Label managed="false" styleClass="error" text="Fichier invalide" visible="false" />
          <Button fx:id="loginButton" mnemonicParsing="false" onMouseClicked="#onLoginButtonClick" text="SE CONNECTER">
             <styleClass>
                <String fx:value="rounded" />

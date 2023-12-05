@@ -14,12 +14,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -45,6 +48,9 @@ public class LoginViewController {
 
     @FXML
     private Label loginError;
+
+    @FXML
+    private Button importButton;
 
     @FXML
     private void onRegisterLabelClick() throws IOException {
@@ -185,6 +191,25 @@ public class LoginViewController {
 
             // Showing an error message.
             this.showGlobalError("Une erreur est survenue. Veuillez réessayer.");
+        }
+    }
+
+
+    @FXML
+    private void onImportButtonClick() {
+
+        Node parent = MainClient.getStage().getScene().getRoot();
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Configuration File");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("All Files", "*.*"));
+
+        File selectedFile = fileChooser.showOpenDialog(MainClient.getStage());
+
+        if (selectedFile != null) {
+            String filePath = selectedFile.getAbsolutePath();
+            System.out.println("Selected File: " + filePath);
         }
     }
 
