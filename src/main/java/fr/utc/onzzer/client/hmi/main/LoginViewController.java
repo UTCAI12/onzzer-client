@@ -8,9 +8,7 @@ import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.client.hmi.util.ValidationResult;
 import fr.utc.onzzer.client.hmi.util.ValidationUtil;
-import fr.utc.onzzer.common.dataclass.ModelUpdateTypes;
-import fr.utc.onzzer.common.dataclass.User;
-import fr.utc.onzzer.common.dataclass.UserLite;
+import fr.utc.onzzer.common.dataclass.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,8 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.UUID;
+import java.util.List;
 
 public class LoginViewController {
 
@@ -88,21 +85,18 @@ public class LoginViewController {
     @FXML
     private ValidationResult<String> onIpChange() {
 
-        boolean hasErrors = false;
         String ip = ((TextField) this.inputGroupIp.lookup(".input")).getText();
 
         // Firstname must not be empty or blank.
         if(ip.isEmpty() || ip.isBlank()) {
             ValidationUtil.showError(this.inputGroupIp);
-            hasErrors = true;
+            return new ValidationResult<>("", true);
         }
 
-        // If there is no error, hiding error message.
-        if(!hasErrors) {
-            ValidationUtil.hideErrors(this.inputGroupIp);
-        }
+        // Hiding error message.
+        ValidationUtil.hideErrors(this.inputGroupIp);
 
-        return new ValidationResult<>(ip, hasErrors);
+        return new ValidationResult<>(ip, false);
     }
 
     @FXML
@@ -112,15 +106,13 @@ public class LoginViewController {
         String port = ((TextField) this.inputGroupPort.lookup(".input")).getText();
 
         // Firstname must not be empty or blank.
-        if(port.isEmpty() || port.isBlank()) {
+        if(port.isEmpty() || port.isBlank() || !ValidationUtil.isInt(port)) {
             ValidationUtil.showError(this.inputGroupPort);
-            hasErrors = true;
+            return new ValidationResult<>(-1, true);
         }
 
-        // If there is no error, hiding error message.
-        if(!hasErrors) {
-            ValidationUtil.hideErrors(this.inputGroupPort);
-        }
+        // Hiding error message.
+        ValidationUtil.hideErrors(this.inputGroupPort);
 
         return new ValidationResult<>(Integer.parseInt(port), hasErrors);
     }
@@ -128,21 +120,18 @@ public class LoginViewController {
     @FXML
     private ValidationResult<String> onPasswordChange() {
 
-        boolean hasErrors = false;
         String password = ((PasswordField) this.inputGroupPassword.lookup(".input")).getText();
 
         // Firstname must not be empty or blank.
         if(password.isEmpty() || password.isBlank()) {
             ValidationUtil.showError(this.inputGroupPassword);
-            hasErrors = true;
+            return new ValidationResult<>("", true);
         }
 
-        // If there is no error, hiding error message.
-        if(!hasErrors) {
-            ValidationUtil.hideErrors(this.inputGroupPassword);
-        }
+        // Hiding error message.
+        ValidationUtil.hideErrors(this.inputGroupPassword);
 
-        return new ValidationResult<>(password, hasErrors);
+        return new ValidationResult<>(password, false);
     }
 
     @FXML
@@ -151,6 +140,8 @@ public class LoginViewController {
         Node parent = MainClient.getStage().getScene().getRoot();
 
         // Hiding errors if there are ones.
+        this.hideGlobalError();
+
         ValidationUtil.hideErrors(parent);
 
         // Validating inputs.
@@ -172,45 +163,57 @@ public class LoginViewController {
 
             // Providers.
             ComServicesProvider comServicesProvider = this.controller.getComServicesProvider();
-            ComMainServices comMainServices = comServicesProvider.getComMainServices();
+            ComMainServices comServices = comServicesProvider.getComMainServices();
 
             DataServicesProvider dataServicesProvider = this.controller.getDataServicesProvider();
-            DataUserServices dataUserServices = dataServicesProvider.getDataUserServices();
+            DataUserServices userServices = dataServicesProvider.getDataUserServices();
 
             // Checking credentials.
-            boolean hasCredentialsCorrect = dataUserServices.checkCredentials(login.value(), password.value());
-            hasCredentialsCorrect = true;
+            boolean hasCredentialsCorrect = userServices.checkCredentials(login.value(), password.value());
 
             if(!hasCredentialsCorrect) {
-                this.showError("Identifiants incorrects.");
+                this.showGlobalError("Identifiants incorrects.");
                 return;
             }
 
-            // Adding a listener to get the result of the connection.
-            dataUserServices.addListener(users -> {
-                Platform.runLater(() -> {
-                    try {
-                        this.openMainView();
-                    } catch (IOException exception) {
-                        throw new RuntimeException(exception);
-                    }
-                });
-            }, UserLite.class, ModelUpdateTypes.NEW_USERS);
-
-            // Providers.
-            User user = new User(UUID.randomUUID(), login.value(), "mail", "mdp");
-            UserLite userLite = new UserLite(user.getId(), user.getUsername());
-
-            // Connection to the server.
-            comMainServices.connect(userLite, new ArrayList<>());
+            // Login in the user.
+            this.login(userServices, comServices);
 
         } catch (Exception exception) {
 
             exception.printStackTrace();
 
             // Showing an error message.
-            this.showError("Une erreur est survenue. Veuillez réessayer.");
+            this.showGlobalError("Une erreur est survenue. Veuillez réessayer.");
         }
+    }
+
+    private void login(DataUserServices userServices, ComMainServices comServices) throws Exception {
+
+        // Preparing data to send.
+        User user = userServices.getUser();
+
+        UserLite userLite = user.toUserLite();
+
+        List<TrackLite> trackLiteList = user.getTrackList().stream()
+                .map(Track::toTrackLite)
+                .toList();
+
+        // Adding a listener to get the result of the connection.
+        userServices.addListener(this::onLoginSucceeded, UserLite.class, ModelUpdateTypes.NEW_USERS);
+
+        // Connecting to the server.
+        comServices.connect(userLite, trackLiteList);
+    }
+
+    private void onLoginSucceeded(UserLite user) {
+        Platform.runLater(() -> {
+            try {
+                this.openMainView();
+            } catch (IOException exception) {
+                throw new RuntimeException(exception);
+            }
+        });
     }
 
     private void openMainView() throws IOException {
@@ -227,9 +230,14 @@ public class LoginViewController {
         stage.setScene(scene);
     }
 
-    private void showError(String text) {
+    private void showGlobalError(String text) {
         this.loginError.setText(text);
         this.loginError.setVisible(true);
         this.loginError.setManaged(true);
+    }
+
+    private void hideGlobalError() {
+        this.loginError.setVisible(false);
+        this.loginError.setManaged(false);
     }
 }

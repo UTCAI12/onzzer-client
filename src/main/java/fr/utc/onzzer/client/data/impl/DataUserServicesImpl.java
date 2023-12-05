@@ -18,19 +18,23 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
 
     public DataUserServicesImpl(final DataRepository dataRepository) {
         this.dataRepository = dataRepository;
+        System.out.println("DataUserServicesImpl constructor");
     }
     @Override
     public User importProfile(String filePath) throws Exception {
-        try (FileInputStream fileIn = new FileInputStream(filePath);
-             ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
-
-            User importedUser = (User) objectIn.readObject();
-            System.out.println("Profil de l'utilisateur importé avec succès depuis : " + filePath);
-            return importedUser;
-
+        // Fonction permettant de recuperer un profil utilisateur à partir d'un fichier, de l'ajouter au dosssier profiles et de retourner l'utilisateur correspondant
+        User user = null;
+        try (FileInputStream fileInputStream = new FileInputStream(filePath);
+             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+            Object obj = objectInputStream.readObject();
+            if (obj instanceof User) {
+                user = (User) obj;
+                this.createProfile(user);
+            }
         } catch (Exception ex) {
-            throw new Exception("Erreur lors de l'importation du profil : " + ex.getMessage());
+            throw new Exception("Erreur lors de l'import du profil : " + ex.getMessage());
         }
+        return user;
     }
     @Override
     public void createProfile(User newClient) throws Exception {
@@ -90,7 +94,18 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
 
     @Override
     public void exportProfile(User user, String filePath) throws Exception {
+        // Fonction permettant d'exporter un profil utilisateur dans un fichier
+        if (!(user instanceof Serializable)) {
+            throw new IllegalArgumentException("User object must implement Serializable");
+        }
+        try (FileOutputStream fileOut = new FileOutputStream(filePath);
+             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
 
+            objectOut.writeObject(user); // Écriture de l'objet User sérialisé dans le fichier
+            System.out.println("Le profil de l'utilisateur a été exporté avec succès à l'emplacement : " + filePath);
+        } catch (Exception ex) {
+            throw new Exception("Erreur lors de l'export du profil : " + ex.getMessage());
+        }
     }
     @Override
     public User getUser() throws Exception {
@@ -152,9 +167,56 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
         this.notify(userLite, UserLite.class, ModelUpdateTypes.DELETE_USER);
     }
     @Override
-    public void updateUser(User user) throws Exception {}
-    @Override
-    public void deleteAllUsers() {}
+    public void updateUser(User user) throws Exception {
+        // Récupérer l'utilisateur à modifier dans les fichiers du dossier profiles
+        String profilesDirectory = "profiles";
+        File directory = new File(profilesDirectory);
+        if (directory.isDirectory()) {
+            File[] files = directory.listFiles(); // Liste des fichiers du répertoire
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isFile()) {
+                        // Manipulation de chaque fichier
+                        System.out.println("Nom du fichier : " + file.getName());
+                        if (file.getName().equals(user.getId() + ".ser")) {
+                            // Suppression de l'ancien fichier
+                            file.delete();
+                            // Création du nouveau fichier
+                            this.createProfile(user);
+                            this.dataRepository.user = user;
+                        }
+                    }
+                }
+            }
+        }
 
+    }
+    @Override
+    public void deleteAllUsers() {
+        this.dataRepository.getConnectedUsers().clear();
+        String profilesDirectory = "profiles";
+        File directory = new File(profilesDirectory);
+        if (directory.isDirectory()) {
+            File[] files = directory.listFiles(); // Liste des fichiers du répertoire
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isFile()) {
+                        // Manipulation de chaque fichier
+                        System.out.println("Nom du fichier : " + file.getName());
+                        file.delete();
+                        dataRepository.user = null;
+                    }
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public void logOut() {
+        this.dataRepository.user = null;
+        this.dataRepository.getConnectedUsers().clear();
+        this.dataRepository.tracks.clear();
+    }
 
 }
