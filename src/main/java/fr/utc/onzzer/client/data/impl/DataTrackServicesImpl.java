@@ -6,9 +6,14 @@ import fr.utc.onzzer.common.dataclass.TrackLite;
 import fr.utc.onzzer.common.dataclass.UserLite;
 import fr.utc.onzzer.common.services.Listenable;
 
+
 import java.util.List;
 import java.util.Map;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.UUID;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 
 
@@ -27,6 +32,7 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
     @Override
     public void saveTrack(Track track) throws Exception {
         this.dataRepository.tracks.add(track);
+
         // Ajouter à l'hashmap des tracks par user
         //this.dataRepository.connectedUsers.put(track.getUserId(), track.toTrackLite());
         //on parcours la hashmap pour trouver l'utilisteur

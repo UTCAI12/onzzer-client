@@ -8,6 +8,7 @@ import java.util.UUID;
 import java.util.HashMap;
 import java.util.List;
 
+
 import fr.utc.onzzer.common.dataclass.TrackLite;
 import fr.utc.onzzer.common.dataclass.Track;
 
@@ -19,10 +20,12 @@ import fr.utc.onzzer.common.dataclass.User;
 import fr.utc.onzzer.client.data.impl.DataTrackServicesImpl;
 import fr.utc.onzzer.client.data.impl.DataUserServicesImpl;
 
+
 public class DataTrackServicesTest {
 
     private DataTrackServices dataTrackServices;
     private DataUserServices dataUserServices;
+
 
     @BeforeEach
     void setUp() {
@@ -31,7 +34,6 @@ public class DataTrackServicesTest {
         DataRepository dataRepository = new DataRepository();
         dataTrackServices = new DataTrackServicesImpl(dataRepository);
         dataUserServices = new DataUserServicesImpl(dataRepository);
-
     }
 
     @Test
@@ -46,6 +48,8 @@ public class DataTrackServicesTest {
         }
         // Créez une piste (Track) pour le test
         Track track = new Track(UUID.randomUUID(), user.getId(), "artist", "album");
+        // Créez une piste (Track) pour le test
+        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album");
 
         try {
             // Appelez la méthode saveTrack avec la piste créée
@@ -74,6 +78,7 @@ public class DataTrackServicesTest {
         } catch (Exception e) {
             Assertions.fail("Erreur lors de la suppression de l'utilisateur : " + e.getMessage());
         }
+
     }
 
     @Test
