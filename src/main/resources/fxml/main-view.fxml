@@ -4,7 +4,6 @@
 <?import java.net.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
 <BorderPane id="root-pane" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
@@ -46,24 +45,19 @@
          <padding>
             <Insets left="25.0" right="25.0" />
          </padding>
+         <Label maxWidth="1.7976931348623157E308" text="Utilisateurs" />
+         <Separator styleClass="separator-dark" VBox.vgrow="ALWAYS" />
          <HBox>
-            <Label maxWidth="1.7976931348623157E308" text="Utilisateurs" />
-            <Separator maxWidth="10.0" />
-            <TextField fx:id="searchField" maxWidth="100.0" promptText="Rechercher...">
+            <TextField fx:id="searchField" maxWidth="1.7976931348623157E308" minHeight="-Infinity" onKeyPressed="#handleSearch" prefHeight="30.0" promptText="Rechercher..." HBox.hgrow="ALWAYS">
                <styleClass>
-                  <String fx:value="-fx-border-height : 1 px" />
+                  <String fx:value="input" />
+                  <String fx:value="input-light" />
                </styleClass>
             </TextField>
-            <Separator maxWidth="10.0" />
-            <Button maxHeight="20" maxWidth="15" onAction="#handleSearch">
-               <graphic>
-                  <ImageView fitHeight="20" fitWidth="15" preserveRatio="true">
-                     <Image url="@../img/icone-loupe-gris.png" />
-                  </ImageView>
-               </graphic>
-            </Button>
+            <padding>
+               <Insets top="25.0" />
+            </padding>
          </HBox>
-         <Separator maxWidth="200.0" styleClass="separator-dark" />
          <ListView fx:id="usersList" style="list-cell" VBox.vgrow="ALWAYS">
             <VBox.margin>
                <Insets top="25.0" />

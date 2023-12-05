@@ -8,9 +8,12 @@ import fr.utc.onzzer.common.dataclass.TrackLite;
 import fr.utc.onzzer.common.dataclass.UserLite;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 import java.util.Collection;
 import java.util.List;
@@ -101,7 +104,11 @@ public class MainViewController {
     }
 
     @FXML
-    private void handleSearch() {
+    private void handleSearch(KeyEvent event) {
+
+        if(event.getCode() != KeyCode.ENTER) {
+            return;
+        }
 
         DataServicesProvider dataServicesProvider = this.controller.getDataServicesProvider();
         DataUserServices dataUserServices = dataServicesProvider.getDataUserServices();
