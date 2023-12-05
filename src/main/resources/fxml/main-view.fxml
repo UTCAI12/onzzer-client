@@ -1,45 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import java.net.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import java.net.URL?>
-<?import javafx.util.Callback?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import java.lang.String?>
-<BorderPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+
+<BorderPane id="root-pane" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
    <left>
       <VBox alignment="TOP_CENTER" minWidth="250.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
-            <Insets left="25.0" right="25.0"/>
+            <Insets left="25.0" right="25.0" />
          </BorderPane.margin>
-         <Label maxWidth="1.7976931348623157E308" styleClass="h1" text="Phiphi"/>
-         <Separator styleClass="separator-dark"/>
+         <Label maxWidth="1.7976931348623157E308" styleClass="h1" text="Phiphi" />
+         <Separator styleClass="separator-dark" />
       </VBox>
    </left>
    <center>
-      <VBox alignment="TOP_CENTER"
-            style="-fx-border-width: 1; -fx-border-color: gray; -fx-border-style: hidden solid hidden solid;"
-            BorderPane.alignment="CENTER">
+      <VBox alignment="TOP_CENTER" style="-fx-border-width: 1; -fx-border-color: gray; -fx-border-style: hidden solid hidden solid;" BorderPane.alignment="CENTER">
          <padding>
-            <Insets left="25.0" right="25.0"/>
+            <Insets left="25.0" right="25.0" />
          </padding>
-         <Label styleClass="h1" text="Vos musiques"/>
-         <Separator prefWidth="200.0" styleClass="separator-dark"/>
+         <Label styleClass="h1" text="Vos musiques" />
+         <Separator prefWidth="200.0" styleClass="separator-dark" />
          <TableView>
             <columns>
-               <TableColumn maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="Titre"/>
-               <TableColumn maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="Artiste"/>
-               <TableColumn maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="Album"/>
-               <TableColumn editable="false" prefWidth="-1.0" sortable="false" text="Partagé"/>
-               <TableColumn prefWidth="-1.0" text="Actions"/>
+               <TableColumn maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="Titre" />
+               <TableColumn maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="Artiste" />
+               <TableColumn maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="Album" />
+               <TableColumn editable="false" prefWidth="-1.0" sortable="false" text="Partagé" />
+               <TableColumn prefWidth="-1.0" text="Actions" />
             </columns>
             <VBox.margin>
-               <Insets top="25.0"/>
+               <Insets top="25.0" />
             </VBox.margin>
             <columnResizePolicy>
-               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
             </columnResizePolicy>
          </TableView>
       </VBox>
@@ -47,29 +44,29 @@
    <right>
       <VBox alignment="TOP_CENTER" minWidth="250.0" styleClass="h1" BorderPane.alignment="CENTER">
          <padding>
-            <Insets left="25.0" right="25.0"/>
+            <Insets left="25.0" right="25.0" />
          </padding>
          <HBox>
-            <Label maxWidth="1.7976931348623157E308" text="Utilisateurs"/>
-            <Separator maxWidth="10.0"/>
-            <TextField maxWidth="100.0" fx:id="searchField" promptText="Rechercher...">
+            <Label maxWidth="1.7976931348623157E308" text="Utilisateurs" />
+            <Separator maxWidth="10.0" />
+            <TextField fx:id="searchField" maxWidth="100.0" promptText="Rechercher...">
                <styleClass>
                   <String fx:value="-fx-border-height : 1 px" />
                </styleClass>
             </TextField>
-            <Separator maxWidth="10.0"/>
+            <Separator maxWidth="10.0" />
             <Button maxHeight="20" maxWidth="15" onAction="#handleSearch">
                <graphic>
                   <ImageView fitHeight="20" fitWidth="15" preserveRatio="true">
-                     <Image url="@../img/icone-loupe-gris.png"/>
+                     <Image url="@../img/icone-loupe-gris.png" />
                   </ImageView>
                </graphic>
             </Button>
          </HBox>
-         <Separator  maxWidth="200.0"  styleClass="separator-dark"/>
-         <ListView  style="list-cell" fx:id="usersList" VBox.vgrow="ALWAYS">
-            <VBox.margin >
-               <Insets top="25.0"/>
+         <Separator maxWidth="200.0" styleClass="separator-dark" />
+         <ListView fx:id="usersList" style="list-cell" VBox.vgrow="ALWAYS">
+            <VBox.margin>
+               <Insets top="25.0" />
             </VBox.margin>
          </ListView>
       </VBox>
