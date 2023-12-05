@@ -245,5 +245,34 @@ public class DataUserServicesTest {
         }
     }
 
+    @Test
+    //test de la fonction logout
+    void testLogOut(){
+        // Création d'un nouvel utilisateur pour le test
+        User user1 = new User(UUID.randomUUID(), "username", "mail", "password");
+        User user2 = new User(UUID.randomUUID(), "username2", "mail@testeur_parfait.com", "passpassword");
+        try {
+            // Appel de la méthode createProfile avec l'utilisateur créé
+            dataUserServices.createProfile(user1);
+            dataUserServices.createProfile(user2);
+        } catch (Exception e) {
+            Assertions.fail("Erreur lors de la création du profil : " + e.getMessage());
+        }
+
+        try {
+            dataUserServices.checkCredentials(user1.getUsername(), user1.getPassword());
+            dataUserServices.checkCredentials(user2.getUsername(), user2.getPassword());
+        }catch (Exception e) {
+            Assertions.fail("Erreur lors de la vérification des identifiants : " + e.getMessage());
+        }
+
+        try {
+            dataUserServices.logOut();
+            Assertions.assertNull(dataUserServices.getUser());
+        } catch (Exception e) {
+            Assertions.fail("Erreur lors de la déconnexion : " + e.getMessage());
+        }
+    }
+
 }
 
