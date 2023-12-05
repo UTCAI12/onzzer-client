@@ -47,30 +47,7 @@ public class MainViewController {
         // Refresh the user list with the connected users.
         this.refreshUsersList();
 
-        List<String> yourElementsList = Arrays.asList(
-                "Élément 1", "Élément 2", "Élément 3", "Élément 4", "Élément 5",
-                "Élément 6", "Élément 7", "Élément 8", "Élément 9", "Élément 10",
-                "Élément 11", "Élément 12", "Élément 13", "Élément 14", "Élément 15",
-                "Élément 16", "Élément 17", "Élément 18", "Élément 19", "Élément 20",
-                "Élément 1", "Élément 2", "Élément 3", "Élément 4", "Élément 5",
-                "Élément 6", "Élément 7", "Élément 8", "Élément 9", "Élément 10",
-                "Élément 11", "Élément 12", "Élément 13", "Élément 14", "Élément 15",
-                "Élément 16", "Élément 17", "Élément 18", "Élément 19", "Élément 20",
-                "Élément 1", "Élément 2", "Élément 3", "Élément 4", "Élément 5",
-                "Élément 6", "Élément 7", "Élément 8", "Élément 9", "Élément 10",
-                "Élément 11", "Élément 12", "Élément 13", "Élément 14", "Élément 15",
-                "Élément 16", "Élément 17", "Élément 18", "Élément 19", "Élément 20",
-                "Élément 1", "Élément 2", "Élément 3", "Élément 4", "Élément 5",
-                "Élément 6", "Élément 7", "Élément 8", "Élément 9", "Élément 10",
-                "Élément 11", "Élément 12", "Élément 13", "Élément 14", "Élément 15",
-                "Élément 16", "Élément 17", "Élément 18", "Élément 19", "Élément 20"
-        );
-
-        ObservableList<String> items = this.usersList.getItems();
-
-        items.addAll(yourElementsList);
-
-        /*// Adding a listener to get the new user connected and to add it to the list.
+        // Adding a listener to get the new user connected and to add it to the list.
         dataUserServices.addListener(user -> {
             Platform.runLater(() -> {
                 this.usersList.getItems().add(user.getUsername());
@@ -82,7 +59,7 @@ public class MainViewController {
             Platform.runLater(() -> {
                 this.usersList.getItems().remove(user.getUsername());
             });
-        }, UserLite.class, ModelUpdateTypes.DELETE_USER);*/
+        }, UserLite.class, ModelUpdateTypes.DELETE_USER);
 
         // Removing focus on list view.
         this.usersList.setMouseTransparent(false);
