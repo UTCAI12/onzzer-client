@@ -17,6 +17,11 @@
 
 /* user lists */
 
+#searchField {
+    -fx-font-weight: normal;
+    -fx-prompt-text-fill: gray;
+}
+
 /* make the list view fully transparent */
 .list-cell {
     -fx-background-color: transparent;
