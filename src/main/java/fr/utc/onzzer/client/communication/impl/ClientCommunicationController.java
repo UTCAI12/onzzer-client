@@ -67,6 +67,15 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
             System.out.println("I have received a SERVER_STOPPED message from server!");
             this.clientRequestHandler.serverStopped();
         });
+        messageHandlers.put(SocketMessagesTypes.GET_TRACK, (message, sender) -> {
+            UUID trackId = (UUID) message.object;
+            try {
+                Track track = this.clientRequestHandler.downloadTrack(trackId);
+                this.sendServer(SocketMessagesTypes.DOWNLOAD_TRACK, track);
+            } catch (Exception e) {
+                System.out.println("Can't find the track " + trackId);
+            }
+        });
 
         try  {
             this.socket =  new Socket(serverAddress, serverPort);

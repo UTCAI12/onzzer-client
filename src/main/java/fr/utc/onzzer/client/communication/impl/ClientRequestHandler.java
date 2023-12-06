@@ -2,11 +2,14 @@ package fr.utc.onzzer.client.communication.impl;
 
 import fr.utc.onzzer.client.data.DataServicesProvider;
 import fr.utc.onzzer.common.dataclass.ClientModel;
+import fr.utc.onzzer.common.dataclass.Track;
 import fr.utc.onzzer.common.dataclass.TrackLite;
 import fr.utc.onzzer.common.dataclass.UserLite;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ClientRequestHandler {
     private final DataServicesProvider dataServicesProvider;
@@ -28,6 +31,10 @@ public class ClientRequestHandler {
 
     void publishTrack(final TrackLite trackLite) {
 //        this.dataServicesProvider.getDataTrackServices().addTrack(trackLite);
+    }
+
+    Track downloadTrack(final UUID trackID) throws Exception {
+        return this.dataServicesProvider.getDataTrackServices().getTrack(trackID);
     }
 
     void serverStopped(){
