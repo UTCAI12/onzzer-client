@@ -69,7 +69,7 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
         messageHandlers.put(SocketMessagesTypes.GET_TRACK, (message, sender) -> {
             UUID trackId = (UUID) message.object;
             try {
-                Track track = this.clientRequestHandler.downloadTrack(trackId);
+                Track track = this.clientRequestHandler.getTrack(trackId);
                 this.sendServer(SocketMessagesTypes.DOWNLOAD_TRACK, track);
             } catch (Exception e) {
                 System.out.println("Can't find the track " + trackId);

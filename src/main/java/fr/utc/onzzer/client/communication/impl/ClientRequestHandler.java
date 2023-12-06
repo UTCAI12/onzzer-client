@@ -30,7 +30,7 @@ public class ClientRequestHandler {
 //        this.dataServicesProvider.getDataTrackServices().addTrack(trackLite);
     }
 
-    Track downloadTrack(final UUID trackID) throws Exception {
+    Track getTrack(final UUID trackID) throws Exception {
         return this.dataServicesProvider.getDataTrackServices().getTrack(trackID);
     }
 
