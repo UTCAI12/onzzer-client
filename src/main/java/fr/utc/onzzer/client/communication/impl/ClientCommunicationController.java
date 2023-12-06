@@ -3,7 +3,6 @@ package fr.utc.onzzer.client.communication.impl;
 import fr.utc.onzzer.client.communication.ComMainServices;
 import fr.utc.onzzer.client.communication.ComMusicServices;
 import fr.utc.onzzer.client.data.DataServicesProvider;
-import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.common.dataclass.*;
 import fr.utc.onzzer.common.dataclass.communication.SocketMessage;
 import fr.utc.onzzer.common.dataclass.communication.SocketMessagesTypes;

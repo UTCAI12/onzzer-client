@@ -1,15 +1,10 @@
 package fr.utc.onzzer.client.communication.impl;
 
 import fr.utc.onzzer.client.data.DataServicesProvider;
-import fr.utc.onzzer.common.dataclass.ClientModel;
 import fr.utc.onzzer.common.dataclass.Track;
 import fr.utc.onzzer.common.dataclass.TrackLite;
-import fr.utc.onzzer.common.dataclass.Track;
-import fr.utc.onzzer.common.dataclass.*;
 import fr.utc.onzzer.common.dataclass.UserLite;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
