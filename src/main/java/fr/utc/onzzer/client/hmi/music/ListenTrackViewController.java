@@ -1,8 +1,9 @@
 package fr.utc.onzzer.client.hmi.music;
 
 import fr.utc.onzzer.client.communication.ComMusicServices;
+import fr.utc.onzzer.client.data.DataTrackServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
-import fr.utc.onzzer.common.dataclass.TrackLite;
+import fr.utc.onzzer.common.dataclass.Track;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -13,18 +14,26 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class ListenTrackViewController {
     private final GlobalController controller;
-    private final ComMusicServices services;
+
+    private final DataTrackServices dataTrackServices;
 
 
-    public ListenTrackViewController(GlobalController controller) {
+    public ListenTrackViewController(GlobalController controller, Track track) {
         this.controller = controller;
-        this.services = this.controller.getComServicesProvider().getComMusicServices();
+        this.dataTrackServices = this.controller.getDataServicesProvider().getDataTrackServices();
+
+        this.trackArrayList = this.dataTrackServices.getTracks();
+        this.track = track;
     }
 
-    private TrackLite track;
+    private Track track;
+
+    private ArrayList<Track> trackArrayList;
 
     @FXML
     private Text txtTitle;
@@ -64,6 +73,7 @@ public class ListenTrackViewController {
 
     @FXML
     private void onClickPlayPause() {
+        System.out.println(trackArrayList);
         /*
         if (this.mediaPlayer != null) {
             this.mediaPlayer.stop();
