@@ -12,10 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -35,6 +32,9 @@ public class MainViewController {
     private ListView<String> usersList;
 
     @FXML
+    private Button addMusic;
+
+    @FXML
     private TableView<Track> tableau;
 
     @FXML
@@ -45,26 +45,22 @@ public class MainViewController {
 
     private DataUserServices dataUserServices;
 
-    private DataServicesProvider dataServicesProvider;
-
-
     public MainViewController(GlobalController controller) {
         this.controller = controller;
-        this.colonneTitre = new TableColumn<>();
-        this.colonneAuteur = new TableColumn<>();
-        this.tableau = new TableView<>();
-        this.usersList = new ListView<>();
-        this.searchField = new TextField();
-
     }
 
     public void initialize() {
-        this.dataServicesProvider = this.controller.getDataServicesProvider();
-        this.dataUserServices = dataServicesProvider.getDataUserServices();
         // Initializing the user list.
         this.initializeUserList();
-        // Initializing the music list.
-        this.initializeMusicList();
+    }
+
+    @FXML
+    private void handleAddMusic(ActionEvent event) {
+        try {
+            this.controller.getViewMusicServices().openCreateTrack();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initializeMusicList() {
