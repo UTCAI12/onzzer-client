@@ -34,6 +34,7 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
         } catch (Exception ex) {
             throw new Exception("Erreur lors de l'import du profil : " + ex.getMessage());
         }
+
         return user;
     }
     @Override
@@ -189,6 +190,7 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
                 }
             }
         }
+        this.notify(user, User.class, ModelUpdateTypes.UPDATE_USER);
 
     }
     @Override
@@ -205,6 +207,7 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
                         System.out.println("Nom du fichier : " + file.getName());
                         file.delete();
                         dataRepository.user = null;
+
                     }
                 }
             }
@@ -217,6 +220,7 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
         this.dataRepository.user = null;
         this.dataRepository.getConnectedUsers().clear();
         this.dataRepository.tracks.clear();
+
     }
 
 }

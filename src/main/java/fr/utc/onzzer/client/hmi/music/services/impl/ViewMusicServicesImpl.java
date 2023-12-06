@@ -5,6 +5,7 @@ import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.client.hmi.main.LoginViewController;
 
 import fr.utc.onzzer.client.hmi.music.SearchViewController;
+import fr.utc.onzzer.client.hmi.music.UploadViewController;
 import fr.utc.onzzer.client.hmi.music.services.ViewMusicServices;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -39,8 +40,8 @@ public class ViewMusicServicesImpl implements ViewMusicServices {
 
     @Override
     public void openCreateTrack() throws IOException {
-        LoginViewController controller = new LoginViewController(globalController);
-        openInModal("Nouveau morceau", "/fxml/create-track-view.fxml", controller);
+        UploadViewController controller = new UploadViewController(globalController);
+        openInModal("Nouveau morceau", "/fxml/add_music-view.fxml", controller);
     }
 
     @Override

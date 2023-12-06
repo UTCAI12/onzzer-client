@@ -14,6 +14,7 @@
          </BorderPane.margin>
          <Label maxWidth="1.7976931348623157E308" styleClass="h1" text="Phiphi" />
          <Separator styleClass="separator-dark" />
+         <Button fx:id="addMusic" mnemonicParsing="false" onAction="#handleAddMusic" text="Ajouter une musique" />
       </VBox>
    </left>
    <center>
