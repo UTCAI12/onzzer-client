@@ -1,79 +1,140 @@
 package fr.utc.onzzer.client.hmi.main;
-
+import java.util.Arrays;
+import fr.utc.onzzer.client.data.DataServicesProvider;
+import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
-import javafx.fxml.FXML;
-import javafx.collections.ObservableList;
-import javafx.scene.control.ListView;
-import fr.utc.onzzer.common.dataclass.User;
-import fr.utc.onzzer.common.dataclass.ClientModel;
+import fr.utc.onzzer.common.dataclass.ModelUpdateTypes;
+import fr.utc.onzzer.common.dataclass.Track;
+import fr.utc.onzzer.common.dataclass.TrackLite;
+import fr.utc.onzzer.common.dataclass.UserLite;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class MainViewController {
 
     private final GlobalController controller;
 
-    public MainViewController(GlobalController controller) {
-        this.controller = controller;
-    }
+    @FXML
+    private TextField searchField;
 
     @FXML
     private ListView<String> usersList;
 
+    @FXML
+    private TableView<Track> tableau;
 
     @FXML
-    public TextField searchField;
-
-    private ClientModel model;
-
-    private ObservableList<String> usernamesList = FXCollections.observableArrayList("Ilian", "Clement", "Matthieu");
-
-    // If the model triggers an "NEW_USER" event, call the "updateAllUsers" method
-    //this.model.addListener(newUser -> this.UpdateUsersList(newUser.toString,true), UserLite.class, ModelUpdateTypes.NEW_USER);
-
-    // If the model triggers an "DELETE_USER" event, call the "updateAllUsers" method
-    //this.model.addListener(newUser -> this.UpdateUsersList(newUser.toString,false), UserLite.class, ModelUpdateTypes.DELETE_USER);
-
-
-    private void UpdateUsersList(String user,boolean IsAddUser)
-    {
-        this.usersList.getItems().clear();
-        //this.model.others.forEach(user -> this.usersList.getItems().add(user.getName()));
-
-        if(IsAddUser)
-        {
-            usernamesList.add(user);
-        }
-        else
-        {
-            usernamesList.remove(user);
-        }
-
-        for (String element : usernamesList) {
-            this.usersList.getItems().add(element);
-        }
-    }
+    private TableColumn<Track, String> colonneTitre;
 
     @FXML
-    private void handleSearch()
-    {
-        ObservableList<String> filteredList = usernamesList.filtered(item -> item.toLowerCase().contains(searchField.getText().toLowerCase()));
+    private TableColumn<Track, String> colonneAuteur;
 
-        this.usersList.getItems().clear();
-        // Mettre à jour la liste affichée dans la vue
-        for (String element : filteredList) {
-            this.usersList.getItems().add(element);
-        }
+    private DataUserServices dataUserServices;
 
+    public MainViewController(GlobalController controller) {
+        this.controller = controller;
     }
-
 
     public void initialize() {
-        System.out.println("coucou");
-        for (String element : usernamesList) {
-            this.usersList.getItems().add(element);
+
+        // Initializing the user list.
+        this.initializeUserList();
+    }
+
+    private void initializeMusicList() {
+        colonneTitre.setCellValueFactory(new PropertyValueFactory<>("title"));
+        colonneAuteur.setCellValueFactory(new PropertyValueFactory<>("author"));
+
+        try {
+            ObservableList<Track> tracks = FXCollections.observableArrayList(dataUserServices.getUser().getTrackList());
+            tableau.setItems(tracks);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initializeUserList() {
+
+        DataServicesProvider dataServicesProvider = this.controller.getDataServicesProvider();
+        DataUserServices dataUserServices = dataServicesProvider.getDataUserServices();
+
+        // Refresh the user list with the connected users.
+        this.refreshUsersList();
+
+        // Adding a listener to get the new user connected and to add it to the list.
+        dataUserServices.addListener(user -> {
+            Platform.runLater(() -> {
+                this.usersList.getItems().add(user.getUsername());
+            });
+        }, UserLite.class, ModelUpdateTypes.NEW_USER);
+
+        // Adding a listener to get the user disconnected and remove it from the list.
+        dataUserServices.addListener(user -> {
+            Platform.runLater(() -> {
+                this.usersList.getItems().remove(user.getUsername());
+            });
+        }, UserLite.class, ModelUpdateTypes.DELETE_USER);
+
+        // Removing focus on list view.
+        this.usersList.setMouseTransparent(false);
+        this.usersList.setFocusTraversable(true);
+    }
+
+    private void refreshUsersList() {
+
+        DataServicesProvider dataServicesProvider = this.controller.getDataServicesProvider();
+        DataUserServices dataUserServices = dataServicesProvider.getDataUserServices();
+
+        Map<UserLite, List<TrackLite>> connectedUsers = dataUserServices.getConnectedUsers();
+        Collection<UserLite> users = connectedUsers.keySet();
+
+        ObservableList<String> items = this.usersList.getItems();
+        items.clear();
+
+        users.forEach(user -> items.add(user.getUsername()));
+    }
+
+    @FXML
+    private void handleSearch(KeyEvent event) {
+
+        if(event.getCode() != KeyCode.ENTER) {
+            return;
         }
 
+        DataServicesProvider dataServicesProvider = this.controller.getDataServicesProvider();
+        DataUserServices dataUserServices = dataServicesProvider.getDataUserServices();
+
+        // Filtering the list using the user input.
+        String text = this.searchField.getText().toLowerCase();
+
+        // Refreshing the whole list.
+        if (text.isEmpty()) {
+            this.refreshUsersList();
+            return;
+        }
+
+        // Updating the list.
+        Map<UserLite, List<TrackLite>> users = dataUserServices.getConnectedUsers();
+
+        ObservableList<String> items = this.usersList.getItems();
+        items.clear();
+
+        users.keySet().stream()
+                .filter(user -> user.getUsername().toLowerCase().contains(text))
+                .forEach(user -> items.add(user.getUsername()));
     }
 }

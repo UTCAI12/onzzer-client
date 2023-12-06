@@ -212,5 +212,11 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
 
     }
 
+    @Override
+    public void logOut() {
+        this.dataRepository.user = null;
+        this.dataRepository.getConnectedUsers().clear();
+        this.dataRepository.tracks.clear();
+    }
 
 }

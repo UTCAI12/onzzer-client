@@ -3,11 +3,22 @@ package fr.utc.onzzer.client.data.impl;
 import fr.utc.onzzer.client.data.DataTrackServices;
 import fr.utc.onzzer.common.dataclass.Track;
 import fr.utc.onzzer.common.dataclass.TrackLite;
+import fr.utc.onzzer.common.dataclass.UserLite;
 import fr.utc.onzzer.common.services.Listenable;
 
+
+import java.util.List;
+import java.util.Map;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+
+
+import java.io.File;
+import java.util.ArrayList;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -21,6 +32,16 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
     @Override
     public void saveTrack(Track track) throws Exception {
         this.dataRepository.tracks.add(track);
+
+        // Ajouter à l'hashmap des tracks par user
+        //this.dataRepository.connectedUsers.put(track.getUserId(), track.toTrackLite());
+        //on parcours la hashmap pour trouver l'utilisteur
+        for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
+            if (entry.getKey().getId() == track.getUserId()) {
+                //on ajoute le track à la liste des tracks de l'utilisateur
+                entry.getValue().add(track.toTrackLite());
+            }
+        }
     }
 
     @Override
