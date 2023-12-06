@@ -57,7 +57,7 @@
          <Separator prefWidth="200.0" styleClass="separator-dark" />
          <VBox fx:id="inputGroupPseudo" styleClass="input-group">
             <Label text="Pseudo :" />
-            <TextField onKeyTyped="#onLoginChange">
+            <TextField fx:id="pseudoInput" onKeyTyped="#onLoginChange">
                <styleClass>
                   <String fx:value="input" />
                   <String fx:value="input-light" />
@@ -67,7 +67,7 @@
          </VBox>
          <VBox fx:id="inputGroupPassword" styleClass="input-group">
             <Label text="Mot de passe :" />
-            <PasswordField onKeyTyped="#onPasswordChange">
+            <PasswordField fx:id="passwordInput" onKeyTyped="#onPasswordChange">
                <styleClass>
                   <String fx:value="input" />
                   <String fx:value="input-light" />

@@ -47,6 +47,12 @@ public class LoginViewController {
     private VBox inputGroupPassword;
 
     @FXML
+    private TextField pseudoInput;
+
+    @FXML
+    private TextField passwordInput;
+
+    @FXML
     private Label loginError;
 
     @FXML
@@ -197,7 +203,6 @@ public class LoginViewController {
         }
     }
 
-
     @FXML
     private void onImportButtonClick() {
 
@@ -223,7 +228,12 @@ public class LoginViewController {
         String filePath = selectedFile.getAbsolutePath();
 
         try{
+
             User user = userServices.importProfile(filePath);
+
+            this.pseudoInput.setText(user.getUsername());
+            this.passwordInput.setText(user.getPassword());
+
         } catch (Exception exception){
 
             exception.printStackTrace();
