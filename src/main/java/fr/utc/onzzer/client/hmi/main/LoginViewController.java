@@ -50,6 +50,9 @@ public class LoginViewController {
     private Label loginError;
 
     @FXML
+    private Label importError;
+
+    @FXML
     private Button importButton;
 
     @FXML
@@ -198,10 +201,15 @@ public class LoginViewController {
     @FXML
     private void onImportButtonClick() {
 
+        this.hideImportError();
+
+        DataServicesProvider dataServicesProvider = this.controller.getDataServicesProvider();
+        DataUserServices userServices = dataServicesProvider.getDataUserServices();
+
         Node parent = MainClient.getStage().getScene().getRoot();
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Configuration File");
+        fileChooser.setTitle("Choisir fichier de configuration");
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
 
@@ -209,7 +217,13 @@ public class LoginViewController {
 
         if (selectedFile != null) {
             String filePath = selectedFile.getAbsolutePath();
-            System.out.println("Selected File: " + filePath);
+            try{
+                User user = userServices.importProfile(filePath);
+            } catch (Exception exception){
+                exception.printStackTrace();
+
+                this.showImportError();
+            }
         }
     }
 
@@ -264,5 +278,15 @@ public class LoginViewController {
     private void hideGlobalError() {
         this.loginError.setVisible(false);
         this.loginError.setManaged(false);
+    }
+
+    private void showImportError() {
+        this.importError.setVisible(true);
+        this.importError.setManaged(true);
+    }
+
+    private void hideImportError() {
+        this.importError.setVisible(false);
+        this.importError.setManaged(false);
     }
 }

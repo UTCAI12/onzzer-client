@@ -84,7 +84,7 @@
             </Label>
             <Separator styleClass="separator-dark" HBox.hgrow="ALWAYS" />
          </HBox>
-         <VBox styleClass="input-group">
+         <VBox>
             <Button fx:id="importButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#onImportButtonClick" styleClass="button-light">
                <graphic>
                   <HBox>
@@ -93,8 +93,8 @@
                   </HBox>
                </graphic>
             </Button>
+            <Label  fx:id="importError" managed="false" styleClass="error" text="Fichier invalide" visible="false" />
          </VBox>
-         <Label managed="false" styleClass="error" text="Fichier invalide" visible="false" />
          <Button fx:id="loginButton" mnemonicParsing="false" onMouseClicked="#onLoginButtonClick" text="SE CONNECTER">
             <styleClass>
                <String fx:value="rounded" />
