@@ -122,9 +122,7 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
     public void downloadTrack(UUID trackId) throws Exception {
         try {
             // Create a new SocketMessage with the type GET_TRACK and the track's UUID as the object.
-            SocketMessage message = new SocketMessage(SocketMessagesTypes.GET_TRACK, trackId);
-            // Use the clientSocketManager to send the message to the server.
-            this.clientSocketManager.send(message);
+            this.sendServer(SocketMessagesTypes.GET_TRACK, trackId);
         } catch (Exception e) {
             // Handle any exceptions that may occur during the process.
             throw new Exception("Error sending download track request: " + e.getMessage(), e);
