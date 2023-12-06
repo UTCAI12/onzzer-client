@@ -93,7 +93,3 @@
 .global-footer {
 	-fx-background-color: -fx-color-purple;
 }
-
-.global-footer-text {
-	-fx-text-fill: -fx-color-white;
-}
