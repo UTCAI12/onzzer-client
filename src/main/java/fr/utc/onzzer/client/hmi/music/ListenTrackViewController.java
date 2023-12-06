@@ -10,6 +10,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.text.Text;
 
 import java.io.File;
 
@@ -26,19 +27,19 @@ public class ListenTrackViewController {
     private TrackLite track;
 
     @FXML
-    private TextField txtTitle;
+    private Text txtTitle;
 
     @FXML
-    private TextField txtAuthor;
+    private Text txtAuthor;
 
     @FXML
-    private TextField txtAlbum;
+    private Text txtAlbum;
 
     @FXML
-    private TextField txtCurrentTime;
+    private Text txtCurrentTime;
 
     @FXML
-    private TextField txtTrackDuration;
+    private Text txtTrackDuration;
 
     @FXML
     private Button btnPrevious;
