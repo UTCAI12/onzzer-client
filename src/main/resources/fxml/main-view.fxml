@@ -14,7 +14,19 @@
          </BorderPane.margin>
          <Label maxWidth="1.7976931348623157E308" styleClass="h1" text="Phiphi" />
          <Separator styleClass="separator-dark" />
-         <Button fx:id="addMusic" mnemonicParsing="false" onAction="#handleAddMusic" text="Ajouter une musique" />
+         <HBox>
+            <Button fx:id="addMusic" mnemonicParsing="false" onAction="#handleAddMusic" text="Ajouter une musique">
+               <HBox.margin>
+                  <Insets bottom="10.0" top="10.0" />
+               </HBox.margin></Button>
+         </HBox>
+         <HBox>
+            <Button mnemonicParsing="false" text="Rechercher une musique">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </Button>
+         </HBox>
       </VBox>
    </left>
    <center>
