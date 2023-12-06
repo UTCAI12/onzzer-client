@@ -180,7 +180,7 @@ public class MainController {
 
             // TODO Use a cast here (if Track inherits from TrackLite)
             final Track track = new Track(UUID.randomUUID(), ul.getId(), trackName, "michel");
-            final TrackLite newTrackLite = new TrackLite(track.getId(), ul, trackName, "michel");
+            final TrackLite newTrackLite = new TrackLite(track.getId(), ul.getId(), trackName, "michel");
 
             // adding track to local model
 //            this.dataServicesProvider.getDataTrackServices().addTrack(newTrackLite);

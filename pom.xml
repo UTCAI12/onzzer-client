@@ -14,6 +14,13 @@
         <junit.version>5.9.2</junit.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -39,10 +46,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>fr.utc.onzzer</groupId>
+            <groupId>com.github.UTCAI12</groupId>
             <artifactId>onzzer-common</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
+            <version>dev-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -58,25 +64,19 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.8</version>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
                 <executions>
                     <execution>
-                        <!-- Default configuration for running with: mvn clean javafx:run -->
-                        <id>default-cli</id>
-                        <configuration>
-                            <mainClass>fr.utc.onzzer.client.MainClient
-                            </mainClass>
-                            <launcher>app</launcher>
-                            <jlinkZipName>app</jlinkZipName>
-                            <jlinkImageName>app</jlinkImageName>
-                            <noManPages>true</noManPages>
-                            <stripDebug>true</stripDebug>
-                            <noHeaderFiles>true</noHeaderFiles>
-                        </configuration>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <mainClass>fr.utc.onzzer.client.MainClient</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>

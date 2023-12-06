@@ -12,13 +12,14 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.ConnectException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.BiConsumer;
 
 public class ClientCommunicationController implements ComMainServices, ComMusicServices {
 
     private ClientModel clientModel;
+
+    private final Map<SocketMessagesTypes, BiConsumer<SocketMessage, ClientSocketManager>> messageHandlers;
 
     private final ClientRequestHandler clientRequestHandler;
 
@@ -33,49 +34,59 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
         this.serverPort = serverPort;
         this.clientRequestHandler = new ClientRequestHandler(dataServicesProvider);
 
+        this.messageHandlers = new HashMap<>();
+
+        messageHandlers.put(SocketMessagesTypes.USER_CONNECT, (message, sender) -> {
+            // If type is USER_CONNECT, we can get the object from the message, we know that it's a UserLite, so must be cast into UserLite
+            UserLite userLiteConnected = (UserLite) message.object;
+
+            // call method
+            try {
+                this.clientRequestHandler.userConnect(userLiteConnected);
+            } catch (Exception e) {
+                System.out.println("Can't connect to server");
+            }
+        });
+        messageHandlers.put(SocketMessagesTypes.USER_CONNECTED, (message, sender) -> {
+            ArrayList<UserLite> users = (ArrayList<UserLite>) message.object;
+            this.clientRequestHandler.userConnected(users);
+        });
+        messageHandlers.put(SocketMessagesTypes.USER_DISCONNECT, (message, sender) -> {
+            UserLite userLiteDisconnected = (UserLite) message.object;
+            try {
+                this.clientRequestHandler.userDisconnect(userLiteDisconnected);
+            } catch (Exception e) {
+                System.out.println("Can't connect to server");
+            }
+        });
+        messageHandlers.put(SocketMessagesTypes.PUBLISH_TRACK, (message, sender) -> {
+            TrackLite trackLite = (TrackLite) message.object;
+            this.clientRequestHandler.publishTrack(trackLite);
+        });
+        messageHandlers.put(SocketMessagesTypes.SERVER_STOPPED, (message, sender) -> {
+            System.out.println("I have received a SERVER_STOPPED message from server!");
+            this.clientRequestHandler.serverStopped();
+        });
+
         try  {
             this.socket =  new Socket(serverAddress, serverPort);
             this.clientSocketManager = new ClientSocketManager(this.socket, this);
             this.clientSocketManager.start();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void onMessage(final SocketMessage message, final ClientSocketManager sender) {
-        // TODO replace with a HashMap, check
-        switch (message.messageType) {
-            case USER_CONNECT -> {
-                // If type is USER_CONNECT, we can get the object from the message, we know that it's a UserLite, so must be cast into UserLite
-                UserLite userLiteConnected = (UserLite) message.object;
+        // getting the method associated to the message type
+        BiConsumer<SocketMessage, ClientSocketManager> handler = messageHandlers.get(message.messageType);
 
-                // call method
-                try {
-                    this.clientRequestHandler.userConnect(userLiteConnected);
-                } catch (Exception e) {
-                    System.out.println("Can't connect to server");
-                }
-            }
-            case USER_CONNECTED -> {
-                ArrayList<UserLite> users = (ArrayList<UserLite>) message.object;
-                this.clientRequestHandler.userConnected(users);
-            }
-            case USER_DISCONNECT -> {
-                UserLite userLiteDisconnected = (UserLite) message.object;
-                try {
-                    this.clientRequestHandler.userDisconnect(userLiteDisconnected);
-                } catch (Exception e) {
-                    System.out.println("Can't connect to server");
-                }
-            }
-            case PUBLISH_TRACK -> {
-                TrackLite trackLite = (TrackLite) message.object;
-                this.clientRequestHandler.publishTrack(trackLite);
-            }
-
-            default ->
-                    System.out.println("Unhandled message");
+        if (handler != null) {
+            // if handler is not null, means that a method is defined
+            handler.accept(message, sender);
+        } else {
+            // if handler is null, no function for this message type
+            System.out.println("Unhandled message");
         }
     }
 
@@ -85,7 +96,7 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
     }
 
     @Override
-    public void connect(UserLite user, List<Track> trackList) throws ConnectException {
+    public void connect(UserLite user, List<TrackLite> trackList) throws ConnectException {
         this.sendServer(SocketMessagesTypes.USER_CONNECT, user);
     }
 
@@ -101,7 +112,15 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
 
     @Override
     public void downloadTrack(UUID trackId) throws Exception {
-
+        try {
+            // Create a new SocketMessage with the type GET_TRACK and the track's UUID as the object.
+            SocketMessage message = new SocketMessage(SocketMessagesTypes.GET_TRACK, trackId);
+            // Use the clientSocketManager to send the message to the server.
+            this.clientSocketManager.send(message);
+        } catch (Exception e) {
+            // Handle any exceptions that may occur during the process.
+            throw new Exception("Error sending download track request: " + e.getMessage(), e);
+        }
     }
 
     @Override
