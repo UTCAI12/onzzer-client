@@ -4,6 +4,7 @@ import fr.utc.onzzer.client.communication.ComMusicServices;
 import fr.utc.onzzer.client.data.DataTrackServices;
 import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
+import fr.utc.onzzer.common.dataclass.Track;
 import fr.utc.onzzer.common.dataclass.TrackLite;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,6 +12,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+
+import java.util.UUID;
 
 public class DownloadViewController{
 
@@ -47,11 +50,13 @@ public class DownloadViewController{
         this.downloadError.setManaged(false);
 
         try {
-            services.downloadTrack(track.getId());
+            services.downloadTrack(UUID.randomUUID());
         } catch (Exception exception){
             exception.printStackTrace();
             this.downloadError.setVisible(true);
             this.downloadError.setManaged(true);
+
+            btnDownload.setText("Réessayer");
         }
     }
 }

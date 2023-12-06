@@ -67,6 +67,14 @@
 	-fx-font-weight: bold;
 }
 
+.button-download {
+	-fx-min-height: 30;
+	-fx-min-width: 175;
+	-fx-background-radius: 50;
+	-fx-font-weight: bold;
+	-fx-background-color: -fx-color-white;
+}
+
 .icon-medium {
     -fx-fit-width: 100;
     -fx-fit-height: 100;
