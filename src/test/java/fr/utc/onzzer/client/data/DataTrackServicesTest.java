@@ -49,7 +49,7 @@ public class DataTrackServicesTest {
         // Créez une piste (Track) pour le test
         Track track = new Track(UUID.randomUUID(), user.getId(), "artist", "album");
         // Créez une piste (Track) pour le test
-        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album");
+       // Track track2 = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album");
 
         try {
             // Appelez la méthode saveTrack avec la piste créée
