@@ -201,29 +201,34 @@ public class LoginViewController {
     @FXML
     private void onImportButtonClick() {
 
+        // Hide previous errors.
         this.hideImportError();
 
         DataServicesProvider dataServicesProvider = this.controller.getDataServicesProvider();
         DataUserServices userServices = dataServicesProvider.getDataUserServices();
 
-        Node parent = MainClient.getStage().getScene().getRoot();
-
+        // File selection.
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choisir fichier de configuration");
+        fileChooser.setTitle("Choisir le fichier de profil.");
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("All Files", "*.*"));
+                new FileChooser.ExtensionFilter("Profiles", "*.ser"));
 
         File selectedFile = fileChooser.showOpenDialog(MainClient.getStage());
 
-        if (selectedFile != null) {
-            String filePath = selectedFile.getAbsolutePath();
-            try{
-                User user = userServices.importProfile(filePath);
-            } catch (Exception exception){
-                exception.printStackTrace();
+        if(selectedFile == null) {
+            return;
+        }
 
-                this.showImportError();
-            }
+        // Importing profile.
+        String filePath = selectedFile.getAbsolutePath();
+
+        try{
+            User user = userServices.importProfile(filePath);
+        } catch (Exception exception){
+
+            exception.printStackTrace();
+
+            this.showImportError();
         }
     }
 
