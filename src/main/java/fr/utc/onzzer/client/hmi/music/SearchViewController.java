@@ -12,7 +12,6 @@ import fr.utc.onzzer.common.dataclass.UserLite;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -136,8 +135,7 @@ public class SearchViewController {
         try {
             // Load the download view
             FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/download-view.fxml"));
-            DownloadViewController downloadViewController = new DownloadViewController(globalController);
-            // TODO set the track to download
+            DownloadViewController downloadViewController = new DownloadViewController(globalController, track);
             fxmlLoader.setController(downloadViewController);
 
             // Set the download view in the scene
