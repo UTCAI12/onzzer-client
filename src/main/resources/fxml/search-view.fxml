@@ -14,7 +14,7 @@
    <children>
       <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="h1" text="Recherche" />
       <Separator prefWidth="200.0" styleClass="separator-dark" />
-      <HBox spacing="25.0" VBox.vgrow="NEVER">
+      <HBox alignment="CENTER_LEFT" spacing="25.0" VBox.vgrow="NEVER">
          <children>
             <TextField fx:id="txtTitle" onAction="#onSearchFieldChanged" promptText="Titre">
                <styleClass>
@@ -26,19 +26,19 @@
                   <String fx:value="input-primary" />
                   <String fx:value="search-field" />
                </styleClass></TextField>
-            <TextField fx:id="txtUser" layoutX="159.0" layoutY="10.0" onAction="#onSearchFieldChanged" promptText="Propriétaire">
+            <TextField fx:id="txtAlbum" layoutX="159.0" layoutY="10.0" onAction="#onSearchFieldChanged" promptText="Album">
                <styleClass>
                   <String fx:value="input-primary" />
                   <String fx:value="search-field" />
                </styleClass></TextField>
-            <Button mnemonicParsing="false" onAction="#onClearButtonClicked" styleClass="icon-button" text="Effacer" />
+            <Button mnemonicParsing="false" onAction="#onClearButtonClicked" styleClass="button-light" text="Effacer" />
          </children>
       </HBox>
       <TableView fx:id="tableTracks" prefWidth="200.0" VBox.vgrow="ALWAYS">
          <columns>
             <TableColumn fx:id="columnTitle" prefWidth="100.0" text="Titre" />
             <TableColumn fx:id="columnAuthor" prefWidth="100.0" text="Artiste" />
-            <TableColumn fx:id="columnUser" prefWidth="100.0" text="Propriétaire" />
+            <TableColumn fx:id="columnAlbum" prefWidth="100.0" text="Album" />
             <TableColumn fx:id="columnActions" prefWidth="100.0" text="Actions" />
          </columns>
       </TableView>

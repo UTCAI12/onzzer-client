@@ -2,14 +2,17 @@ package fr.utc.onzzer.client.hmi.music;
 
 import fr.utc.onzzer.client.MainClient;
 import fr.utc.onzzer.client.data.DataTrackServices;
+import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.client.hmi.component.IconButton;
+import fr.utc.onzzer.common.dataclass.ModelUpdateTypes;
 import fr.utc.onzzer.common.dataclass.TrackLite;
 import fr.utc.onzzer.common.dataclass.UserLite;
 
-import javafx.beans.property.SimpleStringProperty;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,7 +32,7 @@ public class SearchViewController {
     @FXML
     private TextField txtAuthor;
     @FXML
-    private TextField txtUser;
+    private TextField txtAlbum;
     @FXML
     private TableView<TrackLite> tableTracks;
     @FXML
@@ -37,7 +40,7 @@ public class SearchViewController {
     @FXML
     private TableColumn<TrackLite, String> columnAuthor;
     @FXML
-    private TableColumn<TrackLite, String> columnUser;
+    private TableColumn<TrackLite, String> columnAlbum;
     @FXML
     private TableColumn<TrackLite, Void> columnActions;
 
@@ -46,21 +49,18 @@ public class SearchViewController {
     private ObservableList<TrackLite> tracks;
 
     public SearchViewController(GlobalController globalController) {
+        // Get the controllers and services
         this.globalController = globalController;
         this.dataTrackServices = globalController.getDataServicesProvider().getDataTrackServices();
-        //this.tracks = FXCollections.observableArrayList(dataTrackServices.getTracks());
+        DataUserServices dataUserServices = globalController.getDataServicesProvider().getDataUserServices();
 
-        // =============== DEBUG =============== //
-        // TODO get all the tracks available on the network and keep it updated
-        tracks = FXCollections.observableArrayList();
-        UserLite user = new UserLite(UUID.randomUUID(), "Styx");
-        UserLite user2 = new UserLite(UUID.randomUUID(), "Batman");
-        tracks.add(new TrackLite(UUID.randomUUID(), user, "Cool title", "Me"));
-        tracks.add(new TrackLite(UUID.randomUUID(), user, "Test music", "Him"));
-        tracks.add(new TrackLite(UUID.randomUUID(), user, "Best of", "The author !"));
-        tracks.add(new TrackLite(UUID.randomUUID(), user2, "Silence 10 hours", "That's me"));
-        tracks.add(new TrackLite(UUID.randomUUID(), user2, "YES", "Me"));
-        // =============== DEBUG =============== //
+        // Adding listeners to know when the users list changes
+        dataUserServices.addListener(user -> {
+            Platform.runLater(this::refreshTrackList);
+        }, UserLite.class, ModelUpdateTypes.NEW_USER);
+        dataUserServices.addListener(user -> {
+            Platform.runLater(this::refreshTrackList);
+        }, UserLite.class, ModelUpdateTypes.DELETE_USER);
     }
 
     public void initialize() {
@@ -70,18 +70,33 @@ public class SearchViewController {
             final int columnActionWidth = 100;
             columnTitle.setPrefWidth((tableTracks.getWidth() - columnActionWidth) / columnNumber);
             columnAuthor.setPrefWidth((tableTracks.getWidth() - columnActionWidth) / columnNumber);
-            columnUser.setPrefWidth((tableTracks.getWidth() - columnActionWidth) / columnNumber);
+            columnAlbum.setPrefWidth((tableTracks.getWidth() - columnActionWidth) / columnNumber);
             columnActions.setPrefWidth(columnActionWidth - 2);
         });
 
         // Set the cell factories
         columnTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         columnAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
-        columnUser.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUser().getUsername()));
+        //columnAlbum.setCellValueFactory(new PropertyValueFactory<>("album"));
         columnActions.setCellFactory(getActionCellFactory());
 
-        // Set the first items
-        tableTracks.setItems(tracks);
+        // Get the current accessible tracks
+        refreshTrackList();
+    }
+
+    private void refreshTrackList() {
+        // Get the tracks that are currently accessible on the network
+        tracks = FXCollections.observableArrayList(dataTrackServices.getTrackLites());
+        // =============== DEBUG =============== //
+        UserLite user = new UserLite(UUID.randomUUID(), "Styx");
+        UserLite user2 = new UserLite(UUID.randomUUID(), "Batman");
+        tracks.add(new TrackLite(UUID.randomUUID(), user.getId(), "Cool title", "Me"));
+        tracks.add(new TrackLite(UUID.randomUUID(), user.getId(), "Test music", "Him"));
+        tracks.add(new TrackLite(UUID.randomUUID(), user.getId(), "Best of", "The author !"));
+        tracks.add(new TrackLite(UUID.randomUUID(), user2.getId(), "Silence 10 hours", "That's me"));
+        tracks.add(new TrackLite(UUID.randomUUID(), user2.getId(), "YES", "Me"));
+        // =============== DEBUG =============== //
+        onSearchFieldChanged();
     }
 
     @FXML
@@ -91,9 +106,15 @@ public class SearchViewController {
         // Remove the tracks if it does not correspond to the filters
         filteredTracks.removeIf(track -> !txtTitle.getText().isBlank() && !track.getTitle().toLowerCase().contains(txtTitle.getText().toLowerCase()));
         filteredTracks.removeIf(track -> !txtAuthor.getText().isBlank() && !track.getAuthor().toLowerCase().contains(txtAuthor.getText().toLowerCase()));
-        filteredTracks.removeIf(track -> !txtUser.getText().isBlank() && !track.getUser().getUsername().toLowerCase().contains(txtUser.getText().toLowerCase()));
+        //filteredTracks.removeIf(track -> !txtAlbum.getText().isBlank() && !track.getAlbum().toLowerCase().contains(txtAlbum.getText().toLowerCase()));
 
-        tableTracks.setItems(filteredTracks);
+        // Update the current items displayed
+        tableTracks.getItems().removeIf(t -> !filteredTracks.contains(t));
+        for (TrackLite track : filteredTracks) {
+            if (!tableTracks.getItems().contains(track)) {
+                tableTracks.getItems().add(track);
+            }
+        }
     }
 
     @FXML
@@ -101,13 +122,13 @@ public class SearchViewController {
         // Stop here if there is nothing to change (avoid useless processes)
         if (txtTitle.getText().isBlank()
                 && txtAuthor.getText().isBlank()
-                && txtUser.getText().isBlank()) {
+                && txtAlbum.getText().isBlank()) {
             return;
         }
 
         txtTitle.setText("");
         txtAuthor.setText("");
-        txtUser.setText("");
+        txtAlbum.setText("");
         onSearchFieldChanged();
     }
 
@@ -116,6 +137,7 @@ public class SearchViewController {
             // Load the download view
             FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/download-view.fxml"));
             DownloadViewController downloadViewController = new DownloadViewController(globalController);
+            // TODO set the track to download
             fxmlLoader.setController(downloadViewController);
 
             // Set the download view in the scene
