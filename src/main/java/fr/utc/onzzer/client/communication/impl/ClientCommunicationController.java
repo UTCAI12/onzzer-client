@@ -3,7 +3,6 @@ package fr.utc.onzzer.client.communication.impl;
 import fr.utc.onzzer.client.communication.ComMainServices;
 import fr.utc.onzzer.client.communication.ComMusicServices;
 import fr.utc.onzzer.client.data.DataServicesProvider;
-import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.common.dataclass.*;
 import fr.utc.onzzer.common.dataclass.communication.SocketMessage;
 import fr.utc.onzzer.common.dataclass.communication.SocketMessagesTypes;
@@ -67,6 +66,15 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
             System.out.println("I have received a SERVER_STOPPED message from server!");
             this.clientRequestHandler.serverStopped();
         });
+        messageHandlers.put(SocketMessagesTypes.GET_TRACK, (message, sender) -> {
+            UUID trackId = (UUID) message.object;
+            try {
+                Track track = this.clientRequestHandler.getTrack(trackId);
+                this.sendServer(SocketMessagesTypes.DOWNLOAD_TRACK, track);
+            } catch (Exception e) {
+                System.out.println("Can't find the track " + trackId);
+            }
+        });
         messageHandlers.put(SocketMessagesTypes.DOWNLOAD_TRACK, (message, sender) -> {
             Track track = (Track) message.object;
             try {
@@ -75,7 +83,6 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
                 throw new RuntimeException(e);
             }
         });
-
         try  {
             this.socket =  new Socket(serverAddress, serverPort);
             this.clientSocketManager = new ClientSocketManager(this.socket, this);
@@ -128,7 +135,6 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
             throw new Exception("Error sending download track request: " + e.getMessage(), e);
         }
     }
-
     @Override
     public void updateTrack(TrackLite track) throws Exception {
 
