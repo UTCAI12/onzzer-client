@@ -1,3 +1,9 @@
+#root-pane {
+    -fx-background-color: white;
+}
+
+/* music table */
+
 .table-view .column-header,
 .table-view .column-header .filler,
 .table-view .column-header-background .filler {
@@ -7,4 +13,19 @@
 
 .table-view:focus {
     outline: none;
+}
+
+/* user lists */
+
+#searchField {
+    -fx-font-weight: normal;
+    -fx-prompt-text-fill: gray;
+}
+
+/* make the list view fully transparent */
+.list-cell {
+    -fx-background-color: transparent;
+}
+.list-view {
+    -fx-background-color: transparent;
 }

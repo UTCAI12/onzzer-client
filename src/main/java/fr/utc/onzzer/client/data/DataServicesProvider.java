@@ -18,7 +18,7 @@ public class DataServicesProvider {
 
         this.dataRepository = new DataRepository();
         this.dataUserServices = new DataUserServicesImpl(this.dataRepository);
-        this.dataTrackServices = new DataTrackServicesImpl(dataRepository); // this.dataRepository en parametre
+        this.dataTrackServices = new DataTrackServicesImpl(this.dataRepository); // this.dataRepository en parametre
         this.dataRatingServices = new DataRatingServicesImpl(); // this.dataRepository en parametre
         this.dataCommentServices = new DataCommentServicesImpl(); // this.dataRepository en parametre
     }

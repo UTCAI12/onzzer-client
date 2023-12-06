@@ -3,6 +3,7 @@
 	-fx-color-white: #FFFFFF;
 	-fx-color-black: #181818;
 	-fx-color-gray: #E8E8E8;
+	-fx-color-dark-gray: #333333;
 	-fx-color-purple: #8A2BE2;
 	-fx-color-purple-background: #E8D5F9;
 	-fx-color-red: #D22D37;
@@ -64,6 +65,12 @@
 	-fx-background-radius: 0;
 }
 
+.list-cell {
+    -fx-text-fill: -fx-color-dark-gray;
+    -fx-font-family: "Arial";
+    -fx-font-size: 14px;
+}
+
 .date-picker.input-light .text-field {
     -fx-control-inner-background: -fx-color-gray;
 }
@@ -97,6 +104,14 @@
 	-fx-font-weight: bold;
 }
 
+.button-download {
+	-fx-min-height: 30;
+	-fx-min-width: 175;
+	-fx-background-radius: 50;
+	-fx-font-weight: bold;
+	-fx-background-color: -fx-color-white;
+}
+
 .icon-medium {
     -fx-fit-width: 100;
     -fx-fit-height: 100;
@@ -110,4 +125,8 @@
 .required {
     -fx-text-fill: -fx-color-red;
     -fx-font-weight: bold;
+}
+
+.global-footer {
+	-fx-background-color: -fx-color-purple;
 }
