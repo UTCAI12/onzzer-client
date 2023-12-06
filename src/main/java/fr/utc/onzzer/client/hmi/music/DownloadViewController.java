@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 
 public class DownloadViewController{
 
@@ -25,13 +26,13 @@ public class DownloadViewController{
     private TrackLite track;
 
     @FXML
-    private TextField txtTitle;
+    private Text txtTitle;
 
     @FXML
-    private TextField txtAuthor;
+    private Text txtAuthor;
 
     @FXML
-    private TextField txtAlbum;
+    private Text txtAlbum;
 
     @FXML
     private Button btnDownload;
