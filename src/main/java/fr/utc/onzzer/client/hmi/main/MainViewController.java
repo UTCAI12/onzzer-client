@@ -4,14 +4,19 @@ import fr.utc.onzzer.client.data.DataServicesProvider;
 import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.common.dataclass.ModelUpdateTypes;
+import fr.utc.onzzer.common.dataclass.Track;
 import fr.utc.onzzer.common.dataclass.TrackLite;
 import fr.utc.onzzer.common.dataclass.UserLite;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
@@ -29,6 +34,17 @@ public class MainViewController {
     @FXML
     private ListView<String> usersList;
 
+    @FXML
+    private TableView<Track> tableau;
+
+    @FXML
+    private TableColumn<Track, String> colonneTitre;
+
+    @FXML
+    private TableColumn<Track, String> colonneAuteur;
+
+    private DataUserServices dataUserServices;
+
     public MainViewController(GlobalController controller) {
         this.controller = controller;
     }
@@ -37,6 +53,18 @@ public class MainViewController {
 
         // Initializing the user list.
         this.initializeUserList();
+    }
+
+    private void initializeMusicList() {
+        colonneTitre.setCellValueFactory(new PropertyValueFactory<>("title"));
+        colonneAuteur.setCellValueFactory(new PropertyValueFactory<>("author"));
+
+        try {
+            ObservableList<Track> tracks = FXCollections.observableArrayList(dataUserServices.getUser().getTrackList());
+            tableau.setItems(tracks);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initializeUserList() {
