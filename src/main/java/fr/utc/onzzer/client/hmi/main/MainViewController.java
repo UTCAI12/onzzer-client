@@ -45,13 +45,25 @@ public class MainViewController {
 
     private DataUserServices dataUserServices;
 
+    private DataServicesProvider dataServicesProvider;
+
     public MainViewController(GlobalController controller) {
         this.controller = controller;
+        this.colonneTitre = new TableColumn<>();
+        this.colonneAuteur = new TableColumn<>();
+        this.tableau = new TableView<>();
+        this.usersList = new ListView<>();
+        this.searchField = new TextField();
     }
 
     public void initialize() {
+        this.dataServicesProvider = this.controller.getDataServicesProvider();
+        this.dataUserServices = dataServicesProvider.getDataUserServices();
+
         // Initializing the user list.
         this.initializeUserList();
+        // Initializing the music list.
+        this.initializeMusicList();
     }
 
     @FXML
@@ -100,9 +112,6 @@ public class MainViewController {
     }
 
     private void refreshUsersList() {
-
-        DataServicesProvider dataServicesProvider = this.controller.getDataServicesProvider();
-        DataUserServices dataUserServices = dataServicesProvider.getDataUserServices();
 
         Map<UserLite, List<TrackLite>> connectedUsers = dataUserServices.getConnectedUsers();
         Collection<UserLite> users = connectedUsers.keySet();
