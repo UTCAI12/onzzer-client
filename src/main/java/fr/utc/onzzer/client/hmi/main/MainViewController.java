@@ -45,14 +45,26 @@ public class MainViewController {
 
     private DataUserServices dataUserServices;
 
+    private DataServicesProvider dataServicesProvider;
+
+
     public MainViewController(GlobalController controller) {
         this.controller = controller;
+        this.colonneTitre = new TableColumn<>();
+        this.colonneAuteur = new TableColumn<>();
+        this.tableau = new TableView<>();
+        this.usersList = new ListView<>();
+        this.searchField = new TextField();
+
     }
 
     public void initialize() {
-
+        this.dataServicesProvider = this.controller.getDataServicesProvider();
+        this.dataUserServices = dataServicesProvider.getDataUserServices();
         // Initializing the user list.
         this.initializeUserList();
+        // Initializing the music list.
+        this.initializeMusicList();
     }
 
     private void initializeMusicList() {
@@ -68,9 +80,6 @@ public class MainViewController {
     }
 
     private void initializeUserList() {
-
-        DataServicesProvider dataServicesProvider = this.controller.getDataServicesProvider();
-        DataUserServices dataUserServices = dataServicesProvider.getDataUserServices();
 
         // Refresh the user list with the connected users.
         this.refreshUsersList();
