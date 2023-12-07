@@ -2,7 +2,6 @@ package fr.utc.onzzer.client.hmi.music;
 import fr.utc.onzzer.client.data.DataTrackServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.common.dataclass.Track;
-import fr.utc.onzzer.common.dataclass.TrackLite;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -78,15 +77,15 @@ public class ListenTrackViewController {
 
     @FXML
     private void onClickPlayPause() {
-        System.out.println(trackArrayList);
+        System.out.println(track);
 
-        /* if (this.mediaPlayer != null) {
+        if (this.mediaPlayer != null) {
             this.mediaPlayer.stop();
         }
 
         final File file;
         try {
-            file = new File(this.track.asMp3File("test"));
+            file = new File(this.track.asMp3File(this.track.getTitle()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -97,11 +96,10 @@ public class ListenTrackViewController {
         this.mediaPlayer.currentTimeProperty().addListener((obs, oldValue, newValue) -> {
             if (this.sound == null)
                 return;
-            this.txtCurrentTime.setText((int) newValue.toSeconds() + "s/");
+            this.txtCurrentTime.setText((int) newValue.toSeconds() + "s");
             this.txtTrackDuration.setText((int) this.sound.getDuration().toSeconds() + "s" );
             this.sliderTrackDuration.setValue((int) ((newValue.toSeconds() / this.sound.getDuration().toSeconds()) * 100) );
         });
-        */
     }
 
     @FXML
