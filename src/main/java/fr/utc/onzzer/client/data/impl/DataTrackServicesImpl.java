@@ -44,7 +44,14 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
         } catch (Exception ex) {
             throw new Exception("Erreur lors de la création du track : " + ex.getMessage());
         }
-
+        // On enregistre également dans le meme dossier un fichier mp3 contenant le track
+        String mp3FilePath = tracksDirectory + File.separator + track.getId() + ".mp3";
+        try (FileOutputStream fileOut = new FileOutputStream(mp3FilePath)) {
+            fileOut.write(track.getAudio());
+            System.out.println("Le track a été créé avec succès à l'emplacement : " + mp3FilePath);
+        } catch (Exception ex) {
+            throw new Exception("Erreur lors de la création du track : " + ex.getMessage());
+        }
         // On enregistre le track dans la liste des tracks
         this.dataRepository.tracks.add(track);
         if(this.dataRepository.user.getId() == track.getUserId()){

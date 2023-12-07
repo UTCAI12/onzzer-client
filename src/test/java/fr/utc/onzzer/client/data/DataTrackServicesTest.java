@@ -34,6 +34,15 @@ public class DataTrackServicesTest {
         DataRepository dataRepository = new DataRepository();
         dataTrackServices = new DataTrackServicesImpl(dataRepository);
         dataUserServices = new DataUserServicesImpl(dataRepository);
+
+        //Créer un utilisateur pour le test
+        User user = new User(UUID.randomUUID(), "usrname", "mail", "pasword");
+        try {
+            dataUserServices.createProfile(user);
+            dataUserServices.checkCredentials(user.getUsername(), user.getPassword());
+        } catch (Exception e) {
+            Assertions.fail("Erreur lors de la création du profil : " + e.getMessage());
+        }
     }
 
     @Test
@@ -215,6 +224,19 @@ public class DataTrackServicesTest {
         try {
             // Appelez la méthode getTrack avec l'UUID de la piste créée
             dataTrackServices.removeAllTracks();
+        } catch (Exception e) {
+            Assertions.fail("Erreur lors de la suppression de la piste : " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testDeleteTrack() {
+        // Créez une piste (Track) pour le test
+        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album", true);
+        try {
+            // Appelez la méthode saveTrack avec la piste créée
+            dataTrackServices.saveTrack(track);
+            dataTrackServices.deleteTrack(track.getId());
         } catch (Exception e) {
             Assertions.fail("Erreur lors de la suppression de la piste : " + e.getMessage());
         }
