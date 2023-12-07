@@ -43,7 +43,6 @@
 
 .icon {
     -fx-background-color: -fx-color-purple;
-
     -fx-min-height: -icon-size;
     -fx-min-width: -icon-size;
     -fx-max-height: -icon-size;
@@ -95,6 +94,7 @@
 
 .button {
 	-fx-cursor: hand;
+	-fx-background-radius: 50;
 }
 
 .submit-button {

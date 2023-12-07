@@ -117,9 +117,7 @@ public class SearchViewController {
     }
 
     @FXML
-    private void onClearButtonClicked() throws IOException {
-
-        globalController.getViewMusicServices().openCreateTrack();
+    private void onClearButtonClicked() {
         // Stop here if there is nothing to change (avoid useless processes)
         if (txtTitle.getText().isBlank()
                 && txtAuthor.getText().isBlank()

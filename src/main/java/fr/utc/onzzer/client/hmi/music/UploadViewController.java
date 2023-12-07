@@ -104,7 +104,7 @@ public class UploadViewController {
 
         User user = this.userServices.getUser();
         UUID trackID = UUID.randomUUID();
-        fr.utc.onzzer.common.dataclass.Track track = new Track(trackID, user.getId(), title, author);
+        fr.utc.onzzer.common.dataclass.Track track = new Track(trackID, user.getId(), title, author, true);
         track.setAudio(file);
         this.trackServices.saveTrack(track);
         Stage stage = MainClient.getStage();
