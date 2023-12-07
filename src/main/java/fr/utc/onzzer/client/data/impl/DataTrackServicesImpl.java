@@ -115,17 +115,15 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
         this.dataRepository.toDownloadTracks.add(uuid);
     }
     @Override
-    public void removeAllTracks() throws Exception {
+    public void removeAllTracks(){
         dataRepository.tracks.clear();
-        for(Track track : dataRepository.downloadedTracks){
-            String tracksDirectory = "tracks";
-            File directory = new File(tracksDirectory);
-            String filePath = tracksDirectory + File.separator + track.getId() + ".mp3";
-            File file = new File(filePath);
-            file.delete();
-        }
-        dataRepository.downloadedTracks.clear();
-
+        this.notify(null, Track.class, ModelUpdateTypes.DELETE_TRACK);
+    }
+    @Override
+    public void deleteTrack(UUID uuid){
+        Track track = this.dataRepository.getTrackByID(uuid);
+        this.dataRepository.tracks.remove(track);
+        this.notify(track, Track.class, ModelUpdateTypes.DELETE_TRACK);
     }
 
     @Override
@@ -135,5 +133,6 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
             this.updateTrack(track);
         } catch (Exception e) {
             e.printStackTrace();
+        }
     }
 }

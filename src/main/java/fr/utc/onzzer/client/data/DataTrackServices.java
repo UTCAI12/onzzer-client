@@ -11,9 +11,9 @@ public interface DataTrackServices {
     void updateTrack(Track track) throws Exception;
     Track getTrack(UUID uuid);
     void addTrackToLibrary(UUID uuid);
-    void removeAllTracks() throws Exception;
+    void removeAllTracks();
     ArrayList<Track> getTracks();
     ArrayList<TrackLite> getTrackLites();
-
     void publishTrack(Track track);
+    void deleteTrack(UUID uuid);
 }
