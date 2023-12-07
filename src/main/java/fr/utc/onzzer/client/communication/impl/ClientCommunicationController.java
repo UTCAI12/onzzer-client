@@ -62,6 +62,9 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
             TrackLite trackLite = (TrackLite) message.object;
             this.clientRequestHandler.publishTrack(trackLite);
         });
+        messageHandlers.put(SocketMessagesTypes.SERVER_PING, (message, sender) -> {
+            this.sendServer(SocketMessagesTypes.USER_PING, null);
+        });
         messageHandlers.put(SocketMessagesTypes.SERVER_STOPPED, (message, sender) -> {
             System.out.println("I have received a SERVER_STOPPED message from server!");
             this.clientRequestHandler.serverStopped();
