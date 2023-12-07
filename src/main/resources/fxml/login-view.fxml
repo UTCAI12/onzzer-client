@@ -57,7 +57,7 @@
          <Separator prefWidth="200.0" styleClass="separator-dark" />
          <VBox fx:id="inputGroupPseudo" styleClass="input-group">
             <Label text="Pseudo :" />
-            <TextField onKeyTyped="#onLoginChange">
+            <TextField fx:id="pseudoInput" onKeyTyped="#onLoginChange">
                <styleClass>
                   <String fx:value="input" />
                   <String fx:value="input-light" />
@@ -67,7 +67,7 @@
          </VBox>
          <VBox fx:id="inputGroupPassword" styleClass="input-group">
             <Label text="Mot de passe :" />
-            <PasswordField onKeyTyped="#onPasswordChange">
+            <PasswordField fx:id="passwordInput" onKeyTyped="#onPasswordChange">
                <styleClass>
                   <String fx:value="input" />
                   <String fx:value="input-light" />
@@ -84,14 +84,17 @@
             </Label>
             <Separator styleClass="separator-dark" HBox.hgrow="ALWAYS" />
          </HBox>
-         <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="button-light">
-            <graphic>
-               <HBox>
-                  <Label maxWidth="1.7976931348623157E308" text="Importer un fichier" HBox.hgrow="ALWAYS" />
-                  <Label text="+" />
-               </HBox>
-            </graphic>
-         </Button>
+         <VBox>
+            <Button fx:id="importButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#onImportButtonClick" styleClass="button-light">
+               <graphic>
+                  <HBox>
+                     <Label maxWidth="1.7976931348623157E308" text="Importer un fichier" HBox.hgrow="ALWAYS" />
+                     <Label text="+" />
+                  </HBox>
+               </graphic>
+            </Button>
+            <Label  fx:id="importError" managed="false" styleClass="error" text="Erreur lors de l'importation du profil." visible="false" />
+         </VBox>
          <Button fx:id="loginButton" mnemonicParsing="false" onMouseClicked="#onLoginButtonClick" text="SE CONNECTER">
             <styleClass>
                <String fx:value="rounded" />
