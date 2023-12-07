@@ -169,13 +169,6 @@ public class LoginViewController {
         // Login.
         try {
 
-            // Initializing controller.
-            this.controller.initialize(ip.value(), port.value());
-
-            // Providers.
-            ComServicesProvider comServicesProvider = this.controller.getComServicesProvider();
-            ComMainServices comServices = comServicesProvider.getComMainServices();
-
             DataServicesProvider dataServicesProvider = this.controller.getDataServicesProvider();
             DataUserServices userServices = dataServicesProvider.getDataUserServices();
 
@@ -186,6 +179,12 @@ public class LoginViewController {
                 this.showGlobalError("Identifiants incorrects.");
                 return;
             }
+
+            // Initializing controller.
+            this.controller.initialize(ip.value(), port.value());
+
+            ComServicesProvider comServicesProvider = this.controller.getComServicesProvider();
+            ComMainServices comServices = comServicesProvider.getComMainServices();
 
             // Login in the user.
             this.login(userServices, comServices);
