@@ -76,7 +76,7 @@ public class SearchViewController {
         // Set the cell factories
         columnTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         columnAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
-        //columnAlbum.setCellValueFactory(new PropertyValueFactory<>("album"));
+        columnAlbum.setCellValueFactory(new PropertyValueFactory<>("album"));
         columnActions.setCellFactory(getActionCellFactory());
 
         // Get the current accessible tracks
@@ -89,11 +89,11 @@ public class SearchViewController {
         // =============== DEBUG =============== //
         UserLite user = new UserLite(UUID.randomUUID(), "Styx");
         UserLite user2 = new UserLite(UUID.randomUUID(), "Batman");
-        tracks.add(new TrackLite(UUID.randomUUID(), user.getId(), "Cool title", "Me"));
-        tracks.add(new TrackLite(UUID.randomUUID(), user.getId(), "Test music", "Him"));
-        tracks.add(new TrackLite(UUID.randomUUID(), user.getId(), "Best of", "The author !"));
-        tracks.add(new TrackLite(UUID.randomUUID(), user2.getId(), "Silence 10 hours", "That's me"));
-        tracks.add(new TrackLite(UUID.randomUUID(), user2.getId(), "YES", "Me"));
+        tracks.add(new TrackLite(UUID.randomUUID(), user.getId(), "Cool title", "Me", "Test"));
+        tracks.add(new TrackLite(UUID.randomUUID(), user.getId(), "Test music", "Him", "Test"));
+        tracks.add(new TrackLite(UUID.randomUUID(), user.getId(), "Best of", "The author !", "Test 76"));
+        tracks.add(new TrackLite(UUID.randomUUID(), user2.getId(), "Silence 10 hours", "That's me", "Test"));
+        tracks.add(new TrackLite(UUID.randomUUID(), user2.getId(), "YES", "Me", "Test 367"));
         // =============== DEBUG =============== //
         onSearchFieldChanged();
     }
@@ -105,7 +105,7 @@ public class SearchViewController {
         // Remove the tracks if it does not correspond to the filters
         filteredTracks.removeIf(track -> !txtTitle.getText().isBlank() && !track.getTitle().toLowerCase().contains(txtTitle.getText().toLowerCase()));
         filteredTracks.removeIf(track -> !txtAuthor.getText().isBlank() && !track.getAuthor().toLowerCase().contains(txtAuthor.getText().toLowerCase()));
-        //filteredTracks.removeIf(track -> !txtAlbum.getText().isBlank() && !track.getAlbum().toLowerCase().contains(txtAlbum.getText().toLowerCase()));
+        filteredTracks.removeIf(track -> !txtAlbum.getText().isBlank() && !track.getAlbum().toLowerCase().contains(txtAlbum.getText().toLowerCase()));
 
         // Update the current items displayed
         tableTracks.getItems().removeIf(t -> !filteredTracks.contains(t));
@@ -117,7 +117,9 @@ public class SearchViewController {
     }
 
     @FXML
-    private void onClearButtonClicked() {
+    private void onClearButtonClicked() throws IOException {
+
+        globalController.getViewMusicServices().openCreateTrack();
         // Stop here if there is nothing to change (avoid useless processes)
         if (txtTitle.getText().isBlank()
                 && txtAuthor.getText().isBlank()
