@@ -48,6 +48,7 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
         // On enregistre le track dans la liste des tracks
         this.dataRepository.tracks.add(track);
         if(this.dataRepository.user.getId() == track.getUserId()){
+            this.dataRepository.user.addTrackToTrackList(track);
             for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
                 if (entry.getKey().getId() == track.getUserId()) {
                     //on ajoute le track à la liste des tracks de l'utilisateur

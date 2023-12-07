@@ -47,7 +47,7 @@ public class DataTrackServicesTest {
             Assertions.fail("Erreur lors de la création du profil : " + e.getMessage());
         }
         // Créez une piste (Track) pour le test
-        Track track = new Track(UUID.randomUUID(), user.getId(), "artist", "album");
+        Track track = new Track(UUID.randomUUID(), user.getId(), "artist", "album", false);
         // Créez une piste (Track) pour le test
        // Track track2 = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album");
 
@@ -84,7 +84,7 @@ public class DataTrackServicesTest {
     @Test
     void testGetTrack() {
         // Créez une piste (Track) pour le test
-        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album");
+        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album", false);
         try {
             // Appelez la méthode saveTrack avec la piste créée
             dataTrackServices.saveTrack(track);
@@ -104,7 +104,7 @@ public class DataTrackServicesTest {
     @Test
     void testGetTrackLites() {
         // Créez une piste (Track) pour le test
-        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album");
+        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album", true);
         try {
             // Appelez la méthode saveTrack avec la piste créée
             dataTrackServices.saveTrack(track);
