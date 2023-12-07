@@ -241,4 +241,17 @@ public class DataTrackServicesTest {
             Assertions.fail("Erreur lors de la suppression de la piste : " + e.getMessage());
         }
     }
+
+    @Test
+    public void testPublishTrack() {
+        // Créez une piste (Track) pour le test
+        Track track = new Track(UUID.randomUUID(), "du texte en musique".getBytes(), UUID.randomUUID() ,"artist", "album", true);
+        try {
+            // Appelez la méthode saveTrack avec la piste créée
+            dataTrackServices.saveTrack(track);
+            dataTrackServices.publishTrack(track);
+        } catch (Exception e) {
+            Assertions.fail("Erreur lors de la publication de la piste : " + e.getMessage());
+        }
+    }
 }
