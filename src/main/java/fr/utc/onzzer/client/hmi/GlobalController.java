@@ -11,11 +11,11 @@ public class GlobalController {
     private ViewMusicServices viewMusicServices;
 
     public GlobalController() {
+        this.dataServicesProvider = new DataServicesProvider();
         this.viewMusicServices = new ViewMusicServicesImpl(this);
     }
 
     public void initialize(String address, int port) {
-        this.dataServicesProvider = new DataServicesProvider();
         this.comServicesProvider = new ComServicesProvider(address, port, this.dataServicesProvider);
     }
 
