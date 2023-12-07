@@ -61,11 +61,26 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
 
     @Override
     public void updateTrack(Track track) throws Exception {
+        //old track
+        Track old_track = this.dataRepository.getTrackByID(track.getId());
         //Si la musique est déjà présente dans la liste des tracks, on la modifie
-        if(this.dataRepository.tracks.contains(track)){
-            this.dataRepository.tracks.remove(track);
+        if(this.dataRepository.tracks.contains(old_track)){
+            this.dataRepository.tracks.remove(old_track);
             this.dataRepository.tracks.add(track);
             this.notify(track, Track.class, ModelUpdateTypes.UPDATE_TRACK);
+            //Si le proprietaire de la musique est l'utilisateur connecté, on modifie la musique dans sa liste de musique
+            if(this.dataRepository.user.getId() == track.getUserId()){
+                List<Track> tracklist = this.dataRepository.user.getTrackList();
+                tracklist.remove(old_track);
+                tracklist.add(track);
+                this.dataRepository.user.setTrackList(tracklist);
+                for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
+                    if (entry.getKey().getId() == track.getUserId()) {
+                        //on ajoute le track à la liste des tracks de l'utilisateur
+                        entry.getValue().add(track.toTrackLite());
+                    }
+                }
+            }
         }else{
             //Si le trackId est présent dans la liste des track à téléchargé, alors on le télécharge
             if(this.dataRepository.toDownloadTracks.contains(track.getId())){
@@ -80,7 +95,7 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
     }
 
     @Override
-    public Track getTrack(UUID uuid) throws Exception {
+    public Track getTrack(UUID uuid){
         return dataRepository.getTrackByID(uuid);
     }
     @Override
@@ -111,5 +126,14 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
         }
         dataRepository.downloadedTracks.clear();
 
+    }
+
+    @Override
+    public void publishTrack(Track track) {
+        track.setPrivateTrack(false);
+        try {
+            this.updateTrack(track);
+        } catch (Exception e) {
+            e.printStackTrace();
     }
 }

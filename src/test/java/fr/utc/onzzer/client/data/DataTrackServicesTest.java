@@ -124,7 +124,7 @@ public class DataTrackServicesTest {
     @Test
     void testUpdateTrack() {
         // Créez une piste (Track) pour le test
-        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album");
+        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album", false);
         try {
             // Appelez la méthode saveTrack avec la piste créée
             dataTrackServices.saveTrack(track);
@@ -141,7 +141,7 @@ public class DataTrackServicesTest {
         }
 
         // Créez une piste (Track) pour le test
-        Track track3 = new Track(track.getId(), UUID.randomUUID(), "artist2", "album2");
+        Track track3 = new Track(track.getId(), UUID.randomUUID(), "artist2", "album2", false);
         try {
             // Appelez la méthode saveTrack avec la piste créée
             dataTrackServices.updateTrack(track3);
@@ -161,7 +161,7 @@ public class DataTrackServicesTest {
     @Test
     void testAddTrackToLibrary() {
         // Créez une piste (Track) pour le test
-        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album");
+        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album", false);
         try {
             // Appelez la méthode saveTrack avec la piste créée
             dataTrackServices.saveTrack(track);
@@ -188,7 +188,7 @@ public class DataTrackServicesTest {
     @Test
     void testRemoveAllTracks() {
         // Créez une piste (Track) pour le test
-        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album");
+        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album", true);
         try {
             // Appelez la méthode saveTrack avec la piste créée
             dataTrackServices.saveTrack(track);
