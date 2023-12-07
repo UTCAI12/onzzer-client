@@ -29,3 +29,22 @@
 .list-view {
     -fx-background-color: transparent;
 }
+
+.button {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-border-color: transparent;
+    -fx-background-radius: 8;
+    -fx-padding: 10 20 ;
+    -fx-font-size: 14px;
+    -fx-alignment: center;
+}
+
+.button:hover {
+    -fx-background-color: #C5A3D1;
+}
+
+.button:pressed {
+    -fx-background-color: #B490C0;
+}
