@@ -2,7 +2,6 @@ package fr.utc.onzzer.client.hmi.music;
 import fr.utc.onzzer.client.data.DataTrackServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.common.dataclass.Track;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
@@ -81,7 +80,6 @@ public class ListenTrackViewController {
 
     @FXML
     private void onClickPlayPause() {
-        System.out.println(track);
 
         if (this.mediaPlayer != null) {
             this.mediaPlayer.stop();
@@ -90,22 +88,26 @@ public class ListenTrackViewController {
         final File file;
         try {
             file = new File(this.track.asMp3File(this.track.getTitle()));
+            System.out.println(file);
+
+            if (this.track.getTitle() != null) this.txtTitle.setText(this.track.getTitle());
+            if (this.track.getAuthor() != null) this.txtAuthor.setText(this.track.getAuthor());
+            if (this.track.getAlbum() != null) this.txtAlbum.setText(this.track.getAlbum());
+            this.sound = new Media(file.toURI().toString());
+            this.mediaPlayer = new MediaPlayer(sound);
+
+            System.out.println(mediaPlayer);
+
+            this.mediaPlayer.currentTimeProperty().addListener((obs, oldValue, newValue) -> {
+                if (this.sound == null)
+                    return;
+                this.txtCurrentTime.setText((int) newValue.toSeconds() + "s");
+                this.txtTrackDuration.setText((int) this.sound.getDuration().toSeconds() + "s" );
+                this.sliderTrackDuration.setValue((int) ((newValue.toSeconds() / this.sound.getDuration().toSeconds()) * 100) );
+            });
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if (this.track.getTitle() != null) this.txtTitle.setText(this.track.getTitle());
-        if (this.track.getAuthor() != null) this.txtAuthor.setText(this.track.getAuthor());
-        if (this.track.getAlbum() != null) this.txtAlbum.setText(this.track.getAlbum());
-        this.sound = new Media(file.toURI().toString());
-        this.mediaPlayer = new MediaPlayer(sound);
-
-        this.mediaPlayer.currentTimeProperty().addListener((obs, oldValue, newValue) -> {
-            if (this.sound == null)
-                return;
-            this.txtCurrentTime.setText((int) newValue.toSeconds() + "s");
-            this.txtTrackDuration.setText((int) this.sound.getDuration().toSeconds() + "s" );
-            this.sliderTrackDuration.setValue((int) ((newValue.toSeconds() / this.sound.getDuration().toSeconds()) * 100) );
-        });
     }
 
     @FXML
