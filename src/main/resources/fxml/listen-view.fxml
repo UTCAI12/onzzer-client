@@ -15,7 +15,7 @@
                <Text fx:id="txtCurrentTime" fill="WHITE" text="-" />
                <Text fx:id="txtTrackDuration" fill="WHITE" text="-" />
             </HBox>
-            <Slider fx:id="sliderTrackDuration" prefHeight="14.0" prefWidth="1000.0" />
+            <Slider fx:id="sliderTrackDuration" prefHeight="14.0" prefWidth="1000.0" onMouseReleased="#onSliderReleased"/>
          </VBox>
          <VBox alignment="CENTER" spacing="20">
             <VBox alignment="CENTER" spacing="10">
