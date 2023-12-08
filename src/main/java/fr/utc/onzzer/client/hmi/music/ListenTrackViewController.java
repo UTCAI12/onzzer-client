@@ -68,11 +68,15 @@ public class ListenTrackViewController {
     private Media sound;
 
     @FXML
-    public void onClickPreviousTrack(ActionEvent actionEvent) {
+    public void onClickPreviousTrack() {
         if (trackIndex > 0) {
             trackIndex--;
             loadTrackAtIndex(trackIndex);
+        } else {
+            loadTrackAtIndex(trackArrayList.size() - 1);
         }
+
+        this.onClickPlayPause();
     }
 
     @FXML
@@ -105,11 +109,15 @@ public class ListenTrackViewController {
     }
 
     @FXML
-    public void onClickNextTrack(ActionEvent actionEvent) {
+    public void onClickNextTrack() {
         if (trackIndex < trackArrayList.size() - 1) {
             trackIndex++;
             loadTrackAtIndex(trackIndex);
+        } else {
+            loadTrackAtIndex(0);
         }
+
+        this.onClickPlayPause();
     }
 
     private void loadTrackAtIndex(int index) {
