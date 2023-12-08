@@ -89,7 +89,9 @@ public class ListenTrackViewController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        this.txtTitle.setText(file.getName());
+        if (this.track.getTitle() != null) this.txtTitle.setText(this.track.getTitle());
+        if (this.track.getAuthor() != null) this.txtAuthor.setText(this.track.getAuthor());
+        if (this.track.getAlbum() != null) this.txtAlbum.setText(this.track.getAlbum());
         this.sound = new Media(file.toURI().toString());
         this.mediaPlayer = new MediaPlayer(sound);
 
