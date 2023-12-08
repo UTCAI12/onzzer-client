@@ -6,7 +6,7 @@ import fr.utc.onzzer.client.hmi.music.services.ViewMusicServices;
 import fr.utc.onzzer.client.hmi.music.services.impl.ViewMusicServicesImpl;
 
 public class GlobalController {
-    private DataServicesProvider dataServicesProvider = new DataServicesProvider();
+    private final DataServicesProvider dataServicesProvider;
     private ComServicesProvider comServicesProvider;
     private ViewMusicServices viewMusicServices;
 
