@@ -62,6 +62,14 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
             TrackLite trackLite = (TrackLite) message.object;
             this.clientRequestHandler.publishTrack(trackLite);
         });
+        messageHandlers.put(SocketMessagesTypes.PUBLISH_RATING, (message, sender) -> {
+            HashMap rating = (HashMap) message.object;
+            try {
+                this.clientRequestHandler.publishRating(rating);
+            } catch (Exception e) {
+                System.out.println("Error while processing rating: " + e.getMessage());
+            }
+        });
         messageHandlers.put(SocketMessagesTypes.SERVER_PING, (message, sender) -> {
             this.sendServer(SocketMessagesTypes.USER_PING, null);
         });
@@ -155,7 +163,14 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
 
     @Override
     public void addRating(UUID trackId, Rating rating) throws Exception {
-
+        HashMap tmp = new HashMap();
+        tmp.put(1, trackId);
+        tmp.put(2, rating);
+        try {
+            this.sendServer(SocketMessagesTypes.PUBLISH_RATING, tmp);
+        } catch (Exception e){
+            throw new Exception("Error sending publish rating request: " + e.getMessage(), e);
+        }
     }
 
     @Override
