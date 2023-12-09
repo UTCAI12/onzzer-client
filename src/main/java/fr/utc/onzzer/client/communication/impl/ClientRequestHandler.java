@@ -7,6 +7,7 @@ import fr.utc.onzzer.common.dataclass.TrackLite;
 import fr.utc.onzzer.common.dataclass.UserLite;
 
 import java.security.spec.ECField;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -33,10 +34,8 @@ public class ClientRequestHandler {
 //        this.dataServicesProvider.getDataTrackServices().addTrack(trackLite);
     }
 
-    void publishRating(final HashMap rating) throws Exception {
-        this.dataServicesProvider.getDataRatingServices().addRating((UUID) rating.get(1), (Rating) rating.get(2));
-
-        System.out.println("THE RATING VALUE IS: " + ((Rating) rating.get(2)).getValue());
+    void publishRating(final ArrayList<Object> rating) throws Exception {
+        this.dataServicesProvider.getDataRatingServices().addRating((UUID) rating.get(0), (Rating) rating.get(1));
     }
 
     Track getTrack(final UUID trackID) throws Exception {

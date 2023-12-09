@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.sql.Array;
 import java.util.*;
 import java.util.function.BiConsumer;
 
@@ -63,7 +64,7 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
             this.clientRequestHandler.publishTrack(trackLite);
         });
         messageHandlers.put(SocketMessagesTypes.PUBLISH_RATING, (message, sender) -> {
-            HashMap rating = (HashMap) message.object;
+            ArrayList<Object> rating = (ArrayList<Object>) message.object;
             try {
                 this.clientRequestHandler.publishRating(rating);
             } catch (Exception e) {
@@ -163,11 +164,11 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
 
     @Override
     public void addRating(UUID trackId, Rating rating) throws Exception {
-        HashMap tmp = new HashMap();
-        tmp.put(1, trackId);
-        tmp.put(2, rating);
+        ArrayList<Object> ratingDto = new ArrayList<Object>();
+        ratingDto.add(trackId);
+        ratingDto.add(rating);
         try {
-            this.sendServer(SocketMessagesTypes.PUBLISH_RATING, tmp);
+            this.sendServer(SocketMessagesTypes.PUBLISH_RATING, ratingDto);
         } catch (Exception e){
             throw new Exception("Error sending publish rating request: " + e.getMessage(), e);
         }
