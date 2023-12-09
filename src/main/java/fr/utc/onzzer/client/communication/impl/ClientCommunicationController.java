@@ -140,17 +140,32 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
     }
     @Override
     public void updateTrack(TrackLite track) throws Exception {
-
+        try {
+            this.sendServer(SocketMessagesTypes.UPDATE_TRACK, track);
+        } catch (Exception e) {
+            // Handle any exceptions that may occur during the process.
+            throw new Exception("Error sending track: " + e.getMessage(), e);
+        }
     }
 
     @Override
     public void publishTrack(TrackLite track) throws Exception {
-
+        try {
+            this.sendServer(SocketMessagesTypes.PUBLISH_TRACK, track);
+        } catch (Exception e) {
+            // Handle any exceptions that may occur during the process.
+            throw new Exception("Error sending track: " + e.getMessage(), e);
+        }
     }
 
     @Override
     public void unpublishTrack(TrackLite track) throws Exception {
-
+        try {
+            this.sendServer(SocketMessagesTypes.UNPUBLISH_TRACK, track);
+        } catch (Exception e) {
+            // Handle any exceptions that may occur during the process.
+            throw new Exception("Error sending track: " + e.getMessage(), e);
+        }
     }
 
     @Override
