@@ -131,13 +131,14 @@ public class MainViewController {
         columnAlbum.setCellValueFactory(new PropertyValueFactory<>("album"));
         columnActions.setCellFactory(getActionCellFactory());
 
-
-        final int columnNumber = 4;
-        final int columnActionWidth = 100;
-        columnTitle.setPrefWidth((musicsList.getWidth() - columnActionWidth) / columnNumber);
-        columnAuthor.setPrefWidth((musicsList.getWidth() - columnActionWidth) / columnNumber);
-        columnAlbum.setPrefWidth((musicsList.getWidth() - columnActionWidth) / columnNumber);
-        columnActions.setPrefWidth(columnActionWidth - 2);
+        this.musicsList.widthProperty().addListener((ov, t, t1) -> {
+            final int columnNumber = 4;
+            final int columnActionWidth = 100;
+            columnTitle.setPrefWidth((musicsList.getWidth() - columnActionWidth) / columnNumber);
+            columnAuthor.setPrefWidth((musicsList.getWidth() - columnActionWidth) / columnNumber);
+            columnAlbum.setPrefWidth((musicsList.getWidth() - columnActionWidth) / columnNumber);
+            columnActions.setPrefWidth(columnActionWidth - 2);
+        });
 
 
         try {
@@ -146,6 +147,8 @@ public class MainViewController {
             {
                 tracks.add(track.toTrackLite());
             }
+
+            tracks.add(new TrackLite(UUID.randomUUID(), UUID.randomUUID(), "title", "author", "author"));
 
 
             musicsList.setItems(tracks);

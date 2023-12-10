@@ -5,9 +5,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
 
-<?import javafx.scene.control.skin.TabPaneSkin.TabControlButtons?>
 <BorderPane id="root-pane" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
    <left>
       <VBox alignment="TOP_CENTER" minWidth="250.0" BorderPane.alignment="CENTER">
@@ -47,9 +45,9 @@
          <Separator prefWidth="200.0" styleClass="separator-dark" />
          <TableView fx:id="musicsList">
             <columns>
-               <TableColumn fx:id="columnTitle" maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="Titre"/>
-               <TableColumn fx:id="columAuthor" maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="Artiste"/>
-               <TableColumn fx:id="columnAlbum" maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="Album"/>
+               <TableColumn fx:id="columnTitle" prefWidth="100.0" text="Titre" />
+               <TableColumn fx:id="columnAuthor" prefWidth="100.0" text="Artiste" />
+               <TableColumn fx:id="columnAlbum" prefWidth="100.0" text="Album" />
                <TableColumn fx:id="columnActions" prefWidth="100.0" text="Actions" />
             </columns>
             <VBox.margin>
