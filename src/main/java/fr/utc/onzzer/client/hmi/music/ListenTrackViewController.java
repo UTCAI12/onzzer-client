@@ -68,6 +68,73 @@ public class ListenTrackViewController {
 
     private Media sound;
 
+    private boolean isUserChangingSlider = false;
+
+    private void initializeTrack() {
+        File file = null;
+        try {
+            file = new File(this.track.asMp3File());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        this.txtTitle.setText(this.track.getTitle() == null ? "No Title" : this.track.getTitle());
+        this.txtAuthor.setText(this.track.getAuthor() == null ? "No Author" : this.track.getAuthor());
+        this.txtAlbum.setText(this.track.getAlbum() == null ? "No Album" : this.track.getAlbum());
+
+        this.sound = new Media(file.toURI().toString());
+        this.mediaPlayer = new MediaPlayer(sound);
+
+        if (this.mediaPlayer.getStatus() == MediaPlayer.Status.UNKNOWN) {
+            this.mediaPlayer.statusProperty().addListener((obs, oldStatus, newStatus) -> {
+                if (newStatus == MediaPlayer.Status.READY) {
+                    initializeMedia();
+                }
+            });
+        } else {
+            initializeMedia();
+        }
+    }
+
+    private void initializeMedia() {
+        if (this.mediaPlayer.getStatus() != MediaPlayer.Status.READY)
+            throw new RuntimeException("The media player is not ready");
+
+        this.sliderTrackDuration.setMax(this.mediaPlayer.getTotalDuration().toMillis());
+
+        this.mediaPlayer.currentTimeProperty().addListener((observable, oldTime, newTime) -> {
+            if (!isUserChangingSlider) {
+                this.sliderTrackDuration.setValue(newTime.toMillis());
+            }
+
+            this.txtCurrentTime.setText((int) newTime.toSeconds() + "s");
+            this.txtTrackDuration.setText((int) this.sound.getDuration().toSeconds() + "s" );
+        });
+
+        this.mediaPlayer.setOnEndOfMedia(() -> {
+            onClickNextTrack();
+        });
+
+        this.mediaPlayer.play();
+    }
+
+    @FXML
+    public void initialize() {
+        sliderTrackDuration.setMin(0);
+        sliderTrackDuration.setValue(0);
+
+        this.sliderTrackDuration.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (isUserChangingSlider && this.mediaPlayer != null) {
+                this.mediaPlayer.seek(Duration.millis(newValue.doubleValue()));
+            }
+        });
+
+        this.sliderTrackDuration.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> isUserChangingSlider = true);
+        this.sliderTrackDuration.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> isUserChangingSlider = false);
+
+        initializeTrack();
+    }
+
     @FXML
     public void onClickPreviousTrack() {
         if (trackIndex > 0) {
@@ -80,41 +147,10 @@ public class ListenTrackViewController {
 
     @FXML
     private void onClickPlayPause() {
-        final File file;
-        try {
-            System.out.println(this.mediaPlayer);
-            file = new File(this.track.asMp3File(this.track.getTitle()));
-
-            if (this.track.getTitle() != null) this.txtTitle.setText(this.track.getTitle());
-            if (this.track.getAuthor() != null) this.txtAuthor.setText(this.track.getAuthor());
-            if (this.track.getAlbum() != null) this.txtAlbum.setText(this.track.getAlbum());
-
-            this.sound = new Media(file.toURI().toString());
-
-            System.out.println(mediaPlayer);
-            if (this.mediaPlayer == null) {
-                this.mediaPlayer = new MediaPlayer(sound);
-                this.mediaPlayer.setOnEndOfMedia(() -> {
-                    onClickNextTrack();
-                });
-                this.mediaPlayer.play();
-            } else {
-                if (this.mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED) {
-                    this.mediaPlayer.play();
-                } else if (this.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
-                    this.mediaPlayer.pause();
-                }
-            }
-            this.mediaPlayer.currentTimeProperty().addListener((obs, oldValue, newValue) -> {
-                if (this.sound == null)
-                    return;
-                System.out.println(newValue);
-                this.txtCurrentTime.setText((int) newValue.toSeconds() + "s");
-                this.txtTrackDuration.setText((int) this.sound.getDuration().toSeconds() + "s" );
-                this.sliderTrackDuration.setValue((int) ((newValue.toSeconds() / this.sound.getDuration().toSeconds()) * 100) );
-            });
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (this.mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED) {
+            this.mediaPlayer.play();
+        } else if (this.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            this.mediaPlayer.pause();
         }
     }
 
@@ -128,19 +164,12 @@ public class ListenTrackViewController {
         }
     }
 
-    @FXML
-    private void onSliderReleased(MouseEvent event) {
-        if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
-            double seekTime = (sliderTrackDuration.getValue() / 100) * sound.getDuration().toSeconds();
-            mediaPlayer.seek(Duration.seconds(seekTime));
-        }
-    }
-
     private void loadTrackAtIndex(int index) {
         this.mediaPlayer.stop();
         this.mediaPlayer = null;
         track = trackArrayList.get(index);
         trackIndex = index;
-        this.onClickPlayPause();
+
+        initializeTrack();
     }
 }
