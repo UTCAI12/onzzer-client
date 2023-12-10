@@ -1,32 +1,30 @@
 package fr.utc.onzzer.client.hmi.main;
-import java.io.IOException;
-import java.util.*;
 
 import fr.utc.onzzer.client.MainClient;
 import fr.utc.onzzer.client.data.DataServicesProvider;
 import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.client.hmi.component.IconButton;
-import fr.utc.onzzer.client.hmi.music.DownloadViewController;
-import fr.utc.onzzer.common.dataclass.ModelUpdateTypes;
-import fr.utc.onzzer.common.dataclass.Track;
-import fr.utc.onzzer.common.dataclass.TrackLite;
-import fr.utc.onzzer.common.dataclass.UserLite;
-import fr.utc.onzzer.common.dataclass.User;
+import fr.utc.onzzer.common.dataclass.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class MainViewController {
 
@@ -83,6 +81,7 @@ public class MainViewController {
     }
 
     public void initialize() {
+
         this.dataServicesProvider = this.controller.getDataServicesProvider();
         this.dataUserServices = dataServicesProvider.getDataUserServices();
 
@@ -126,35 +125,53 @@ public class MainViewController {
     }
 
     private void initializeMusicList() {
+
+        // Prevent columns from being reordered and resized.
+        this.musicsList.getColumns().forEach(column -> {
+            column.setResizable(false);
+            column.setReorderable(false);
+        });
+
+        // Specifying values.
         columnTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         columnAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
         columnAlbum.setCellValueFactory(new PropertyValueFactory<>("album"));
         columnActions.setCellFactory(getActionCellFactory());
 
+        // Make the table responsive.
         this.musicsList.widthProperty().addListener((ov, t, t1) -> {
-            final int columnNumber = 4;
-            final int columnActionWidth = 100;
-            columnTitle.setPrefWidth((musicsList.getWidth() - columnActionWidth) / columnNumber);
-            columnAuthor.setPrefWidth((musicsList.getWidth() - columnActionWidth) / columnNumber);
-            columnAlbum.setPrefWidth((musicsList.getWidth() - columnActionWidth) / columnNumber);
-            columnActions.setPrefWidth(columnActionWidth - 2);
+
+            int columns = this.musicsList.getColumns().size();
+            int width = (int) ((this.musicsList.getWidth() / columns) * 0.95);
+
+            columnTitle.setPrefWidth(width);
+            columnAuthor.setPrefWidth(width);
+            columnAlbum.setPrefWidth(width);
+            columnActions.setPrefWidth(width);
         });
 
+        // Refresh the whole list.
+        this.refreshMusicList();
+    }
+
+    private void refreshMusicList() {
 
         try {
-            ObservableList<TrackLite> tracks = FXCollections.observableArrayList();
-            for(Track track : dataUserServices.getUser().getTrackList())
-            {
-                tracks.add(track.toTrackLite());
+
+            ObservableList<TrackLite> items = this.musicsList.getItems();
+            items.clear();
+
+            // Adding tracks to the list.
+            List<Track> tracks = dataUserServices.getUser().getTrackList();
+            tracks.stream().map(Track::toTrackLite).forEach(items::add);
+
+            // TODO : To remove.
+            for(int i = 0; i < 100; i++) {
+                items.add(new TrackLite(UUID.randomUUID(), UUID.randomUUID(), "title", "author", "author"));
             }
 
-            tracks.add(new TrackLite(UUID.randomUUID(), UUID.randomUUID(), "title", "author", "author"));
-
-
-            musicsList.setItems(tracks);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
     }
 
