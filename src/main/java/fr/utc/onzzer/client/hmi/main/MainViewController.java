@@ -3,10 +3,7 @@ import java.util.Arrays;
 import fr.utc.onzzer.client.data.DataServicesProvider;
 import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
-import fr.utc.onzzer.common.dataclass.ModelUpdateTypes;
-import fr.utc.onzzer.common.dataclass.Track;
-import fr.utc.onzzer.common.dataclass.TrackLite;
-import fr.utc.onzzer.common.dataclass.UserLite;
+import fr.utc.onzzer.common.dataclass.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Text;
 
 import java.util.Collection;
 import java.util.List;
@@ -43,6 +41,9 @@ public class MainViewController {
     @FXML
     private TableColumn<Track, String> colonneAuteur;
 
+    @FXML
+    private Text username;
+
     private DataUserServices dataUserServices;
 
     private DataServicesProvider dataServicesProvider;
@@ -57,11 +58,16 @@ public class MainViewController {
     }
 
     public void initialize() {
+
         this.dataServicesProvider = this.controller.getDataServicesProvider();
         this.dataUserServices = dataServicesProvider.getDataUserServices();
 
+        // Initializing username.
+        this.initializeUsername();
+
         // Initializing the user list.
         this.initializeUserList();
+
         // Initializing the music list.
         this.initializeMusicList();
     }
@@ -72,6 +78,17 @@ public class MainViewController {
             this.controller.getViewMusicServices().openCreateTrack();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void initializeUsername() {
+
+        try {
+            User user = this.dataUserServices.getUser();
+            this.username.setText(user.getUsername());
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.username.setText("error");
         }
     }
 
