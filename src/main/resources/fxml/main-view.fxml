@@ -1,18 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 
-<BorderPane id="root-pane" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane id="root-pane" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <left>
       <VBox alignment="TOP_CENTER" minWidth="250.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets left="25.0" right="25.0" />
          </BorderPane.margin>
-         <Label maxWidth="1.7976931348623157E308" styleClass="h1" text="Phiphi" />
+         <HBox alignment="CENTER_LEFT">
+            <Text fx:id="username" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="h1" text="Username" />
+            <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+               <ImageView fitHeight="20.0" fitWidth="20.0" onMouseClicked="#onDisconnect" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
+                  <viewport>
+                     <Rectangle2D />
+                  </viewport>
+                  <Image url="@../img/disconnect-icon.png" />
+               </ImageView>
+            </HBox>
+         </HBox>
          <Separator styleClass="separator-dark" />
          <HBox>
             <Button fx:id="addMusic" mnemonicParsing="false" onAction="#handleAddMusic" text="Ajouter une musique">
