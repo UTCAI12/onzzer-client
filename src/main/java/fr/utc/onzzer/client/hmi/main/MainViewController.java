@@ -1,27 +1,36 @@
 package fr.utc.onzzer.client.hmi.main;
-import java.util.Arrays;
+import java.io.IOException;
+import java.util.*;
+
+import fr.utc.onzzer.client.MainClient;
 import fr.utc.onzzer.client.data.DataServicesProvider;
 import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
+import fr.utc.onzzer.client.hmi.component.IconButton;
+import fr.utc.onzzer.client.hmi.music.DownloadViewController;
 import fr.utc.onzzer.common.dataclass.ModelUpdateTypes;
 import fr.utc.onzzer.common.dataclass.Track;
 import fr.utc.onzzer.common.dataclass.TrackLite;
 import fr.utc.onzzer.common.dataclass.UserLite;
+import fr.utc.onzzer.common.dataclass.User;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.util.Callback;
 
 public class MainViewController {
+
+    private ObservableList<TrackLite> tracks;
 
     private final GlobalController controller;
 
@@ -35,23 +44,40 @@ public class MainViewController {
     private Button addMusic;
 
     @FXML
-    private TableView<Track> tableau;
+    private Button search;
 
     @FXML
-    private TableColumn<Track, String> colonneTitre;
+    private Button ourMusic;
 
     @FXML
-    private TableColumn<Track, String> colonneAuteur;
+    private TableView<TrackLite> musicsList;
+
+    @FXML
+    private TableColumn<TrackLite, String> columnTitle;
+
+    @FXML
+    private TableColumn<TrackLite, String> columnAuthor;
+
+    @FXML
+    private TableColumn<TrackLite, Void> columnActions;
+
+    @FXML
+    private TableColumn<TrackLite, String> columnAlbum;
+
+
 
     private DataUserServices dataUserServices;
 
     private DataServicesProvider dataServicesProvider;
 
+
     public MainViewController(GlobalController controller) {
         this.controller = controller;
-        this.colonneTitre = new TableColumn<>();
-        this.colonneAuteur = new TableColumn<>();
-        this.tableau = new TableView<>();
+        this.columnTitle = new TableColumn<>();
+        this.columnAuthor = new TableColumn<>();
+        this.columnAlbum = new TableColumn<>();
+        this.columnActions  = new TableColumn<>();
+        this.musicsList = new TableView<>();
         this.usersList = new ListView<>();
         this.searchField = new TextField();
     }
@@ -67,6 +93,30 @@ public class MainViewController {
     }
 
     @FXML
+    private void handleViewOurMusic(ActionEvent event) {
+        try {
+            User user = dataUserServices.getUser();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void OnMusicAction(ActionEvent event) {
+        try
+        {
+            this.controller.getViewMusicServices().openSearchTracks(MainClient.getStage().getScene());
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleSearchMusic(ActionEvent event) {
+
+    }
+
+    @FXML
     private void handleAddMusic(ActionEvent event) {
         try {
             this.controller.getViewMusicServices().openCreateTrack();
@@ -76,12 +126,30 @@ public class MainViewController {
     }
 
     private void initializeMusicList() {
-        colonneTitre.setCellValueFactory(new PropertyValueFactory<>("title"));
-        colonneAuteur.setCellValueFactory(new PropertyValueFactory<>("author"));
+        columnTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        columnAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
+        columnAlbum.setCellValueFactory(new PropertyValueFactory<>("album"));
+        columnActions.setCellFactory(getActionCellFactory());
+
+
+        final int columnNumber = 4;
+        final int columnActionWidth = 100;
+        columnTitle.setPrefWidth((musicsList.getWidth() - columnActionWidth) / columnNumber);
+        columnAuthor.setPrefWidth((musicsList.getWidth() - columnActionWidth) / columnNumber);
+        columnAlbum.setPrefWidth((musicsList.getWidth() - columnActionWidth) / columnNumber);
+        columnActions.setPrefWidth(columnActionWidth - 2);
+
 
         try {
-            ObservableList<Track> tracks = FXCollections.observableArrayList(dataUserServices.getUser().getTrackList());
-            tableau.setItems(tracks);
+            ObservableList<TrackLite> tracks = FXCollections.observableArrayList();
+            for(Track track : dataUserServices.getUser().getTrackList())
+            {
+                tracks.add(track.toTrackLite());
+            }
+
+
+            musicsList.setItems(tracks);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -151,4 +219,64 @@ public class MainViewController {
                 .filter(user -> user.getUsername().toLowerCase().contains(text))
                 .forEach(user -> items.add(user.getUsername()));
     }
+
+
+    private Callback<TableColumn<TrackLite, Void>, TableCell<TrackLite, Void>> getActionCellFactory() {
+        return new Callback<>() {
+            @Override
+            public TableCell<TrackLite, Void> call(final TableColumn<TrackLite, Void> param) {
+                return new TableCell<>() {
+                    private final HBox hbox = new HBox();
+
+                    {
+                        IconButton btnRemove = new IconButton(IconButton.ICON_DOWNLOAD);
+                        btnRemove.setOnAction((ActionEvent event) -> {
+                            TrackLite track = getTableView().getItems().get(getIndex());
+                            onRemoveButtonClick(track);
+                        });
+                        IconButton btnEvaluate = new IconButton(IconButton.ICON_DOWNLOAD);
+                        btnEvaluate.setOnAction((ActionEvent event) -> {
+                            TrackLite track = getTableView().getItems().get(getIndex());
+                            onEvaluateButtonClick(track);
+                        });
+
+                        hbox.setAlignment(Pos.CENTER);
+                        hbox.getChildren().add(btnRemove);
+                        hbox.getChildren().add(btnEvaluate);
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(hbox);
+                        }
+                    }
+                };
+            }
+        };
+    }
+
+
+    private void onRemoveButtonClick(TrackLite track) {
+        try
+        {
+            this.controller.getViewMusicServices().openDeleteTrack(track.getId());
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void onEvaluateButtonClick(TrackLite track) {
+        try {
+            //pas de vue Evaluate track, à voir ce qu'on fait
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

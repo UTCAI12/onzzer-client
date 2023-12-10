@@ -5,7 +5,9 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 
+<?import javafx.scene.control.skin.TabPaneSkin.TabControlButtons?>
 <BorderPane id="root-pane" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
    <left>
       <VBox alignment="TOP_CENTER" minWidth="250.0" BorderPane.alignment="CENTER">
@@ -15,13 +17,20 @@
          <Label maxWidth="1.7976931348623157E308" styleClass="h1" text="Phiphi" />
          <Separator styleClass="separator-dark" />
          <HBox>
+            <Button fx:id="ourMusic" mnemonicParsing="false" onAction="#handleViewOurMusic" text="Vos musique">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </Button>
+         </HBox>
+         <HBox>
             <Button fx:id="addMusic" mnemonicParsing="false" onAction="#handleAddMusic" text="Ajouter une musique">
                <HBox.margin>
                   <Insets bottom="10.0" top="10.0" />
                </HBox.margin></Button>
          </HBox>
          <HBox>
-            <Button mnemonicParsing="false" text="Rechercher une musique">
+            <Button fx:id="searchMusic" mnemonicParsing="false" onAction="#handleSearchMusic" text="Rechercher une musique">
                <VBox.margin>
                   <Insets bottom="10.0" />
                </VBox.margin>
@@ -36,13 +45,12 @@
          </padding>
          <Label styleClass="h1" text="Vos musiques" />
          <Separator prefWidth="200.0" styleClass="separator-dark" />
-         <TableView>
+         <TableView fx:id="musicsList">
             <columns>
-               <TableColumn maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="Titre" />
-               <TableColumn maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="Artiste" />
-               <TableColumn maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="Album" />
-               <TableColumn editable="false" prefWidth="-1.0" sortable="false" text="Partagé" />
-               <TableColumn prefWidth="-1.0" text="Actions" />
+               <TableColumn fx:id="columnTitle" maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="Titre"/>
+               <TableColumn fx:id="columAuthor" maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="Artiste"/>
+               <TableColumn fx:id="columnAlbum" maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="Album"/>
+               <TableColumn fx:id="columnActions" prefWidth="100.0" text="Actions" />
             </columns>
             <VBox.margin>
                <Insets top="25.0" />
