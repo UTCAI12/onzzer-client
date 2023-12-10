@@ -249,20 +249,20 @@ public class MainViewController {
                     private final HBox hbox = new HBox();
 
                     {
-                        IconButton btnRemove = new IconButton(IconButton.ICON_DOWNLOAD);
-                        btnRemove.setOnAction((ActionEvent event) -> {
-                            TrackLite track = getTableView().getItems().get(getIndex());
-                            onRemoveButtonClick(track);
-                        });
-                        IconButton btnEvaluate = new IconButton(IconButton.ICON_DOWNLOAD);
+                        IconButton btnEvaluate = new IconButton(IconButton.ICON_EVALUATE);
                         btnEvaluate.setOnAction((ActionEvent event) -> {
                             TrackLite track = getTableView().getItems().get(getIndex());
                             onEvaluateButtonClick(track);
                         });
+                        IconButton btnRemove = new IconButton(IconButton.ICON_DELETE);
+                        btnRemove.setOnAction((ActionEvent event) -> {
+                            TrackLite track = getTableView().getItems().get(getIndex());
+                            onRemoveButtonClick(track);
+                        });
 
                         hbox.setAlignment(Pos.CENTER);
-                        hbox.getChildren().add(btnRemove);
                         hbox.getChildren().add(btnEvaluate);
+                        hbox.getChildren().add(btnRemove);
                     }
 
                     @Override
