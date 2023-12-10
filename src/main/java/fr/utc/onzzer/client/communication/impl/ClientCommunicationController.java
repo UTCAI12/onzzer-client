@@ -125,7 +125,7 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
 
     @Override
     public void disconnect() throws Exception {
-
+        this.sendServer(SocketMessagesTypes.USER_DISCONNECT, this.clientModel.getUser());
     }
 
     @Override
