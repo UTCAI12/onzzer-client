@@ -4,6 +4,7 @@ import fr.utc.onzzer.client.MainClient;
 import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.client.hmi.main.LoginViewController;
 
+import fr.utc.onzzer.client.hmi.music.ListenTrackViewController;
 import fr.utc.onzzer.client.hmi.music.SearchViewController;
 import fr.utc.onzzer.client.hmi.music.UploadViewController;
 import fr.utc.onzzer.client.hmi.music.services.ViewMusicServices;
@@ -62,13 +63,12 @@ public class ViewMusicServicesImpl implements ViewMusicServices {
         BorderPane borderPane = (BorderPane) scene.getRoot();
 
         // Load the view and controller
-        // TODO change the test view and controller
         FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/listen-view.fxml"));
-        //LoginViewController loginViewController = new LoginViewController(new GlobalController());
-        //fxmlLoader.setController(loginViewController);
+        ListenTrackViewController controller = new ListenTrackViewController(globalController, trackId);
+        fxmlLoader.setController(controller);
 
         // Update the displayed scene
-        borderPane.setCenter(fxmlLoader.load());
+        borderPane.setBottom(fxmlLoader.load());
     }
 
     private void openInModal(String title, String viewPath, Object controller) throws IOException {
