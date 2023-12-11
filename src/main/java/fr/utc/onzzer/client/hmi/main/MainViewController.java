@@ -5,30 +5,31 @@ import fr.utc.onzzer.client.data.DataServicesProvider;
 import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.client.hmi.component.IconButton;
+import fr.utc.onzzer.client.hmi.music.SearchViewController;
 import fr.utc.onzzer.common.dataclass.*;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 public class MainViewController {
-
-    private ObservableList<TrackLite> tracks;
 
     private final GlobalController controller;
 
@@ -62,12 +63,9 @@ public class MainViewController {
     @FXML
     private TableColumn<TrackLite, String> columnAlbum;
 
-
-
     private DataUserServices dataUserServices;
 
     private DataServicesProvider dataServicesProvider;
-
 
     public MainViewController(GlobalController controller) {
         this.controller = controller;
@@ -89,39 +87,6 @@ public class MainViewController {
         this.initializeUserList();
         // Initializing the music list.
         this.initializeMusicList();
-    }
-
-    @FXML
-    private void handleViewOurMusic(ActionEvent event) {
-        try {
-            User user = dataUserServices.getUser();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    @FXML
-    private void OnMusicAction(ActionEvent event) {
-        try
-        {
-            this.controller.getViewMusicServices().openSearchTracks(MainClient.getStage().getScene());
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void handleSearchMusic(ActionEvent event) {
-
-    }
-
-    @FXML
-    private void handleAddMusic(ActionEvent event) {
-        try {
-            this.controller.getViewMusicServices().openCreateTrack();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void initializeMusicList() {
@@ -240,6 +205,61 @@ public class MainViewController {
                 .forEach(user -> items.add(user.getUsername()));
     }
 
+    @FXML
+    private void handleViewOurMusic() throws IOException {
+
+        // Get the JavaFx parent element
+        Stage stage = MainClient.getStage();
+        Scene scene = stage.getScene();
+
+        BorderPane borderPane = (BorderPane) scene.getRoot();
+
+        // Load the view and controller
+        FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/main-view.fxml"));
+        MainViewController searchViewController = new MainViewController(this.controller);
+        fxmlLoader.setController(searchViewController);
+
+        // Update the displayed scene
+        borderPane.setCenter(fxmlLoader.load());
+    }
+
+    @FXML
+    private void onMusicAction() {
+        try {
+
+            Stage stage = MainClient.getStage();
+            Scene scene = stage.getScene();
+            this.controller.getViewMusicServices().openSearchTracks(scene);
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleSearchMusic() {
+
+        try {
+
+            Stage stage = MainClient.getStage();
+            Scene scene = stage.getScene();
+
+            this.controller.getViewMusicServices().openSearchTracks(scene);
+
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleAddMusic() {
+
+        try {
+            this.controller.getViewMusicServices().openCreateTrack();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+    }
 
     private Callback<TableColumn<TrackLite, Void>, TableCell<TrackLite, Void>> getActionCellFactory() {
         return new Callback<>() {
@@ -279,7 +299,6 @@ public class MainViewController {
         };
     }
 
-
     private void onRemoveButtonClick(TrackLite track) {
         try
         {
@@ -298,5 +317,4 @@ public class MainViewController {
             e.printStackTrace();
         }
     }
-
 }
