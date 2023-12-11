@@ -77,7 +77,7 @@
                <Insets top="25.0" />
             </padding>
          </HBox>
-         <ListView fx:id="usersList" style="list-cell" VBox.vgrow="ALWAYS">
+         <ListView fx:id="usersList" VBox.vgrow="ALWAYS">
             <VBox.margin>
                <Insets top="25.0" />
             </VBox.margin>
