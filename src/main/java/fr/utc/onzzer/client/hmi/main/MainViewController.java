@@ -241,8 +241,8 @@ public class MainViewController {
         // Even if the disconnection fails, opening the login view to enable
         // the user to reconnect again.
         try {
-            ComMainServices provider = this.comServicesProvider.getComMainServices();
-            provider.disconnect();
+            ComMainServices services = this.comServicesProvider.getComMainServices();
+            services.disconnect();
         } catch (Exception exception) {
             exception.printStackTrace();
         } finally {
