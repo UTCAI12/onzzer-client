@@ -1,10 +1,12 @@
 package fr.utc.onzzer.client.communication.impl;
 
 import fr.utc.onzzer.client.data.DataServicesProvider;
+import fr.utc.onzzer.common.dataclass.Comment;
 import fr.utc.onzzer.common.dataclass.Track;
 import fr.utc.onzzer.common.dataclass.TrackLite;
 import fr.utc.onzzer.common.dataclass.UserLite;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +34,10 @@ public class ClientRequestHandler {
 
     Track getTrack(final UUID trackID) throws Exception {
         return this.dataServicesProvider.getDataTrackServices().getTrack(trackID);
+    }
+
+    void publishComment(final ArrayList<Object> comment) throws Exception {
+        this.dataServicesProvider.getDataCommentService().addComment((UUID) comment.get(0), (Comment) comment.get(1));
     }
 
     void serverStopped(){

@@ -16,4 +16,6 @@ public interface DataTrackServices {
     ArrayList<TrackLite> getTrackLites();
     void publishTrack(Track track);
     void deleteTrack(UUID uuid);
+    void unpublishTrack(Track track);
+    void updateTrack(TrackLite trackLite);
 }
