@@ -142,4 +142,32 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void unpublishTrack(Track track) {
+        track.setPrivateTrack(true);
+        try {
+            this.updateTrack(track);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void updateTrack(TrackLite trackLite) {
+        //Modifier dans la hashmap des userLite / tracklites
+        for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
+            if (entry.getKey().getId() == trackLite.getUser()) {
+                //on ajoute le track à la liste des tracks de l'utilisateur
+                for (TrackLite track : entry.getValue()) {
+                    if (track.getId() == trackLite.getId()) {
+                        entry.getValue().remove(track);
+                        entry.getValue().add(trackLite);
+                        break;
+                    }
+                }
+            }
+        }
+
+    }
 }
