@@ -33,7 +33,7 @@ public class DownloadViewController {
     public void initialize() {
         txtTitle.setText(track.getTitle());
         txtAuthor.setText(track.getAuthor());
-        //txtAlbum.setText(track.getAlbum());
+        txtAlbum.setText(track.getAlbum());
     }
 
     @FXML

@@ -14,22 +14,30 @@ import javafx.util.Duration;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class ListenTrackViewController {
     private final GlobalController controller;
 
     private final DataTrackServices dataTrackServices;
 
-
-    public ListenTrackViewController(GlobalController controller, Track track) {
+    private ListenTrackViewController(GlobalController controller) {
         this.controller = controller;
         this.dataTrackServices = this.controller.getDataServicesProvider().getDataTrackServices();
-
         this.trackArrayList = this.dataTrackServices.getTracks();
-        this.track = track;
+    }
+
+    public ListenTrackViewController(GlobalController controller, UUID trackId) {
+        this(controller);
+        this.track = this.dataTrackServices.getTrack(trackId);
         this.trackIndex = trackArrayList.indexOf(track);
     }
 
+    public ListenTrackViewController(GlobalController controller, Track track) {
+        this(controller);
+        this.track = track;
+        this.trackIndex = trackArrayList.indexOf(track);
+    }
 
     private Track track;
 
