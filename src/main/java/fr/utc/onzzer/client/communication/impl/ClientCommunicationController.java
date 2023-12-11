@@ -16,7 +16,6 @@ import java.util.function.BiConsumer;
 
 public class ClientCommunicationController implements ComMainServices, ComMusicServices {
 
-    private ClientModel clientModel;
 
     private final Map<SocketMessagesTypes, BiConsumer<SocketMessage, ClientSocketManager>> messageHandlers;
 
@@ -27,11 +26,13 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
     private final String serverAddress;
     private final int serverPort;
     private Socket socket;
+    private final DataServicesProvider dataServicesProvider;
 
     public ClientCommunicationController(final String serverAddress, final int serverPort, final DataServicesProvider dataServicesProvider) {
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
         this.clientRequestHandler = new ClientRequestHandler(dataServicesProvider);
+        this.dataServicesProvider = dataServicesProvider;
 
         this.messageHandlers = new HashMap<>();
 
@@ -125,7 +126,7 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
 
     @Override
     public void disconnect() throws Exception {
-        this.sendServer(SocketMessagesTypes.USER_DISCONNECT, this.clientModel.getUser());
+        this.sendServer(SocketMessagesTypes.USER_DISCONNECT, this.dataServicesProvider.getDataUserServices().getUser().toUserLite());
         this.socket.close();
     }
 
