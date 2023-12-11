@@ -51,6 +51,9 @@ public class UploadViewController {
     private VBox inputGroupAlbum;
 
     @FXML
+    private CheckBox checkboxShare;
+
+    @FXML
     private Button btnUpload;
 
     @FXML
@@ -93,30 +96,28 @@ public class UploadViewController {
             wrongFileError.setVisible(true);
             noFileError.setVisible(false);
         }
+        System.out.println(fileName);
     }
 
     @FXML
-    public void onClickSave(ActionEvent actionEvent) throws Exception `{
+    public void onClickSave(ActionEvent actionEvent) throws Exception {
         // If the form has error, do not do anything.
         boolean hasErrors = checkErrors();
-        if(hasErrors) return;
-
+        System.out.println("saved");
         String title = this.onTitleChange().value();
         String author = this.onArtistChange().value();
         String album = this.onAlbumChange().value();
-        boolean isPrivate = this.chkShare.isSelected();
+
+        boolean isPrivate = !this.checkboxShare.isSelected();
+
 
         User user = this.userServices.getUser();
         UUID trackID = UUID.randomUUID();
         fr.utc.onzzer.common.dataclass.Track track = new Track(trackID, filePath.toString(), user.getId(), title, author, isPrivate);
         track.setAlbum(album);
         this.trackServices.saveTrack(track);
-        Stage stage = MainClient.getStage();
-        Scene current = stage.getScene();
-
-        FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/main-view"));
-        Scene scene = new Scene(fxmlLoader.load(), current.getWidth(), current.getHeight());
-        stage.setScene(scene);
+        Stage stage = (Stage) this.btnSave.getScene().getWindow();
+        stage.close();
     }
 
     private boolean checkErrors() throws IOException {
@@ -128,7 +129,6 @@ public class UploadViewController {
         return title.hasError() || artist.hasError() || album.hasError() || filePath!=null;
     }
 
-    @FXML
     private ValidationResult<String> onTitleChange() {
 
         boolean hasErrors = false;

@@ -157,7 +157,7 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
     public void updateTrack(TrackLite trackLite) {
         //Modifier dans la hashmap des userLite / tracklites
         for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
-            if (entry.getKey().getId() == trackLite.getUser()) {
+            if (entry.getKey().getId() == trackLite.getUserId()) {
                 //on ajoute le track à la liste des tracks de l'utilisateur
                 for (TrackLite track : entry.getValue()) {
                     if (track.getId() == trackLite.getId()) {
