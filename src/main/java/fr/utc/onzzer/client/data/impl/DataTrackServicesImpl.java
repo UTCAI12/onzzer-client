@@ -42,12 +42,20 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
             objectOut.writeObject(track); // Écriture de l'objet Track sérialisé dans le fichier
             System.out.println("Le track a été créé avec succès à l'emplacement : " + filePath);
         } catch (Exception ex) {
-            throw new Exception("Erreur lors de la création du track : " + ex.getMessage());
+            throw new Exception("Erreur lors de la création du track en fichier ser : " + ex.getMessage());
         }
-
+        // On enregistre également dans le meme dossier un fichier mp3 contenant le track
+        String mp3FilePath = tracksDirectory + File.separator + track.getId() + ".mp3";
+        try (FileOutputStream fileOut = new FileOutputStream(mp3FilePath)) {
+            fileOut.write(track.getAudio());
+            System.out.println("Le track a été créé avec succès à l'emplacement : " + mp3FilePath);
+        } catch (Exception ex) {
+            throw new Exception("Erreur lors de la création du track en fichier mp3: " + ex.getMessage());
+        }
         // On enregistre le track dans la liste des tracks
         this.dataRepository.tracks.add(track);
         if(this.dataRepository.user.getId() == track.getUserId()){
+            this.dataRepository.user.addTrackToTrackList(track);
             for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
                 if (entry.getKey().getId() == track.getUserId()) {
                     //on ajoute le track à la liste des tracks de l'utilisateur
@@ -60,11 +68,26 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
 
     @Override
     public void updateTrack(Track track) throws Exception {
+        //old track
+        Track old_track = this.dataRepository.getTrackByID(track.getId());
         //Si la musique est déjà présente dans la liste des tracks, on la modifie
-        if(this.dataRepository.tracks.contains(track)){
-            this.dataRepository.tracks.remove(track);
+        if(this.dataRepository.tracks.contains(old_track)){
+            this.dataRepository.tracks.remove(old_track);
             this.dataRepository.tracks.add(track);
             this.notify(track, Track.class, ModelUpdateTypes.UPDATE_TRACK);
+            //Si le proprietaire de la musique est l'utilisateur connecté, on modifie la musique dans sa liste de musique
+            if(this.dataRepository.user.getId() == track.getUserId()){
+                List<Track> tracklist = this.dataRepository.user.getTrackList();
+                tracklist.remove(old_track);
+                tracklist.add(track);
+                this.dataRepository.user.setTrackList(tracklist);
+                for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
+                    if (entry.getKey().getId() == track.getUserId()) {
+                        //on ajoute le track à la liste des tracks de l'utilisateur
+                        entry.getValue().add(track.toTrackLite());
+                    }
+                }
+            }
         }else{
             //Si le trackId est présent dans la liste des track à téléchargé, alors on le télécharge
             if(this.dataRepository.toDownloadTracks.contains(track.getId())){
@@ -79,7 +102,7 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
     }
 
     @Override
-    public Track getTrack(UUID uuid) throws Exception {
+    public Track getTrack(UUID uuid){
         return dataRepository.getTrackByID(uuid);
     }
     @Override
@@ -99,16 +122,24 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
         this.dataRepository.toDownloadTracks.add(uuid);
     }
     @Override
-    public void removeAllTracks() throws Exception {
+    public void removeAllTracks(){
         dataRepository.tracks.clear();
-        for(Track track : dataRepository.downloadedTracks){
-            String tracksDirectory = "tracks";
-            File directory = new File(tracksDirectory);
-            String filePath = tracksDirectory + File.separator + track.getId() + ".mp3";
-            File file = new File(filePath);
-            file.delete();
-        }
-        dataRepository.downloadedTracks.clear();
+        this.notify(null, Track.class, ModelUpdateTypes.DELETE_TRACK);
+    }
+    @Override
+    public void deleteTrack(UUID uuid){
+        Track track = this.dataRepository.getTrackByID(uuid);
+        this.dataRepository.tracks.remove(track);
+        this.notify(track, Track.class, ModelUpdateTypes.DELETE_TRACK);
+    }
 
+    @Override
+    public void publishTrack(Track track) {
+        track.setPrivateTrack(false);
+        try {
+            this.updateTrack(track);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

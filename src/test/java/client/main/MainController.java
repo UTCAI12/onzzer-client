@@ -179,8 +179,8 @@ public class MainController {
             final UserLite ul = new UserLite(u.getId(), u.getUsername());
 
             // TODO Use a cast here (if Track inherits from TrackLite)
-            final Track track = new Track(UUID.randomUUID(), ul.getId(), trackName, "michel");
-            final TrackLite newTrackLite = new TrackLite(track.getId(), ul.getId(), trackName, "michel");
+            final Track track = new Track(UUID.randomUUID(), ul.getId(), trackName, "michel", false);
+            final TrackLite newTrackLite = new TrackLite(track.getId(), ul.getId(), trackName, "michel", "ssz");
 
             // adding track to local model
 //            this.dataServicesProvider.getDataTrackServices().addTrack(newTrackLite);

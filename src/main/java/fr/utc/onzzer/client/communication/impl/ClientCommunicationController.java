@@ -16,7 +16,6 @@ import java.util.function.BiConsumer;
 
 public class ClientCommunicationController implements ComMainServices, ComMusicServices {
 
-    private ClientModel clientModel;
 
     private final Map<SocketMessagesTypes, BiConsumer<SocketMessage, ClientSocketManager>> messageHandlers;
 
@@ -27,11 +26,13 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
     private final String serverAddress;
     private final int serverPort;
     private Socket socket;
+    private final DataServicesProvider dataServicesProvider;
 
     public ClientCommunicationController(final String serverAddress, final int serverPort, final DataServicesProvider dataServicesProvider) {
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
         this.clientRequestHandler = new ClientRequestHandler(dataServicesProvider);
+        this.dataServicesProvider = dataServicesProvider;
 
         this.messageHandlers = new HashMap<>();
 
@@ -62,6 +63,9 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
             TrackLite trackLite = (TrackLite) message.object;
             this.clientRequestHandler.publishTrack(trackLite);
         });
+        messageHandlers.put(SocketMessagesTypes.SERVER_PING, (message, sender) -> {
+            this.sendServer(SocketMessagesTypes.USER_PING, null);
+        });
         messageHandlers.put(SocketMessagesTypes.SERVER_STOPPED, (message, sender) -> {
             System.out.println("I have received a SERVER_STOPPED message from server!");
             this.clientRequestHandler.serverStopped();
@@ -84,8 +88,7 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
             }
         });
         try  {
-            this.socket =  new Socket(serverAddress, serverPort);
-            this.clientSocketManager = new ClientSocketManager(this.socket, this);
+            this.clientSocketManager = new ClientSocketManager(new Socket(serverAddress, serverPort), this);
             this.clientSocketManager.start();
         } catch (IOException e) {
             e.printStackTrace();
@@ -122,7 +125,8 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
 
     @Override
     public void disconnect() throws Exception {
-
+        this.sendServer(SocketMessagesTypes.USER_DISCONNECT, this.dataServicesProvider.getDataUserServices().getUser().toUserLite());
+        this.clientSocketManager.close();
     }
 
     @Override
@@ -137,17 +141,32 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
     }
     @Override
     public void updateTrack(TrackLite track) throws Exception {
-
+        try {
+            this.sendServer(SocketMessagesTypes.UPDATE_TRACK, track);
+        } catch (Exception e) {
+            // Handle any exceptions that may occur during the process.
+            throw new Exception("Error sending track: " + e.getMessage(), e);
+        }
     }
 
     @Override
     public void publishTrack(TrackLite track) throws Exception {
-
+        try {
+            this.sendServer(SocketMessagesTypes.PUBLISH_TRACK, track);
+        } catch (Exception e) {
+            // Handle any exceptions that may occur during the process.
+            throw new Exception("Error sending track: " + e.getMessage(), e);
+        }
     }
 
     @Override
     public void unpublishTrack(TrackLite track) throws Exception {
-
+        try {
+            this.sendServer(SocketMessagesTypes.UNPUBLISH_TRACK, track);
+        } catch (Exception e) {
+            // Handle any exceptions that may occur during the process.
+            throw new Exception("Error sending track: " + e.getMessage(), e);
+        }
     }
 
     @Override

@@ -34,6 +34,15 @@ public class DataTrackServicesTest {
         DataRepository dataRepository = new DataRepository();
         dataTrackServices = new DataTrackServicesImpl(dataRepository);
         dataUserServices = new DataUserServicesImpl(dataRepository);
+
+        //Créer un utilisateur pour le test
+        User user = new User(UUID.randomUUID(), "usrname", "mail", "pasword");
+        try {
+            dataUserServices.createProfile(user);
+            dataUserServices.checkCredentials(user.getUsername(), user.getPassword());
+        } catch (Exception e) {
+            Assertions.fail("Erreur lors de la création du profil : " + e.getMessage());
+        }
     }
 
     @Test
@@ -47,7 +56,7 @@ public class DataTrackServicesTest {
             Assertions.fail("Erreur lors de la création du profil : " + e.getMessage());
         }
         // Créez une piste (Track) pour le test
-        Track track = new Track(UUID.randomUUID(), user.getId(), "artist", "album");
+        Track track = new Track(UUID.randomUUID(), user.getId(), "artist", "album", false);
         // Créez une piste (Track) pour le test
        // Track track2 = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album");
 
@@ -84,7 +93,7 @@ public class DataTrackServicesTest {
     @Test
     void testGetTrack() {
         // Créez une piste (Track) pour le test
-        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album");
+        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album", false);
         try {
             // Appelez la méthode saveTrack avec la piste créée
             dataTrackServices.saveTrack(track);
@@ -104,7 +113,7 @@ public class DataTrackServicesTest {
     @Test
     void testGetTrackLites() {
         // Créez une piste (Track) pour le test
-        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album");
+        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album", true);
         try {
             // Appelez la méthode saveTrack avec la piste créée
             dataTrackServices.saveTrack(track);
@@ -124,7 +133,7 @@ public class DataTrackServicesTest {
     @Test
     void testUpdateTrack() {
         // Créez une piste (Track) pour le test
-        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album");
+        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album", false);
         try {
             // Appelez la méthode saveTrack avec la piste créée
             dataTrackServices.saveTrack(track);
@@ -141,7 +150,7 @@ public class DataTrackServicesTest {
         }
 
         // Créez une piste (Track) pour le test
-        Track track3 = new Track(track.getId(), UUID.randomUUID(), "artist2", "album2");
+        Track track3 = new Track(track.getId(), UUID.randomUUID(), "artist2", "album2", false);
         try {
             // Appelez la méthode saveTrack avec la piste créée
             dataTrackServices.updateTrack(track3);
@@ -161,7 +170,7 @@ public class DataTrackServicesTest {
     @Test
     void testAddTrackToLibrary() {
         // Créez une piste (Track) pour le test
-        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album");
+        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album", false);
         try {
             // Appelez la méthode saveTrack avec la piste créée
             dataTrackServices.saveTrack(track);
@@ -188,7 +197,7 @@ public class DataTrackServicesTest {
     @Test
     void testRemoveAllTracks() {
         // Créez une piste (Track) pour le test
-        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album");
+        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album", true);
         try {
             // Appelez la méthode saveTrack avec la piste créée
             dataTrackServices.saveTrack(track);
@@ -217,6 +226,32 @@ public class DataTrackServicesTest {
             dataTrackServices.removeAllTracks();
         } catch (Exception e) {
             Assertions.fail("Erreur lors de la suppression de la piste : " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testDeleteTrack() {
+        // Créez une piste (Track) pour le test
+        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album", true);
+        try {
+            // Appelez la méthode saveTrack avec la piste créée
+            dataTrackServices.saveTrack(track);
+            dataTrackServices.deleteTrack(track.getId());
+        } catch (Exception e) {
+            Assertions.fail("Erreur lors de la suppression de la piste : " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testPublishTrack() {
+        // Créez une piste (Track) pour le test
+        Track track = new Track(UUID.randomUUID(), "du texte en musique".getBytes(), UUID.randomUUID() ,"artist", "album", true);
+        try {
+            // Appelez la méthode saveTrack avec la piste créée
+            dataTrackServices.saveTrack(track);
+            dataTrackServices.publishTrack(track);
+        } catch (Exception e) {
+            Assertions.fail("Erreur lors de la publication de la piste : " + e.getMessage());
         }
     }
 }
