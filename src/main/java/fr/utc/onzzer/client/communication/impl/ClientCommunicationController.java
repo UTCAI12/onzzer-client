@@ -16,7 +16,6 @@ import java.util.function.BiConsumer;
 
 public class ClientCommunicationController implements ComMainServices, ComMusicServices {
 
-    private ClientModel clientModel;
 
     private final Map<SocketMessagesTypes, BiConsumer<SocketMessage, ClientSocketManager>> messageHandlers;
 
@@ -27,11 +26,13 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
     private final String serverAddress;
     private final int serverPort;
     private Socket socket;
+    private final DataServicesProvider dataServicesProvider;
 
     public ClientCommunicationController(final String serverAddress, final int serverPort, final DataServicesProvider dataServicesProvider) {
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
         this.clientRequestHandler = new ClientRequestHandler(dataServicesProvider);
+        this.dataServicesProvider = dataServicesProvider;
 
         this.messageHandlers = new HashMap<>();
 
@@ -62,14 +63,6 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
             TrackLite trackLite = (TrackLite) message.object;
             this.clientRequestHandler.publishTrack(trackLite);
         });
-        messageHandlers.put(SocketMessagesTypes.PUBLISH_RATING, (message, sender) -> {
-            ArrayList<Object> rating = (ArrayList<Object>) message.object;
-            try {
-                this.clientRequestHandler.publishRating(rating);
-            } catch (Exception e) {
-                System.out.println("Error while processing rating: " + e.getMessage());
-            }
-        });
         messageHandlers.put(SocketMessagesTypes.SERVER_PING, (message, sender) -> {
             this.sendServer(SocketMessagesTypes.USER_PING, null);
         });
@@ -95,8 +88,7 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
             }
         });
         try  {
-            this.socket =  new Socket(serverAddress, serverPort);
-            this.clientSocketManager = new ClientSocketManager(this.socket, this);
+            this.clientSocketManager = new ClientSocketManager(new Socket(serverAddress, serverPort), this);
             this.clientSocketManager.start();
         } catch (IOException e) {
             e.printStackTrace();
@@ -133,7 +125,8 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
 
     @Override
     public void disconnect() throws Exception {
-
+        this.sendServer(SocketMessagesTypes.USER_DISCONNECT, this.dataServicesProvider.getDataUserServices().getUser().toUserLite());
+        this.clientSocketManager.close();
     }
 
     @Override
@@ -148,29 +141,37 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
     }
     @Override
     public void updateTrack(TrackLite track) throws Exception {
-
+        try {
+            this.sendServer(SocketMessagesTypes.UPDATE_TRACK, track);
+        } catch (Exception e) {
+            // Handle any exceptions that may occur during the process.
+            throw new Exception("Error sending track: " + e.getMessage(), e);
+        }
     }
 
     @Override
     public void publishTrack(TrackLite track) throws Exception {
-
+        try {
+            this.sendServer(SocketMessagesTypes.PUBLISH_TRACK, track);
+        } catch (Exception e) {
+            // Handle any exceptions that may occur during the process.
+            throw new Exception("Error sending track: " + e.getMessage(), e);
+        }
     }
 
     @Override
     public void unpublishTrack(TrackLite track) throws Exception {
-
+        try {
+            this.sendServer(SocketMessagesTypes.UNPUBLISH_TRACK, track);
+        } catch (Exception e) {
+            // Handle any exceptions that may occur during the process.
+            throw new Exception("Error sending track: " + e.getMessage(), e);
+        }
     }
 
     @Override
     public void addRating(UUID trackId, Rating rating) throws Exception {
-        ArrayList<Object> ratingDto = new ArrayList<Object>();
-        ratingDto.add(trackId);
-        ratingDto.add(rating);
-        try {
-            this.sendServer(SocketMessagesTypes.PUBLISH_RATING, ratingDto);
-        } catch (Exception e){
-            throw new Exception("Error sending publish rating request: " + e.getMessage(), e);
-        }
+
     }
 
     @Override
