@@ -10,6 +10,7 @@ import fr.utc.onzzer.common.dataclass.TrackLite;
 import fr.utc.onzzer.common.dataclass.UserLite;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,9 +21,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.util.Callback;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 public class SearchViewController {
@@ -33,6 +34,8 @@ public class SearchViewController {
     @FXML
     private TextField txtAlbum;
     @FXML
+    private TextField txtUser;
+    @FXML
     private TableView<TrackLite> tableTracks;
     @FXML
     private TableColumn<TrackLite, String> columnTitle;
@@ -41,43 +44,60 @@ public class SearchViewController {
     @FXML
     private TableColumn<TrackLite, String> columnAlbum;
     @FXML
-    private TableColumn<TrackLite, Void> columnActions;
+    private TableColumn<TrackLite, String> columnUser;
+    @FXML
+    private TableColumn<TrackLite, UUID> columnActions;
 
     private final GlobalController globalController;
     private final DataTrackServices dataTrackServices;
+    private final DataUserServices dataUserServices;
     private ObservableList<TrackLite> tracks;
 
     public SearchViewController(GlobalController globalController) {
         // Get the controllers and services
         this.globalController = globalController;
         this.dataTrackServices = globalController.getDataServicesProvider().getDataTrackServices();
-        DataUserServices dataUserServices = globalController.getDataServicesProvider().getDataUserServices();
+        this.dataUserServices = globalController.getDataServicesProvider().getDataUserServices();
 
         // Adding listeners to know when the users list changes
-        dataUserServices.addListener(user -> {
+        this.dataUserServices.addListener(user -> {
             Platform.runLater(this::refreshTrackList);
         }, UserLite.class, ModelUpdateTypes.NEW_USER);
-        dataUserServices.addListener(user -> {
+        this.dataUserServices.addListener(user -> {
             Platform.runLater(this::refreshTrackList);
         }, UserLite.class, ModelUpdateTypes.DELETE_USER);
+
+        // =============== DEBUG =============== //
+        try {
+            UserLite user1 = new UserLite(UUID.randomUUID(), "Joker");
+            UserLite user2 = new UserLite(UUID.randomUUID(), "Batman");
+            this.dataUserServices.addUser(user1);
+            this.dataUserServices.addUser(user2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // =============== DEBUG =============== //
     }
 
     public void initialize() {
         // Automatically resize the columns
         tableTracks.widthProperty().addListener((ov, t, t1) -> {
-            final int columnNumber = 3;
+            final int columnNumber = 4;
             final int columnActionWidth = 100;
             columnTitle.setPrefWidth((tableTracks.getWidth() - columnActionWidth) / columnNumber);
             columnAuthor.setPrefWidth((tableTracks.getWidth() - columnActionWidth) / columnNumber);
             columnAlbum.setPrefWidth((tableTracks.getWidth() - columnActionWidth) / columnNumber);
-            columnActions.setPrefWidth(columnActionWidth - 2);
+            columnUser.setPrefWidth((tableTracks.getWidth() - columnActionWidth) / columnNumber);
+            columnActions.setPrefWidth(columnActionWidth - columnNumber);
         });
 
         // Set the cell factories
         columnTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         columnAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
         columnAlbum.setCellValueFactory(new PropertyValueFactory<>("album"));
-        columnActions.setCellFactory(getActionCellFactory());
+        columnUser.setCellValueFactory(cellData -> new SimpleStringProperty(getTrackUsername(cellData.getValue())));
+        columnActions.setCellValueFactory(new PropertyValueFactory<>("id"));
+        columnActions.setCellFactory(cell -> actionsTableCell());
 
         // Get the current accessible tracks
         refreshTrackList();
@@ -86,15 +106,18 @@ public class SearchViewController {
     private void refreshTrackList() {
         // Get the tracks that are currently accessible on the network
         tracks = FXCollections.observableArrayList(dataTrackServices.getTrackLites());
+
         // =============== DEBUG =============== //
-        UserLite user = new UserLite(UUID.randomUUID(), "Styx");
-        UserLite user2 = new UserLite(UUID.randomUUID(), "Batman");
-        tracks.add(new TrackLite(UUID.randomUUID(), user.getId(), "Cool title", "Me", "Test"));
-        tracks.add(new TrackLite(UUID.randomUUID(), user.getId(), "Test music", "Him", "Test"));
-        tracks.add(new TrackLite(UUID.randomUUID(), user.getId(), "Best of", "The author !", "Test 76"));
-        tracks.add(new TrackLite(UUID.randomUUID(), user2.getId(), "Silence 10 hours", "That's me", "Test"));
-        tracks.add(new TrackLite(UUID.randomUUID(), user2.getId(), "YES", "Me", "Test 367"));
+        List<UserLite> users = this.dataUserServices.getConnectedUsers().keySet().stream().toList();
+        UserLite user1 = users.get(0);
+        UserLite user2 = users.get(1);
+        this.tracks.add(new TrackLite(UUID.randomUUID(), user1.getId(), "Doomsday", "Jared Benjamin", null));
+        this.tracks.add(new TrackLite(UUID.randomUUID(), user2.getId(), "Human", "Apashe", "2023"));
+        this.tracks.add(new TrackLite(UUID.randomUUID(), user2.getId(), "Phoenix", "AViVA", "Rise"));
+        this.tracks.add(new TrackLite(UUID.randomUUID(), user1.getId(), "Strangers", "Kenya Grace", null));
+        this.tracks.add(new TrackLite(UUID.randomUUID(), user1.getId(), "I'm Just Ken", "Ryan Gosling", "Yes"));
         // =============== DEBUG =============== //
+
         onSearchFieldChanged();
     }
 
@@ -105,7 +128,8 @@ public class SearchViewController {
         // Remove the tracks if it does not correspond to the filters
         filteredTracks.removeIf(track -> !txtTitle.getText().isBlank() && !track.getTitle().toLowerCase().contains(txtTitle.getText().toLowerCase()));
         filteredTracks.removeIf(track -> !txtAuthor.getText().isBlank() && !track.getAuthor().toLowerCase().contains(txtAuthor.getText().toLowerCase()));
-        filteredTracks.removeIf(track -> !txtAlbum.getText().isBlank() && !track.getAlbum().toLowerCase().contains(txtAlbum.getText().toLowerCase()));
+        filteredTracks.removeIf(track -> !txtAlbum.getText().isBlank() && track.getAlbum() != null && !track.getAlbum().toLowerCase().contains(txtAlbum.getText().toLowerCase()));
+        filteredTracks.removeIf(track -> !txtUser.getText().isBlank() && !getTrackUsername(track).toLowerCase().contains(txtUser.getText().toLowerCase()));
 
         // Update the current items displayed
         tableTracks.getItems().removeIf(t -> !filteredTracks.contains(t));
@@ -121,13 +145,16 @@ public class SearchViewController {
         // Stop here if there is nothing to change (avoid useless processes)
         if (txtTitle.getText().isBlank()
                 && txtAuthor.getText().isBlank()
-                && txtAlbum.getText().isBlank()) {
+                && txtAlbum.getText().isBlank()
+                && txtUser.getText().isBlank()) {
             return;
         }
 
         txtTitle.setText("");
         txtAuthor.setText("");
         txtAlbum.setText("");
+        txtUser.setText("");
+
         onSearchFieldChanged();
     }
 
@@ -146,34 +173,38 @@ public class SearchViewController {
         }
     }
 
-    private Callback<TableColumn<TrackLite, Void>, TableCell<TrackLite, Void>> getActionCellFactory() {
-        return new Callback<>() {
+    private String getTrackUsername(TrackLite track) {
+        return this.dataUserServices.getConnectedUsers()
+                .keySet()
+                .stream()
+                .filter(user -> user.getId().equals(track.getUser()))
+                .map(UserLite::getUsername)
+                .findFirst()
+                .orElse("");
+    }
+
+    private TableCell<TrackLite, UUID> actionsTableCell() {
+        return new TableCell<TrackLite, UUID>() {
             @Override
-            public TableCell<TrackLite, Void> call(final TableColumn<TrackLite, Void> param) {
-                return new TableCell<>() {
-                    private final HBox hbox = new HBox();
+            public void updateItem(UUID trackId, boolean empty) {
+                super.updateItem(trackId, empty);
 
-                    {
-                        IconButton btn = new IconButton(IconButton.ICON_DOWNLOAD);
-                        btn.setOnAction((ActionEvent event) -> {
-                            TrackLite track = getTableView().getItems().get(getIndex());
-                            onDownloadButtonClick(track);
-                        });
+                IconButton btn = new IconButton(IconButton.ICON_DOWNLOAD);
+                btn.setOnAction((ActionEvent event) -> {
+                    System.out.println(trackId);
+                    TrackLite track = getTableView().getItems().get(getIndex());
+                    onDownloadButtonClick(track);
+                });
 
-                        hbox.setAlignment(Pos.CENTER);
-                        hbox.getChildren().add(btn);
-                    }
+                HBox hbox = new HBox();
+                hbox.setAlignment(Pos.CENTER);
+                hbox.getChildren().add(btn);
 
-                    @Override
-                    public void updateItem(Void item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            setGraphic(hbox);
-                        }
-                    }
-                };
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(hbox);
+                }
             }
         };
     }
