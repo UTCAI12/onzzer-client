@@ -79,6 +79,14 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
                 System.out.println("Can't find the track " + trackId);
             }
         });
+        messageHandlers.put(SocketMessagesTypes.PUBLISH_COMMENT, (message, sender) -> {
+            ArrayList<Object> comment = (ArrayList<Object>) message.object;
+            try {
+                this.clientRequestHandler.publishComment(comment);
+            } catch (Exception e) {
+                System.out.println("Error while processing comment: " + e.getMessage());
+            }
+        });
         messageHandlers.put(SocketMessagesTypes.DOWNLOAD_TRACK, (message, sender) -> {
             Track track = (Track) message.object;
             try {
@@ -176,6 +184,13 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
 
     @Override
     public void addComment(UUID trackId, Comment comment) throws Exception {
-
+        ArrayList<Object> commentDto = new ArrayList<Object>();
+        commentDto.add(trackId);
+        commentDto.add(comment);
+        try {
+            this.sendServer(SocketMessagesTypes.PUBLISH_COMMENT, commentDto);
+        } catch (Exception e){
+            throw new Exception("Error sending publish comment request: " + e.getMessage(), e);
+        }
     }
 }
