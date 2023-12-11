@@ -1,5 +1,6 @@
 package fr.utc.onzzer.client.hmi.main;
 
+import fr.utc.onzzer.client.MainClient;
 import fr.utc.onzzer.client.data.DataServicesProvider;
 import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
@@ -11,11 +12,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.util.List;
@@ -127,7 +130,16 @@ public class MyTrackController {
                             onRemoveButtonClick(track);
                         });
 
+                        // Adding start listening button.
+                        IconButton btnListening = new IconButton(IconButton.ICON_LISTENING);
+
+                        btnRemove.setOnAction((ActionEvent event) -> {
+                            TrackLite track = getTableView().getItems().get(getIndex());
+                            onListeningTrack(track);
+                        });
+
                         this.hbox.setAlignment(Pos.CENTER);
+                        this.hbox.getChildren().add(btnListening);
                         this.hbox.getChildren().add(btnEvaluate);
                         this.hbox.getChildren().add(btnRemove);
                     }
@@ -144,6 +156,18 @@ public class MyTrackController {
                 };
             }
         };
+    }
+
+    private void onListeningTrack(TrackLite track) {
+
+        try {
+            Stage stage = MainClient.getStage();
+            Scene scene = stage.getScene();
+            ViewMusicServices viewMusicServices = this.controller.getViewMusicServices();
+            viewMusicServices.openMediaPlayer(scene,track.getId());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 
     private void onRemoveButtonClick(TrackLite track) {
