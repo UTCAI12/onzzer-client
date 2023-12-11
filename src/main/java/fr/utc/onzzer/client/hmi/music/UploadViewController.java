@@ -96,7 +96,7 @@ public class UploadViewController {
     }
 
     @FXML
-    public void onClickSave(ActionEvent actionEvent) throws Exception `{
+    public void onClickSave(ActionEvent actionEvent) throws Exception {
         // If the form has error, do not do anything.
         boolean hasErrors = checkErrors();
         if(hasErrors) return;
@@ -104,7 +104,7 @@ public class UploadViewController {
         String title = this.onTitleChange().value();
         String author = this.onArtistChange().value();
         String album = this.onAlbumChange().value();
-        boolean isPrivate = this.chkShare.isSelected();
+        boolean isPrivate = !this.chkShare.isSelected();
 
         User user = this.userServices.getUser();
         UUID trackID = UUID.randomUUID();
