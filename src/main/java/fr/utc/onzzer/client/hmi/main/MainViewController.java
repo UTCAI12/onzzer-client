@@ -4,34 +4,32 @@ import fr.utc.onzzer.client.MainClient;
 import fr.utc.onzzer.client.data.DataServicesProvider;
 import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
-import fr.utc.onzzer.client.hmi.component.IconButton;
-import fr.utc.onzzer.client.hmi.music.SearchViewController;
-import fr.utc.onzzer.common.dataclass.*;
+import fr.utc.onzzer.common.dataclass.ModelUpdateTypes;
+import fr.utc.onzzer.common.dataclass.TrackLite;
+import fr.utc.onzzer.common.dataclass.UserLite;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class MainViewController {
 
     private final GlobalController controller;
+    private DataUserServices dataUserServices;
+    private DataServicesProvider dataServicesProvider;
 
     @FXML
     private TextField searchField;
@@ -48,32 +46,8 @@ public class MainViewController {
     @FXML
     private Button ourMusic;
 
-    @FXML
-    private TableView<TrackLite> musicsList;
-
-    @FXML
-    private TableColumn<TrackLite, String> columnTitle;
-
-    @FXML
-    private TableColumn<TrackLite, String> columnAuthor;
-
-    @FXML
-    private TableColumn<TrackLite, Void> columnActions;
-
-    @FXML
-    private TableColumn<TrackLite, String> columnAlbum;
-
-    private DataUserServices dataUserServices;
-
-    private DataServicesProvider dataServicesProvider;
-
     public MainViewController(GlobalController controller) {
         this.controller = controller;
-        this.columnTitle = new TableColumn<>();
-        this.columnAuthor = new TableColumn<>();
-        this.columnAlbum = new TableColumn<>();
-        this.columnActions  = new TableColumn<>();
-        this.musicsList = new TableView<>();
         this.usersList = new ListView<>();
         this.searchField = new TextField();
     }
@@ -81,63 +55,13 @@ public class MainViewController {
     public void initialize() {
 
         this.dataServicesProvider = this.controller.getDataServicesProvider();
-        this.dataUserServices = dataServicesProvider.getDataUserServices();
+        this.dataUserServices = this.dataServicesProvider.getDataUserServices();
 
         // Initializing the user list.
         this.initializeUserList();
-        // Initializing the music list.
-        this.initializeMusicList();
-    }
 
-    private void initializeMusicList() {
-
-        // Prevent columns from being reordered and resized.
-        this.musicsList.getColumns().forEach(column -> {
-            column.setResizable(false);
-            column.setReorderable(false);
-        });
-
-        // Specifying values.
-        columnTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
-        columnAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
-        columnAlbum.setCellValueFactory(new PropertyValueFactory<>("album"));
-        columnActions.setCellFactory(getActionCellFactory());
-
-        // Make the table responsive.
-        this.musicsList.widthProperty().addListener((ov, t, t1) -> {
-
-            int columns = this.musicsList.getColumns().size();
-            int width = (int) ((this.musicsList.getWidth() / columns) * 0.95);
-
-            columnTitle.setPrefWidth(width);
-            columnAuthor.setPrefWidth(width);
-            columnAlbum.setPrefWidth(width);
-            columnActions.setPrefWidth(width);
-        });
-
-        // Refresh the whole list.
-        this.refreshMusicList();
-    }
-
-    private void refreshMusicList() {
-
-        try {
-
-            ObservableList<TrackLite> items = this.musicsList.getItems();
-            items.clear();
-
-            // Adding tracks to the list.
-            List<Track> tracks = dataUserServices.getUser().getTrackList();
-            tracks.stream().map(Track::toTrackLite).forEach(items::add);
-
-            // TODO : To remove.
-            for(int i = 0; i < 100; i++) {
-                items.add(new TrackLite(UUID.randomUUID(), UUID.randomUUID(), "title", "author", "author"));
-            }
-
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
+        // Initializing the track list.
+        this.initializeTrackList();
     }
 
     private void initializeUserList() {
@@ -175,6 +99,12 @@ public class MainViewController {
         users.forEach(user -> items.add(user.getUsername()));
     }
 
+    private void initializeTrackList() {
+
+        // runLater seems to be necessary, otherwise the view won't load.
+        Platform.runLater(this::showMyTrackView);
+    }
+
     @FXML
     private void handleSearch(KeyEvent event) {
 
@@ -206,21 +136,8 @@ public class MainViewController {
     }
 
     @FXML
-    private void handleViewOurMusic() throws IOException {
-
-        // Get the JavaFx parent element
-        Stage stage = MainClient.getStage();
-        Scene scene = stage.getScene();
-
-        BorderPane borderPane = (BorderPane) scene.getRoot();
-
-        // Load the view and controller
-        FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/main-view.fxml"));
-        MainViewController searchViewController = new MainViewController(this.controller);
-        fxmlLoader.setController(searchViewController);
-
-        // Update the displayed scene
-        borderPane.setCenter(fxmlLoader.load());
+    private void handleViewOurMusic() {
+        this.showMyTrackView();
     }
 
     @FXML
@@ -261,60 +178,26 @@ public class MainViewController {
         }
     }
 
-    private Callback<TableColumn<TrackLite, Void>, TableCell<TrackLite, Void>> getActionCellFactory() {
-        return new Callback<>() {
-            @Override
-            public TableCell<TrackLite, Void> call(final TableColumn<TrackLite, Void> param) {
-                return new TableCell<>() {
-                    private final HBox hbox = new HBox();
+    private void showMyTrackView() {
 
-                    {
-                        IconButton btnEvaluate = new IconButton(IconButton.ICON_EVALUATE);
-                        btnEvaluate.setOnAction((ActionEvent event) -> {
-                            TrackLite track = getTableView().getItems().get(getIndex());
-                            onEvaluateButtonClick(track);
-                        });
-                        IconButton btnRemove = new IconButton(IconButton.ICON_DELETE);
-                        btnRemove.setOnAction((ActionEvent event) -> {
-                            TrackLite track = getTableView().getItems().get(getIndex());
-                            onRemoveButtonClick(track);
-                        });
+        // Get the JavaFx parent element
+        Stage stage = MainClient.getStage();
+        Scene scene = stage.getScene();
 
-                        hbox.setAlignment(Pos.CENTER);
-                        hbox.getChildren().add(btnEvaluate);
-                        hbox.getChildren().add(btnRemove);
-                    }
+        BorderPane borderPane = (BorderPane) scene.getRoot();
 
-                    @Override
-                    public void updateItem(Void item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            setGraphic(hbox);
-                        }
-                    }
-                };
-            }
-        };
-    }
-
-    private void onRemoveButtonClick(TrackLite track) {
-        try
-        {
-            this.controller.getViewMusicServices().openDeleteTrack(track.getId());
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void onEvaluateButtonClick(TrackLite track) {
         try {
-            //pas de vue Evaluate track, à voir ce qu'on fait
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            // Load the view and controller
+            FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/my-track-view.fxml"));
+            MyTrackController myTrackController = new MyTrackController(this.controller);
+            fxmlLoader.setController(myTrackController);
+
+            // Update the displayed scene
+            borderPane.setCenter(fxmlLoader.load());
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
     }
 }
