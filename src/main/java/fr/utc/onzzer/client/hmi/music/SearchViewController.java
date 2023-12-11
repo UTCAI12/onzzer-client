@@ -191,7 +191,6 @@ public class SearchViewController {
 
                 IconButton btn = new IconButton(IconButton.ICON_DOWNLOAD);
                 btn.setOnAction((ActionEvent event) -> {
-                    System.out.println(trackId);
                     TrackLite track = getTableView().getItems().get(getIndex());
                     onDownloadButtonClick(track);
                 });

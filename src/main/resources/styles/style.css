@@ -77,6 +77,8 @@
 /* dark controls styles */
 .separator-dark .line {
 	-fx-background-color: -fx-color-black;
+	-fx-min-height: 1px;
+	-fx-min-width: 1px;
 }
 
 /* reusable styles */
