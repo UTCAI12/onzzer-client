@@ -3,7 +3,6 @@ package fr.utc.onzzer.client.communication.impl;
 import fr.utc.onzzer.client.communication.ComMainServices;
 import fr.utc.onzzer.client.communication.ComMusicServices;
 import fr.utc.onzzer.client.data.DataServicesProvider;
-import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.common.dataclass.*;
 import fr.utc.onzzer.common.dataclass.communication.SocketMessage;
 import fr.utc.onzzer.common.dataclass.communication.SocketMessagesTypes;
@@ -17,7 +16,6 @@ import java.util.function.BiConsumer;
 
 public class ClientCommunicationController implements ComMainServices, ComMusicServices {
 
-    private ClientModel clientModel;
 
     private final Map<SocketMessagesTypes, BiConsumer<SocketMessage, ClientSocketManager>> messageHandlers;
 
@@ -28,11 +26,13 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
     private final String serverAddress;
     private final int serverPort;
     private Socket socket;
+    private final DataServicesProvider dataServicesProvider;
 
     public ClientCommunicationController(final String serverAddress, final int serverPort, final DataServicesProvider dataServicesProvider) {
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
         this.clientRequestHandler = new ClientRequestHandler(dataServicesProvider);
+        this.dataServicesProvider = dataServicesProvider;
 
         this.messageHandlers = new HashMap<>();
 
@@ -63,14 +63,40 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
             TrackLite trackLite = (TrackLite) message.object;
             this.clientRequestHandler.publishTrack(trackLite);
         });
+        messageHandlers.put(SocketMessagesTypes.SERVER_PING, (message, sender) -> {
+            this.sendServer(SocketMessagesTypes.USER_PING, null);
+        });
         messageHandlers.put(SocketMessagesTypes.SERVER_STOPPED, (message, sender) -> {
             System.out.println("I have received a SERVER_STOPPED message from server!");
             this.clientRequestHandler.serverStopped();
         });
-
+        messageHandlers.put(SocketMessagesTypes.GET_TRACK, (message, sender) -> {
+            UUID trackId = (UUID) message.object;
+            try {
+                Track track = this.clientRequestHandler.getTrack(trackId);
+                this.sendServer(SocketMessagesTypes.DOWNLOAD_TRACK, track);
+            } catch (Exception e) {
+                System.out.println("Can't find the track " + trackId);
+            }
+        });
+        messageHandlers.put(SocketMessagesTypes.PUBLISH_COMMENT, (message, sender) -> {
+            ArrayList<Object> comment = (ArrayList<Object>) message.object;
+            try {
+                this.clientRequestHandler.publishComment(comment);
+            } catch (Exception e) {
+                System.out.println("Error while processing comment: " + e.getMessage());
+            }
+        });
+        messageHandlers.put(SocketMessagesTypes.DOWNLOAD_TRACK, (message, sender) -> {
+            Track track = (Track) message.object;
+            try {
+                this.clientRequestHandler.receiveTrack(track);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
         try  {
-            this.socket =  new Socket(serverAddress, serverPort);
-            this.clientSocketManager = new ClientSocketManager(this.socket, this);
+            this.clientSocketManager = new ClientSocketManager(new Socket(serverAddress, serverPort), this);
             this.clientSocketManager.start();
         } catch (IOException e) {
             e.printStackTrace();
@@ -107,35 +133,48 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
 
     @Override
     public void disconnect() throws Exception {
-
+        this.sendServer(SocketMessagesTypes.USER_DISCONNECT, this.dataServicesProvider.getDataUserServices().getUser().toUserLite());
+        this.clientSocketManager.close();
     }
 
     @Override
     public void downloadTrack(UUID trackId) throws Exception {
         try {
             // Create a new SocketMessage with the type GET_TRACK and the track's UUID as the object.
-            SocketMessage message = new SocketMessage(SocketMessagesTypes.GET_TRACK, trackId);
-            // Use the clientSocketManager to send the message to the server.
-            this.clientSocketManager.send(message);
+            this.sendServer(SocketMessagesTypes.GET_TRACK, trackId);
         } catch (Exception e) {
             // Handle any exceptions that may occur during the process.
             throw new Exception("Error sending download track request: " + e.getMessage(), e);
         }
     }
-
     @Override
     public void updateTrack(TrackLite track) throws Exception {
-
+        try {
+            this.sendServer(SocketMessagesTypes.UPDATE_TRACK, track);
+        } catch (Exception e) {
+            // Handle any exceptions that may occur during the process.
+            throw new Exception("Error sending track: " + e.getMessage(), e);
+        }
     }
 
     @Override
     public void publishTrack(TrackLite track) throws Exception {
-
+        try {
+            this.sendServer(SocketMessagesTypes.PUBLISH_TRACK, track);
+        } catch (Exception e) {
+            // Handle any exceptions that may occur during the process.
+            throw new Exception("Error sending track: " + e.getMessage(), e);
+        }
     }
 
     @Override
     public void unpublishTrack(TrackLite track) throws Exception {
-
+        try {
+            this.sendServer(SocketMessagesTypes.UNPUBLISH_TRACK, track);
+        } catch (Exception e) {
+            // Handle any exceptions that may occur during the process.
+            throw new Exception("Error sending track: " + e.getMessage(), e);
+        }
     }
 
     @Override
@@ -145,6 +184,13 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
 
     @Override
     public void addComment(UUID trackId, Comment comment) throws Exception {
-
+        ArrayList<Object> commentDto = new ArrayList<Object>();
+        commentDto.add(trackId);
+        commentDto.add(comment);
+        try {
+            this.sendServer(SocketMessagesTypes.PUBLISH_COMMENT, commentDto);
+        } catch (Exception e){
+            throw new Exception("Error sending publish comment request: " + e.getMessage(), e);
+        }
     }
 }

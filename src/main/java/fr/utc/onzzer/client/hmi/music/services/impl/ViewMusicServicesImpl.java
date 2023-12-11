@@ -4,6 +4,7 @@ import fr.utc.onzzer.client.MainClient;
 import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.client.hmi.main.LoginViewController;
 
+import fr.utc.onzzer.client.hmi.music.SearchViewController;
 import fr.utc.onzzer.client.hmi.music.UploadViewController;
 import fr.utc.onzzer.client.hmi.music.services.ViewMusicServices;
 import javafx.fxml.FXMLLoader;
@@ -29,10 +30,9 @@ public class ViewMusicServicesImpl implements ViewMusicServices {
         BorderPane borderPane = (BorderPane) scene.getRoot();
 
         // Load the view and controller
-        // TODO change the test view and controller
-        FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/login-view.fxml"));
-        //LoginViewController loginViewController = new LoginViewController(globalController);
-        //fxmlLoader.setController(loginViewController);
+        FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/search-view.fxml"));
+        SearchViewController searchViewController = new SearchViewController(globalController);
+        fxmlLoader.setController(searchViewController);
 
         // Update the displayed scene
         borderPane.setCenter(fxmlLoader.load());

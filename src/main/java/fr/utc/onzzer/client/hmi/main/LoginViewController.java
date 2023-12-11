@@ -18,8 +18,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -44,7 +46,16 @@ public class LoginViewController {
     private VBox inputGroupPassword;
 
     @FXML
+    private TextField pseudoInput;
+
+    @FXML
+    private TextField passwordInput;
+
+    @FXML
     private Label loginError;
+
+    @FXML
+    private Label importError;
 
     @FXML
     private void onRegisterLabelClick() throws IOException {
@@ -158,13 +169,6 @@ public class LoginViewController {
         // Login.
         try {
 
-            // Initializing controller.
-            this.controller.initialize(ip.value(), port.value());
-
-            // Providers.
-            ComServicesProvider comServicesProvider = this.controller.getComServicesProvider();
-            ComMainServices comServices = comServicesProvider.getComMainServices();
-
             DataServicesProvider dataServicesProvider = this.controller.getDataServicesProvider();
             DataUserServices userServices = dataServicesProvider.getDataUserServices();
 
@@ -176,6 +180,12 @@ public class LoginViewController {
                 return;
             }
 
+            // Initializing controller.
+            this.controller.initialize(ip.value(), port.value());
+
+            ComServicesProvider comServicesProvider = this.controller.getComServicesProvider();
+            ComMainServices comServices = comServicesProvider.getComMainServices();
+
             // Login in the user.
             this.login(userServices, comServices);
 
@@ -185,6 +195,45 @@ public class LoginViewController {
 
             // Showing an error message.
             this.showGlobalError("Une erreur est survenue. Veuillez réessayer.");
+        }
+    }
+
+    @FXML
+    private void onImportButtonClick() {
+
+        // Hide previous errors.
+        this.hideImportError();
+
+        DataServicesProvider dataServicesProvider = this.controller.getDataServicesProvider();
+        DataUserServices userServices = dataServicesProvider.getDataUserServices();
+
+        // File selection.
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choisir le fichier de profil.");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Profiles", "*.ser"));
+
+        File selectedFile = fileChooser.showOpenDialog(MainClient.getStage());
+
+        if(selectedFile == null) {
+            return;
+        }
+
+        // Importing profile.
+        String filePath = selectedFile.getAbsolutePath();
+
+        try{
+
+            User user = userServices.importProfile(filePath);
+
+            this.pseudoInput.setText(user.getUsername());
+            this.passwordInput.setText(user.getPassword());
+
+        } catch (Exception exception){
+
+            exception.printStackTrace();
+
+            this.showImportError();
         }
     }
 
@@ -239,5 +288,15 @@ public class LoginViewController {
     private void hideGlobalError() {
         this.loginError.setVisible(false);
         this.loginError.setManaged(false);
+    }
+
+    private void showImportError() {
+        this.importError.setVisible(true);
+        this.importError.setManaged(true);
+    }
+
+    private void hideImportError() {
+        this.importError.setVisible(false);
+        this.importError.setManaged(false);
     }
 }
