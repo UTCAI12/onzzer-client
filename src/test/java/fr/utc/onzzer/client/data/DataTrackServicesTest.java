@@ -249,9 +249,31 @@ public class DataTrackServicesTest {
         try {
             // Appelez la méthode saveTrack avec la piste créée
             dataTrackServices.saveTrack(track);
-            dataTrackServices.publishTrack(track);
+            dataTrackServices.publishTrack(track.toTrackLite());
         } catch (Exception e) {
             Assertions.fail("Erreur lors de la publication de la piste : " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testUnpublishTrack() {
+        // Créez une piste (Track) pour le test
+        Track track = new Track(UUID.randomUUID(), "du texte en musique".getBytes(), UUID.randomUUID(), "artist", "album", false);
+        try {
+            // Appelez la méthode saveTrack avec la piste créée
+            dataTrackServices.saveTrack(track);
+            dataTrackServices.unpublishTrack(track.toTrackLite());
+        } catch (Exception e) {
+            Assertions.fail("Erreur lors de la dépublication de la piste : " + e.getMessage());
+        }
+
+        // Afficher la track
+        try {
+            // Appelez la méthode getTrack avec l'UUID de la piste créée
+            Track track2 = dataTrackServices.getTrack(track.getId());
+            Assertions.assertEquals(track, track2);
+        } catch (Exception e) {
+            Assertions.fail("Erreur lors de la récupération de la piste : " + e.getMessage());
         }
     }
 }

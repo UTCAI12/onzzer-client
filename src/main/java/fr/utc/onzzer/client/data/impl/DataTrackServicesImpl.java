@@ -24,7 +24,10 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
     private DataRepository dataRepository;
 
     public DataTrackServicesImpl(DataRepository dataRepository) {
+
         this.dataRepository = dataRepository;
+
+
     }
 
     @Override
@@ -134,7 +137,9 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
     }
 
     @Override
-    public void publishTrack(Track track) {
+    public void publishTrack(TrackLite tracklite) {
+        //récupérer le track dans la liste des tracks
+        Track track = this.dataRepository.getTrackByID(tracklite.getId());
         track.setPrivateTrack(false);
         try {
             this.updateTrack(track);
@@ -144,7 +149,8 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
     }
 
     @Override
-    public void unpublishTrack(Track track) {
+    public void unpublishTrack(TrackLite tracklite) {
+        Track track = this.dataRepository.getTrackByID(tracklite.getId());
         track.setPrivateTrack(true);
         try {
             this.updateTrack(track);
