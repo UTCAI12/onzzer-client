@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.TextField;
@@ -55,6 +56,9 @@ public class UploadViewController {
     @FXML
     private Button btnSave;
 
+    @FXML
+    private CheckBox chkShare;
+
     public UploadViewController(GlobalController controller) {
         DataServicesProvider dataServicesProvider = controller.getDataServicesProvider();
         this.trackServices = dataServicesProvider.getDataTrackServices();
@@ -92,7 +96,7 @@ public class UploadViewController {
     }
 
     @FXML
-    public void onClickSave(ActionEvent actionEvent) throws Exception {
+    public void onClickSave(ActionEvent actionEvent) throws Exception `{
         // If the form has error, do not do anything.
         boolean hasErrors = checkErrors();
         if(hasErrors) return;
@@ -100,12 +104,12 @@ public class UploadViewController {
         String title = this.onTitleChange().value();
         String author = this.onArtistChange().value();
         String album = this.onAlbumChange().value();
-        byte[] file = Files.readAllBytes(this.filePath);
+        boolean isPrivate = this.chkShare.isSelected();
 
         User user = this.userServices.getUser();
         UUID trackID = UUID.randomUUID();
-        fr.utc.onzzer.common.dataclass.Track track = new Track(trackID, user.getId(), title, author);
-        track.setAudio(file);
+        fr.utc.onzzer.common.dataclass.Track track = new Track(trackID, filePath.toString(), user.getId(), title, author, isPrivate);
+        track.setAlbum(album);
         this.trackServices.saveTrack(track);
         Stage stage = MainClient.getStage();
         Scene current = stage.getScene();
@@ -114,6 +118,7 @@ public class UploadViewController {
         Scene scene = new Scene(fxmlLoader.load(), current.getWidth(), current.getHeight());
         stage.setScene(scene);
     }
+
     private boolean checkErrors() throws IOException {
         // Validating inputs.
         ValidationResult<String> title = this.onTitleChange();
@@ -150,10 +155,12 @@ public class UploadViewController {
         return new ValidationResult<>(title, false);
     }
 
+    @FXML
     private ValidationResult<String> onArtistChange() {
         String title = ((TextField) this.inputGroupArtist.lookup(".input")).getText();
 
         // artist is allowed to be empty or blank.
         return new ValidationResult<>(title, false);
     }
+
 }
