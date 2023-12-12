@@ -28,8 +28,18 @@ public class ClientRequestHandler {
         this.dataServicesProvider.getDataUserServices().deleteUser(userLite);
     }
 
+    void updateTrack(final TrackLite trackLite) {
+        this.dataServicesProvider.getDataTrackServices().updateTrack(trackLite);
+    }
+
     void publishTrack(final TrackLite trackLite) {
-//        this.dataServicesProvider.getDataTrackServices().addTrack(trackLite);
+        this.dataServicesProvider.getDataTrackServices().publishedTrack(trackLite);
+
+    }
+
+    void unpublishTrack(final TrackLite trackLite) {
+        this.dataServicesProvider.getDataTrackServices().unpublishedTrack(trackLite);
+
     }
 
     Track getTrack(final UUID trackID) throws Exception {

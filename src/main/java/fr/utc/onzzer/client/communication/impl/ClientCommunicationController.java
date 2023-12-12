@@ -63,6 +63,14 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
             TrackLite trackLite = (TrackLite) message.object;
             this.clientRequestHandler.publishTrack(trackLite);
         });
+        messageHandlers.put(SocketMessagesTypes.UPDATE_TRACK, (message, sender) -> {
+            TrackLite trackLite = (TrackLite) message.object;
+            this.clientRequestHandler.updateTrack(trackLite);
+        });
+        messageHandlers.put(SocketMessagesTypes.UNPUBLISH_TRACK, (message, sender) -> {
+            TrackLite trackLite = (TrackLite) message.object;
+            this.clientRequestHandler.unpublishTrack(trackLite);
+        });
         messageHandlers.put(SocketMessagesTypes.SERVER_PING, (message, sender) -> {
             this.sendServer(SocketMessagesTypes.USER_PING, null);
         });
