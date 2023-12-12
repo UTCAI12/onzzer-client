@@ -7,6 +7,7 @@ import fr.utc.onzzer.common.dataclass.TrackLite;
 import fr.utc.onzzer.common.dataclass.UserLite;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,7 +17,12 @@ public class ClientRequestHandler {
         this.dataServicesProvider = dataServicesProvider;
     }
 
-    void userConnect(final UserLite userLite) throws Exception {
+    void userConnect(final HashMap<UserLite, List<TrackLite>> connectData) throws Exception {
+        UserLite userLite = connectData.keySet().iterator().next();
+        List<TrackLite> trackList = connectData.get(userLite);
+        for(TrackLite t: trackList){
+            this.dataServicesProvider.getDataTrackServices().addTrackToLibrary(t.getId());
+        }
         this.dataServicesProvider.getDataUserServices().addUser(userLite);
     }
 
