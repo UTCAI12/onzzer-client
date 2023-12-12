@@ -162,6 +162,34 @@ public class DataTrackServicesTest {
             Assertions.fail("Erreur lors de la récupération de la piste : " + e.getMessage());
         }
     }
+    //Test getOtherTracklites
+    @Test
+    void testGetOtherTrackLites(){
+        // Créez une piste (Track) pour le test
+        Track track = new Track(UUID.randomUUID(), "dfqzd".getBytes(), UUID.randomUUID(), "artist", "album", false);
+        try {
+            dataTrackServices.publishedTrack(track.toTrackLite());
+            // Appelez la méthode saveTrack avec la piste créée
+            dataTrackServices.addTrackToLibrary(track.getId());
+            dataTrackServices.updateTrack(track);
+        } catch (Exception e) {
+            Assertions.fail("Erreur lors de la sauvegarde de la piste : " + e.getMessage());
+        }
+        ArrayList<TrackLite> tracks = dataTrackServices.getOtherTrackLites();
+        System.out.println(tracks);
+        try {
+            //Si le son est present dans la liste des tracks alors assert = true
+            boolean assert1 = false;
+            for (TrackLite track1 : tracks) {
+                if (track1.getId().equals(track.getId())) {
+                    assert1 = true;
+                }
+            }
+            Assertions.assertTrue(assert1);
+        } catch (Exception e) {
+            Assertions.fail("Erreur lors de la récupération de la piste : " + e.getMessage());
+        }
+    }
 
     @Test
     void testGetTrackLites() {

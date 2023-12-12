@@ -146,9 +146,10 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
     public ArrayList<TrackLite> getOtherTrackLites() {
         ArrayList<TrackLite> tracklites = new ArrayList<TrackLite>();
         for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
-            for (TrackLite trackLite : entry.getValue()) {
-                tracklites.add(trackLite);
-            }
+            if(entry.getValue() != null)
+                for (TrackLite trackLite : entry.getValue()) {
+                    tracklites.add(trackLite);
+                };
         }
         return tracklites;
     }
