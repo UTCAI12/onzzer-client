@@ -161,7 +161,7 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
     @Override
     public void removeAllTracks(){
         dataRepository.tracks.clear();
-        this.notify(null, Track.class, ModelUpdateTypes.DELETE_TRACK);
+        this.notify(null, Track.class, ModelUpdateTypes.DELETE_ALL_TRACKS);
     }
     @Override
     public void deleteTrack(UUID uuid){

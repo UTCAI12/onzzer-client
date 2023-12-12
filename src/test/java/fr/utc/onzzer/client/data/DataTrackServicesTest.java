@@ -4,6 +4,8 @@ import fr.utc.onzzer.client.data.impl.DataRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.HashMap;
 import java.util.List;
@@ -123,8 +125,15 @@ public class DataTrackServicesTest {
 
         try {
             // Appelez la méthode getTrack avec l'UUID de la piste créée
-            TrackLite trackLite = dataTrackServices.getTrackLites().get(0);
-            Assertions.assertEquals(track.toTrackLite().getId(), trackLite.getId());
+            ArrayList<TrackLite> traclites= dataTrackServices.getTrackLites();
+            //Si le son est present dans la liste des traclites alors assert = true
+            boolean assert1 = false;
+            for (TrackLite traclite : traclites) {
+                if (traclite.getId().equals(track.getId())) {
+                    assert1 = true;
+                }
+            }
+            Assertions.assertTrue(assert1);
         } catch (Exception e) {
             Assertions.fail("Erreur lors de la récupération de la piste : " + e.getMessage());
         }
