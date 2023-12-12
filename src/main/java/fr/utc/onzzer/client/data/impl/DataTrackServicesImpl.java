@@ -212,6 +212,9 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
         //Modifier dans la hashmap des userLite / tracklites
         for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
             if (entry.getKey().getId() == trackLite.getUserId()) {
+                if(entry.getValue() == null){
+                    entry.setValue(new ArrayList<TrackLite>());
+                }
                 //on ajoute le track à la liste des tracks de l'utilisateur
                 entry.getValue().add(trackLite);
             }
@@ -225,15 +228,16 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
         //Modifier dans la hashmap des userLite / tracklites
         for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
             if (entry.getKey().getId() == trackLite.getUserId()) {
-                //on remove le track à la liste des tracks de l'utilisateur
-                for (TrackLite trackLite1 : entry.getValue()) {
-                    if (trackLite1.getId() == trackLite.getId()) {
-                        entry.getValue().remove(trackLite1);
-                        this.notify(trackLite, TrackLite.class, ModelUpdateTypes.DELETE_TRACK);
-                        break;
+                if(entry.getValue() != null)
+                    //on remove le track à la liste des tracks de l'utilisateur
+                    for (TrackLite trackLite1 : entry.getValue()) {
+                        if (trackLite1.getId() == trackLite.getId()) {
+                            entry.getValue().remove(trackLite1);
+                            this.notify(trackLite, TrackLite.class, ModelUpdateTypes.DELETE_TRACK);
+                            break;
+                        }
                     }
                 }
-            }
         }
     }
 
