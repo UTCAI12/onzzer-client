@@ -26,9 +26,17 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
     public DataTrackServicesImpl(DataRepository dataRepository) {
         this.dataRepository = dataRepository;
         System.out.println("DataTrackServices constructor");
-        //lire tous les fichiers .ser dans le dossier tracks et les ajouter à la liste des tracks
-        String tracksDirectory = "data/tracks";
+        //Verifier que le dossier data/tracks existe, sinon le créer
+        String tracksDirectory = "data";
         File directory = new File(tracksDirectory);
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+        tracksDirectory = "data/tracks";
+        directory = new File(tracksDirectory);
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
         //Lire tous les fichiers .ser du dossier
         try {
             File[] files = directory.listFiles(new FilenameFilter() {
@@ -50,6 +58,8 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
         } catch (Exception ex) {
             System.out.println("Erreur lors de la lecture des fichiers .ser dans le dossier tracks : " + ex.getMessage());
         }
+
+
     }
 
     @Override

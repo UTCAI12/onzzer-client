@@ -19,6 +19,18 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
     public DataUserServicesImpl(final DataRepository dataRepository) {
         this.dataRepository = dataRepository;
         System.out.println("DataUserServicesImpl constructor");
+
+        //Vérifier que le dossier data/profiles existe, sinon le créer
+        String profilesDirectory = "data";
+        File directory = new File(profilesDirectory);
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+        profilesDirectory = "data/profiles";
+        directory = new File(profilesDirectory);
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
     }
     @Override
     public User importProfile(String filePath) throws Exception {
