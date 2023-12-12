@@ -208,7 +208,8 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
 
 
     @Override
-    public void publishedTrack(TrackLite trackLite) {
+    public void publishedTrack(TrackLite trackLite){
+        boolean found = false;
         //Modifier dans la hashmap des userLite / tracklites
         for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
             if (entry.getKey().getId() == trackLite.getUserId()) {
@@ -217,14 +218,19 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
                 }
                 //on ajoute le track à la liste des tracks de l'utilisateur
                 entry.getValue().add(trackLite);
+                found = true;
+                this.notify(trackLite, TrackLite.class, ModelUpdateTypes.NEW_TRACK);
             }
         }
-        this.notify(trackLite, TrackLite.class, ModelUpdateTypes.NEW_TRACK);
+        if(!found){
+            System.out.println("User not found");
+        }
     }
 
 
     @Override
-    public void unpublishedTrack(TrackLite trackLite) {
+    public void unpublishedTrack(TrackLite trackLite){
+        boolean found = false;
         //Modifier dans la hashmap des userLite / tracklites
         for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
             if (entry.getKey().getId() == trackLite.getUserId()) {
@@ -233,11 +239,15 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
                     for (TrackLite trackLite1 : entry.getValue()) {
                         if (trackLite1.getId() == trackLite.getId()) {
                             entry.getValue().remove(trackLite1);
+                            found = true;
                             this.notify(trackLite, TrackLite.class, ModelUpdateTypes.DELETE_TRACK);
                             break;
                         }
                     }
                 }
+        }
+        if(!found){
+            System.out.println("Track not found");
         }
     }
 
