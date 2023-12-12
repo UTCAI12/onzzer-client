@@ -33,12 +33,12 @@ public class ClientRequestHandler {
     }
 
     void publishTrack(final TrackLite trackLite) {
-        this.dataServicesProvider.getDataTrackServices().updateTrack(trackLite);
+        this.dataServicesProvider.getDataTrackServices().publishedTrack(trackLite);
 
     }
 
     void unpublishTrack(final TrackLite trackLite) {
-        this.dataServicesProvider.getDataTrackServices().updateTrack(trackLite);
+        this.dataServicesProvider.getDataTrackServices().unpublishedTrack(trackLite);
 
     }
 
