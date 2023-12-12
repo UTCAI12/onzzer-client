@@ -19,6 +19,7 @@ public class DataRepository {
 
     public User user;
 
+    public ArrayList<UUID> toDownloadTracks = new ArrayList<UUID>();
 
     Track getTrackByID(UUID trackId){
         int track = 0;
@@ -36,6 +37,8 @@ public class DataRepository {
     User getUser() {
         return this.user;
     }
+
+
 
 }
 

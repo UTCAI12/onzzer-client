@@ -1,8 +1,6 @@
 package fr.utc.onzzer.client.hmi.music;
 
 import fr.utc.onzzer.client.MainClient;
-import fr.utc.onzzer.client.communication.ComMainServices;
-import fr.utc.onzzer.client.communication.ComServicesProvider;
 import fr.utc.onzzer.client.data.DataServicesProvider;
 import fr.utc.onzzer.client.data.DataTrackServices;
 import fr.utc.onzzer.client.data.DataUserServices;
@@ -31,7 +29,8 @@ import fr.utc.onzzer.client.hmi.GlobalController;
 
 
 public class UploadViewController {
-    private final GlobalController controller;
+    private final DataTrackServices trackServices;
+    private final DataUserServices userServices;
 
     private Path filePath;
 
@@ -57,7 +56,9 @@ public class UploadViewController {
     private Button btnSave;
 
     public UploadViewController(GlobalController controller) {
-        this.controller = controller;
+        DataServicesProvider dataServicesProvider = controller.getDataServicesProvider();
+        this.trackServices = dataServicesProvider.getDataTrackServices();
+        this.userServices = dataServicesProvider.getDataUserServices();
     }
 
 
@@ -101,18 +102,11 @@ public class UploadViewController {
         String album = this.onAlbumChange().value();
         byte[] file = Files.readAllBytes(this.filePath);
 
-        // Providers.
-        ComServicesProvider comServicesProvider = this.controller.getComServicesProvider();
-        ComMainServices comServices = comServicesProvider.getComMainServices();
-        DataServicesProvider dataServicesProvider = this.controller.getDataServicesProvider();
-        DataTrackServices trackServices = dataServicesProvider.getDataTrackServices();
-        DataUserServices userServices = dataServicesProvider.getDataUserServices();
-
-        User user = userServices.getUser();
+        User user = this.userServices.getUser();
         UUID trackID = UUID.randomUUID();
-        fr.utc.onzzer.common.dataclass.Track track = new Track(trackID, user.getId(), title, author);
+        fr.utc.onzzer.common.dataclass.Track track = new Track(trackID, user.getId(), title, author, true);
         track.setAudio(file);
-        trackServices.saveTrack(track);
+        this.trackServices.saveTrack(track);
         Stage stage = MainClient.getStage();
         Scene current = stage.getScene();
 

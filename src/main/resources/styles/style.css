@@ -5,7 +5,9 @@
 	-fx-color-gray: #E8E8E8;
 	-fx-color-dark-gray: #333333;
 	-fx-color-purple: #8A2BE2;
+	-fx-color-purple-background: #E8D5F9;
 	-fx-color-red: #D22D37;
+	-fx-color-transparent: #00000000;
 }
 
 .separator .line {
@@ -13,12 +15,46 @@
 	-fx-pref-height: 1;
 }
 
+/* primary color controls style */
+.input-primary {
+	-fx-color: -fx-color-purple;
+	-fx-prompt-text-fill: derive(-fx-color-purple, 65%);
+	-fx-text-fill: -fx-color-purple;
+	-fx-font-weight: bold;
+	-fx-border-width: 1px;
+	-fx-border-color: -fx-color-purple;
+	-fx-background-color: -fx-color-purple-background;
+	-fx-border-radius: 4px;
+}
+
+.search-field {
+    -fx-background-image:url('../img/search-icon.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: right center;
+}
+
+.icon-button {
+    -fx-background-color: -fx-color-transparent;
+}
+
+.icon-button:hover {
+    -fx-background-color: -fx-color-purple-background;
+}
+
+.icon {
+    -fx-background-color: -fx-color-purple;
+    -fx-min-height: -icon-size;
+    -fx-min-width: -icon-size;
+    -fx-max-height: -icon-size;
+    -fx-max-width: -icon-size;
+}
+
 /* light controls styles */
- .input-light {
- 	-fx-border-color: -fx-color-black;
- 	-fx-background-color: -fx-color-gray;
- 	-fx-border-width: 1px;
- }
+.input-light {
+	-fx-border-color: -fx-color-black;
+	-fx-background-color: -fx-color-gray;
+	-fx-border-width: 1px;
+}
 
 .button-light, .button-light * {
 	-fx-color: -fx-color-white;
@@ -41,6 +77,8 @@
 /* dark controls styles */
 .separator-dark .line {
 	-fx-background-color: -fx-color-black;
+	-fx-min-height: 1px;
+	-fx-min-width: 1px;
 }
 
 /* reusable styles */
@@ -65,6 +103,7 @@
 
 .button {
 	-fx-cursor: hand;
+	-fx-background-radius: 50;
 }
 
 .submit-button {
