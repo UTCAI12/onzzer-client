@@ -2,10 +2,11 @@ package fr.utc.onzzer.client.data.impl;
 
 import fr.utc.onzzer.client.data.DataRatingServices;
 import fr.utc.onzzer.common.dataclass.Rating;
+import fr.utc.onzzer.common.services.Listenable;
 
 import java.util.UUID;
 
-public class DataRatingServicesImpl implements DataRatingServices {
+public class DataRatingServicesImpl extends Listenable implements DataRatingServices {
 
     public DataRatingServicesImpl() {}
     @Override

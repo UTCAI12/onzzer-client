@@ -83,7 +83,7 @@ public class ViewMusicServicesImpl implements ViewMusicServices {
         fxmlLoader.setController(controller);
 
         // Set the content of the popup stage
-        Scene popupScene = new Scene(fxmlLoader.load(), 200, 100);
+        Scene popupScene = new Scene(fxmlLoader.load(), 307, 365);
         popupStage.setScene(popupScene);
 
         // Set the position relative to the primary stage
