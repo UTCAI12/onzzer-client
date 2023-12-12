@@ -39,6 +39,9 @@ public class UploadViewController {
     private Label noFileError;
 
     @FXML
+    private Label fileNameLabel;
+
+    @FXML
     private Label wrongFileError;
 
     @FXML
@@ -73,7 +76,7 @@ public class UploadViewController {
     public void onClickUpload(ActionEvent actionEvent) throws IOException {
         noFileError.setVisible(false);
         wrongFileError.setVisible(false);
-        Stage stage = MainClient.getStage();
+        Stage stage = (Stage) this.btnSave.getScene().getWindow();
         FileChooser fileC = new FileChooser();
         fileC.setTitle("Choisir un fichier");
         File file = fileC.showOpenDialog(stage);
@@ -88,79 +91,71 @@ public class UploadViewController {
             wrongFileError.setVisible(false);
             this.filePath = Paths.get(file.getPath());
         }
-        else if (extension.equals("")) {
-            noFileError.setVisible(true);
-            wrongFileError.setVisible(false);
-        }
         else {
             wrongFileError.setVisible(true);
             noFileError.setVisible(false);
+            this.filePath = null;
         }
-        System.out.println(fileName);
+        fileNameLabel.setText(fileName);
     }
 
     @FXML
     public void onClickSave(ActionEvent actionEvent) throws Exception {
         // If the form has error, do not do anything.
         boolean hasErrors = checkErrors();
-        System.out.println("saved");
-        String title = this.onTitleChange().value();
-        String author = this.onArtistChange().value();
-        String album = this.onAlbumChange().value();
-
+        String title = this.checkTitle().value();
+        String author = this.getArtist();
+        String album = this.getAlbum();
         boolean isPrivate = !this.checkboxShare.isSelected();
-
 
         User user = this.userServices.getUser();
         UUID trackID = UUID.randomUUID();
-        fr.utc.onzzer.common.dataclass.Track track = new Track(trackID, filePath.toString(), user.getId(), title, author, isPrivate);
-        track.setAlbum(album);
-        this.trackServices.saveTrack(track);
-        Stage stage = (Stage) this.btnSave.getScene().getWindow();
-        stage.close();
+        if (!hasErrors) {
+            fr.utc.onzzer.common.dataclass.Track track = new Track(trackID, filePath.toString(), user.getId(), title, author, isPrivate);
+            track.setAlbum(album);
+            this.trackServices.saveTrack(track);
+            Stage stage = (Stage) this.btnSave.getScene().getWindow();
+            stage.close();
+        }
     }
 
     private boolean checkErrors() throws IOException {
         // Validating inputs.
-        ValidationResult<String> title = this.onTitleChange();
-        ValidationResult<String> artist = this.onArtistChange();
-        ValidationResult<String> album = this.onAlbumChange();
+        ValidationResult<String> title = this.checkTitle();
+        if (title.hasError()){
+            ValidationUtil.showError(this.inputGroupTitle);
+        }
+        else ValidationUtil.hideError(this.inputGroupTitle);
+        if (filePath==null){
+            wrongFileError.setVisible(false);
+            noFileError.setVisible(true);
+            fileNameLabel.setText(" ");
+        }
+        else noFileError.setVisible(false);
 
-        return title.hasError() || artist.hasError() || album.hasError() || filePath!=null;
+        return title.hasError() | filePath==null;
     }
 
-    private ValidationResult<String> onTitleChange() {
+    private ValidationResult<String> checkTitle() {
 
         boolean hasErrors = false;
         String title = ((TextField) this.inputGroupTitle.lookup(".input")).getText();
 
         // title must not be empty or blank.
-        if(title.isEmpty() || title.isBlank()) {
-            ValidationUtil.showError(this.inputGroupTitle);
+        if(title.isEmpty() | title.isBlank()) {
             hasErrors = true;
         }
-
-        // If there is no error, hiding error message.
-        if(!hasErrors) {
-            ValidationUtil.hideErrors(this.inputGroupTitle);
-        }
-
         return new ValidationResult<>(title, hasErrors);
     }
 
-    private ValidationResult<String> onAlbumChange() {
-        String title = ((TextField) this.inputGroupAlbum.lookup(".input")).getText();
-
-        // album is allowed to be empty or blank.
-        return new ValidationResult<>(title, false);
+    private String getAlbum() {
+        // returns the album name
+        return ((TextField) this.inputGroupAlbum.lookup(".input")).getText();
     }
 
-    @FXML
-    private ValidationResult<String> onArtistChange() {
-        String title = ((TextField) this.inputGroupArtist.lookup(".input")).getText();
-
-        // artist is allowed to be empty or blank.
-        return new ValidationResult<>(title, false);
+    private String getArtist() {
+        // returns the album name
+        return ((TextField) this.inputGroupArtist.lookup(".input")).getText();
     }
 
 }
