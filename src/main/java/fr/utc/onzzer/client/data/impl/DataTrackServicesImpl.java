@@ -148,8 +148,41 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
         track.setPrivateTrack(true);
         try {
             this.updateTrack(track);
+            //notify
+
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public void publishedTrack(TrackLite trackLite) {
+        //Modifier dans la hashmap des userLite / tracklites
+        for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
+            if (entry.getKey().getId() == trackLite.getUserId()) {
+                //on ajoute le track à la liste des tracks de l'utilisateur
+                entry.getValue().add(trackLite);
+            }
+        }
+        this.notify(trackLite, TrackLite.class, ModelUpdateTypes.NEW_TRACK);
+    }
+
+
+    @Override
+    public void unpublishedTrack(TrackLite trackLite) {
+        //Modifier dans la hashmap des userLite / tracklites
+        for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
+            if (entry.getKey().getId() == trackLite.getUserId()) {
+                //on remove le track à la liste des tracks de l'utilisateur
+                for (TrackLite trackLite1 : entry.getValue()) {
+                    if (trackLite1.getId() == trackLite.getId()) {
+                        entry.getValue().remove(trackLite1);
+                        this.notify(trackLite, TrackLite.class, ModelUpdateTypes.DELETE_TRACK);
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -163,6 +196,7 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
                     if (track.getId() == trackLite.getId()) {
                         entry.getValue().remove(track);
                         entry.getValue().add(trackLite);
+                        this.notify(trackLite, TrackLite.class, ModelUpdateTypes.UPDATE_TRACK);
                         break;
                     }
                 }
@@ -170,4 +204,5 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
         }
 
     }
+
 }

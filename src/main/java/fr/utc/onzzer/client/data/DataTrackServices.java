@@ -19,4 +19,6 @@ public interface DataTrackServices extends Service {
     void deleteTrack(UUID uuid);
     void unpublishTrack(Track track);
     void updateTrack(TrackLite trackLite);
+    void publishedTrack(TrackLite trackLite);
+    void unpublishedTrack(TrackLite trackLite);
 }
