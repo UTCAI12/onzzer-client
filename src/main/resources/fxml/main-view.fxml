@@ -8,8 +8,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -18,93 +16,97 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane id="root-pane" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
-   <left>
-      <VBox alignment="TOP_CENTER" minWidth="250.0" BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets left="25.0" right="25.0" />
-         </BorderPane.margin>
-         <HBox alignment="CENTER_LEFT">
-            <Text fx:id="username" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="h1" text="Username" />
-            <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
-               <ImageView fitHeight="20.0" fitWidth="20.0" onMouseClicked="#onDisconnect" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
-                  <viewport>
-                     <Rectangle2D />
-                  </viewport>
-                  <Image url="@../img/disconnect-icon.png" />
-               </ImageView>
-            </HBox>
-         </HBox>
-         <Separator styleClass="separator-dark" />
-         <HBox>
-            <Button fx:id="addMusic" mnemonicParsing="false" onAction="#handleAddMusic" text="Ajouter une musique">
-               <HBox.margin>
-                  <Insets bottom="10.0" top="10.0" />
-               </HBox.margin></Button>
-         </HBox>
-         <HBox>
-            <Button mnemonicParsing="false" text="Rechercher une musique">
-               <VBox.margin>
-                  <Insets bottom="10.0" />
-               </VBox.margin>
-            </Button>
-         </HBox>
-      </VBox>
-   </left>
+<BorderPane id="root-pane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <VBox alignment="TOP_CENTER" style="-fx-border-width: 1; -fx-border-color: gray; -fx-border-style: hidden solid hidden solid;" BorderPane.alignment="CENTER">
-         <padding>
-            <Insets left="25.0" right="25.0" />
-         </padding>
-         <Label styleClass="h1" text="Vos musiques" />
-         <Separator prefWidth="200.0" styleClass="separator-dark" />
-         <TableView>
-            <columns>
-               <TableColumn maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="Titre" />
-               <TableColumn maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="Artiste" />
-               <TableColumn maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="Album" />
-               <TableColumn editable="false" prefWidth="-1.0" sortable="false" text="Partagé" />
-               <TableColumn prefWidth="-1.0" text="Actions" />
-            </columns>
-            <VBox.margin>
-               <Insets top="25.0" />
-            </VBox.margin>
-            <columnResizePolicy>
-               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-            </columnResizePolicy>
-         </TableView>
-      </VBox>
    </center>
-   <right>
-      <VBox alignment="TOP_CENTER" minWidth="250.0" styleClass="h1" BorderPane.alignment="CENTER">
-         <padding>
-            <Insets left="25.0" right="25.0" />
-         </padding>
-         <Label maxWidth="1.7976931348623157E308" text="Utilisateurs" />
-         <Separator styleClass="separator-dark" VBox.vgrow="ALWAYS" />
-         <HBox>
-            <TextField fx:id="searchField" maxWidth="1.7976931348623157E308" minHeight="-Infinity" onKeyPressed="#handleSearch" prefHeight="30.0" promptText="Rechercher..." HBox.hgrow="ALWAYS">
-               <styleClass>
-                  <String fx:value="input" />
-                  <String fx:value="input-light" />
-               </styleClass>
-            </TextField>
-            <padding>
-               <Insets top="25.0" />
-            </padding>
-         </HBox>
-         <ListView fx:id="usersList" style="list-cell" VBox.vgrow="ALWAYS">
-            <VBox.margin>
-               <Insets top="25.0" />
-            </VBox.margin>
-         </ListView>
-      </VBox>
-   </right>
-   <padding>
-      <Insets bottom="25.0" top="25.0" />
-   </padding>
    <stylesheets>
       <URL value="@../styles/style.css" />
       <URL value="@../styles/main-view.css" />
    </stylesheets>
+   <padding>
+      <Insets top="25.0" />
+   </padding>
+   <left>
+      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox alignment="TOP_CENTER" minWidth="250.0">
+               <HBox alignment="CENTER_LEFT">
+                  <Text fx:id="username" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="h1" text="Username" />
+                  <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                     <ImageView fitHeight="20.0" fitWidth="20.0" onMouseClicked="#onDisconnect" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
+                        <viewport>
+                           <Rectangle2D />
+                        </viewport>
+                        <Image url="@../img/disconnect-icon.png" />
+                     </ImageView>
+                  </HBox>
+               </HBox>
+               <Separator styleClass="separator-dark" />
+               <HBox>
+                  <Button fx:id="ourMusic" mnemonicParsing="false" onAction="#handleViewOurMusic" text="Vos musique" HBox.hgrow="ALWAYS">
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </Button>
+               </HBox>
+               <HBox>
+                  <Button fx:id="addMusic" mnemonicParsing="false" onAction="#handleAddMusic" text="Ajouter une musique" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Button>
+               </HBox>
+               <HBox>
+                  <Button fx:id="searchMusic" mnemonicParsing="false" onAction="#handleSearchMusic" text="Rechercher une musique">
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </Button>
+               </HBox>
+            </VBox>
+            <Separator orientation="VERTICAL" style="-fx-min-width: 1px; -fx-background-color: lightgray;" styleClass="separator-dark">
+               <HBox.margin>
+                  <Insets left="25.0" />
+               </HBox.margin>
+            </Separator>
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="25.0" left="25.0" right="25.0" />
+         </BorderPane.margin>
+      </HBox>
+   </left>
+   <right>
+      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Separator orientation="VERTICAL" style="-fx-min-width: 1px; -fx-background-color: lightgray;" styleClass="separator-dark">
+               <HBox.margin>
+                  <Insets right="25.0" />
+               </HBox.margin>
+            </Separator>
+            <VBox alignment="TOP_CENTER" minWidth="250.0" styleClass="h1">
+               <Label maxWidth="1.7976931348623157E308" text="Utilisateurs" />
+               <Separator styleClass="separator-dark" VBox.vgrow="ALWAYS" />
+               <HBox>
+                  <TextField fx:id="searchField" maxWidth="1.7976931348623157E308" minHeight="-Infinity" onKeyPressed="#handleSearch" prefHeight="30.0" promptText="Rechercher..." HBox.hgrow="ALWAYS">
+                     <styleClass>
+                        <String fx:value="input" />
+                        <String fx:value="input-light" />
+                     </styleClass>
+                  </TextField>
+                  <padding>
+                     <Insets top="25.0" />
+                  </padding>
+               </HBox>
+               <ListView fx:id="usersList" VBox.vgrow="ALWAYS">
+                  <VBox.margin>
+                     <Insets top="25.0" />
+                  </VBox.margin>
+               </ListView>
+            </VBox>
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="25.0" left="25.0" right="25.0" />
+         </BorderPane.margin>
+      </HBox>
+   </right>
 </BorderPane>

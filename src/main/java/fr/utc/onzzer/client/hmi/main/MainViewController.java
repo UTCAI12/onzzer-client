@@ -1,6 +1,4 @@
 package fr.utc.onzzer.client.hmi.main;
-import java.io.IOException;
-import java.util.Arrays;
 
 import fr.utc.onzzer.client.MainClient;
 import fr.utc.onzzer.client.communication.ComMainServices;
@@ -8,22 +6,26 @@ import fr.utc.onzzer.client.communication.ComServicesProvider;
 import fr.utc.onzzer.client.data.DataServicesProvider;
 import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
-import fr.utc.onzzer.common.dataclass.*;
+import fr.utc.onzzer.common.dataclass.ModelUpdateTypes;
+import fr.utc.onzzer.common.dataclass.TrackLite;
+import fr.utc.onzzer.common.dataclass.User;
+import fr.utc.onzzer.common.dataclass.UserLite;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +33,9 @@ import java.util.Map;
 public class MainViewController {
 
     private final GlobalController controller;
+    private DataUserServices dataUserServices;
+    private DataServicesProvider dataServicesProvider;
+    private ComServicesProvider comServicesProvider;
 
     @FXML
     private TextField searchField;
@@ -42,27 +47,16 @@ public class MainViewController {
     private Button addMusic;
 
     @FXML
-    private TableView<Track> tableau;
+    private Button search;
 
     @FXML
-    private TableColumn<Track, String> colonneTitre;
-
-    @FXML
-    private TableColumn<Track, String> colonneAuteur;
+    private Button ourMusic;
 
     @FXML
     private Text username;
 
-    private DataUserServices dataUserServices;
-
-    private DataServicesProvider dataServicesProvider;
-    private ComServicesProvider comServicesProvider;
-
     public MainViewController(GlobalController controller) {
         this.controller = controller;
-        this.colonneTitre = new TableColumn<>();
-        this.colonneAuteur = new TableColumn<>();
-        this.tableau = new TableView<>();
         this.usersList = new ListView<>();
         this.searchField = new TextField();
     }
@@ -71,7 +65,7 @@ public class MainViewController {
 
         this.dataServicesProvider = this.controller.getDataServicesProvider();
         this.comServicesProvider = this.controller.getComServicesProvider();
-        this.dataUserServices = dataServicesProvider.getDataUserServices();
+        this.dataUserServices = this.dataServicesProvider.getDataUserServices();
 
         // Initializing username.
         this.initializeUsername();
@@ -79,8 +73,8 @@ public class MainViewController {
         // Initializing the user list.
         this.initializeUserList();
 
-        // Initializing the music list.
-        this.initializeMusicList();
+        // Initializing the track list.
+        this.initializeTrackList();
     }
 
     @FXML
@@ -103,17 +97,6 @@ public class MainViewController {
         }
     }
 
-    private void initializeMusicList() {
-        colonneTitre.setCellValueFactory(new PropertyValueFactory<>("title"));
-        colonneAuteur.setCellValueFactory(new PropertyValueFactory<>("author"));
-
-        try {
-            ObservableList<Track> tracks = FXCollections.observableArrayList(dataUserServices.getUser().getTrackList());
-            tableau.setItems(tracks);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void initializeUserList() {
 
@@ -150,6 +133,12 @@ public class MainViewController {
         users.forEach(user -> items.add(user.getUsername()));
     }
 
+    private void initializeTrackList() {
+
+        // runLater seems to be necessary, otherwise the view won't load.
+        Platform.runLater(this::showMyTrackView);
+    }
+
     @FXML
     private void handleSearch(KeyEvent event) {
 
@@ -181,13 +170,79 @@ public class MainViewController {
     }
 
     @FXML
+    private void handleViewOurMusic() {
+        this.showMyTrackView();
+    }
+
+    @FXML
+    private void onMusicAction() {
+        try {
+
+            Stage stage = MainClient.getStage();
+            Scene scene = stage.getScene();
+            this.controller.getViewMusicServices().openSearchTracks(scene);
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleSearchMusic() {
+
+        try {
+
+            Stage stage = MainClient.getStage();
+            Scene scene = stage.getScene();
+
+            this.controller.getViewMusicServices().openSearchTracks(scene);
+
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleAddMusic() {
+
+        try {
+            this.controller.getViewMusicServices().openCreateTrack();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    private void showMyTrackView() {
+
+        // Get the JavaFx parent element
+        Stage stage = MainClient.getStage();
+        Scene scene = stage.getScene();
+
+        BorderPane borderPane = (BorderPane) scene.getRoot();
+
+        try {
+
+            // Load the view and controller
+            FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/my-track-view.fxml"));
+            MyTrackController myTrackController = new MyTrackController(this.controller);
+            fxmlLoader.setController(myTrackController);
+
+            // Update the displayed scene
+            borderPane.setCenter(fxmlLoader.load());
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    @FXML
     private void onDisconnect() throws IOException {
 
         // Even if the disconnection fails, opening the login view to enable
         // the user to reconnect again.
         try {
-            ComMainServices provider = this.comServicesProvider.getComMainServices();
-            provider.disconnect();
+            ComMainServices services = this.comServicesProvider.getComMainServices();
+            services.disconnect();
         } catch (Exception exception) {
             exception.printStackTrace();
         } finally {
