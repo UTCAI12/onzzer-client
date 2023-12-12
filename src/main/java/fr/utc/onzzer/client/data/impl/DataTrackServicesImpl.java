@@ -25,6 +25,19 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
 
     public DataTrackServicesImpl(DataRepository dataRepository) {
         this.dataRepository = dataRepository;
+        //lire tous les fichiers .ser dans le dossier tracks et les ajouter à la liste des tracks
+        String tracksDirectory = "tracks";
+        File directory = new File(tracksDirectory);
+        try(FileInputStream fileInputStream = new FileInputStream(directory);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+            Object obj = objectInputStream.readObject();
+            if (obj instanceof Track) {
+                Track track = (Track) obj;
+                this.dataRepository.tracks.add(track);
+            }
+        } catch (Exception ex) {
+            System.out.println("Erreur lors de la lecture des tracks : " + ex.getMessage());
+        }
     }
 
     @Override
@@ -109,7 +122,7 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
     public ArrayList<Track> getTracks(){return this.dataRepository.tracks;}
 
     @Override
-    public ArrayList<TrackLite> getTrackLites() {
+    public ArrayList<TrackLite> getMyTrackLites() {
         ArrayList<TrackLite> tracklites = new ArrayList<TrackLite>();
         for (Track track : this.dataRepository.tracks) {
             tracklites.add(track.toTrackLite());
@@ -118,13 +131,37 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
     }
 
     @Override
+    public ArrayList<TrackLite> getOtherTrackLites() {
+        ArrayList<TrackLite> tracklites = new ArrayList<TrackLite>();
+        for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
+            for (TrackLite trackLite : entry.getValue()) {
+                tracklites.add(trackLite);
+            }
+        }
+        return tracklites;
+    }
+
+    @Override
+    public ArrayList<TrackLite> getTrackLites() {
+        ArrayList<TrackLite> tracklites = new ArrayList<TrackLite>();
+        for (Track track : this.dataRepository.tracks) {
+            tracklites.add(track.toTrackLite());
+        }
+        for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
+            for (TrackLite trackLite : entry.getValue()) {
+                tracklites.add(trackLite);
+            }
+        }
+        return tracklites;
+    }
+    @Override
     public void addTrackToLibrary(UUID uuid) {
         this.dataRepository.toDownloadTracks.add(uuid);
     }
     @Override
     public void removeAllTracks(){
         dataRepository.tracks.clear();
-        this.notify(null, Track.class, ModelUpdateTypes.DELETE_TRACK);
+        this.notify(null, Track.class, ModelUpdateTypes.DELETE_ALL_TRACKS);
     }
     @Override
     public void deleteTrack(UUID uuid){
@@ -148,8 +185,41 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
         track.setPrivateTrack(true);
         try {
             this.updateTrack(track);
+            //notify
+
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public void publishedTrack(TrackLite trackLite) {
+        //Modifier dans la hashmap des userLite / tracklites
+        for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
+            if (entry.getKey().getId() == trackLite.getUserId()) {
+                //on ajoute le track à la liste des tracks de l'utilisateur
+                entry.getValue().add(trackLite);
+            }
+        }
+        this.notify(trackLite, TrackLite.class, ModelUpdateTypes.NEW_TRACK);
+    }
+
+
+    @Override
+    public void unpublishedTrack(TrackLite trackLite) {
+        //Modifier dans la hashmap des userLite / tracklites
+        for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
+            if (entry.getKey().getId() == trackLite.getUserId()) {
+                //on remove le track à la liste des tracks de l'utilisateur
+                for (TrackLite trackLite1 : entry.getValue()) {
+                    if (trackLite1.getId() == trackLite.getId()) {
+                        entry.getValue().remove(trackLite1);
+                        this.notify(trackLite, TrackLite.class, ModelUpdateTypes.DELETE_TRACK);
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -163,6 +233,7 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
                     if (track.getId() == trackLite.getId()) {
                         entry.getValue().remove(track);
                         entry.getValue().add(trackLite);
+                        this.notify(trackLite, TrackLite.class, ModelUpdateTypes.UPDATE_TRACK);
                         break;
                     }
                 }
@@ -170,4 +241,5 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
         }
 
     }
+
 }
