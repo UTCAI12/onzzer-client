@@ -16,6 +16,7 @@ public interface DataTrackServices extends Service {
     ArrayList<Track> getTracks();
     ArrayList<TrackLite> getOtherTrackLites();
     ArrayList<TrackLite> getMyTrackLites(); //Signifie les tracks qu'il a la possibilités d'couter actuellement : les siennes et celle qu'il a téléchargés
+    ArrayList<TrackLite> getTrackLites();
     void publishTrack(Track track);
     void deleteTrack(UUID uuid);
     void unpublishTrack(Track track);
