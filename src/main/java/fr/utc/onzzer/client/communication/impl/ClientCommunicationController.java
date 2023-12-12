@@ -131,6 +131,8 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
 
     @Override
     public void connect(UserLite user, List<TrackLite> trackList) throws ConnectException {
+        HashMap<UserLite, List<TrackLite>> response = new HashMap<>();
+        response.put(user, trackList);
         this.sendServer(SocketMessagesTypes.USER_CONNECT, user);
     }
 
