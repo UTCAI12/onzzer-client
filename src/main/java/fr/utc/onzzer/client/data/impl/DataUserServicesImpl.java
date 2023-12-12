@@ -73,7 +73,7 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
                 for (File file : files) {
                     if (file.isFile()) {
                         // Manipulation de chaque fichier
-                        System.out.println("Nom du fichier : " + file.getName());
+                        System.out.println("Nom du fichier : " + file.getPath());
                         try (FileInputStream fileInputStream = new FileInputStream(file)) {
                             ObjectInputStream objStream = new ObjectInputStream(fileInputStream);
                             Object obj = objStream.readObject();

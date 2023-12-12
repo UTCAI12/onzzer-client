@@ -177,7 +177,7 @@ public class SearchViewController {
         return this.dataUserServices.getConnectedUsers()
                 .keySet()
                 .stream()
-                .filter(user -> user.getId().equals(track.getUser()))
+                .filter(user -> user.getId().equals(track.getUserId()))
                 .map(UserLite::getUsername)
                 .findFirst()
                 .orElse("");
