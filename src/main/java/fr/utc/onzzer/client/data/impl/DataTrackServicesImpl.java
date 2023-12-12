@@ -25,6 +25,19 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
 
     public DataTrackServicesImpl(DataRepository dataRepository) {
         this.dataRepository = dataRepository;
+        //lire tous les fichiers .ser dans le dossier tracks et les ajouter à la liste des tracks
+        String tracksDirectory = "tracks";
+        File directory = new File(tracksDirectory);
+        try(FileInputStream fileInputStream = new FileInputStream(directory);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+            Object obj = objectInputStream.readObject();
+            if (obj instanceof Track) {
+                Track track = (Track) obj;
+                this.dataRepository.tracks.add(track);
+            }
+        } catch (Exception ex) {
+            System.out.println("Erreur lors de la lecture des tracks : " + ex.getMessage());
+        }
     }
 
     @Override
