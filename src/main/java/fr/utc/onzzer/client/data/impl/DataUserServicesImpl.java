@@ -42,7 +42,7 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
         if (!(newClient instanceof Serializable)) {
             throw new IllegalArgumentException("User object must implement Serializable");
         }
-        String profilesDirectory = "profiles";
+        String profilesDirectory = "data/profiles";
         File directory = new File(profilesDirectory);
 
         // Si le dossier n'existe pas, créez-le
@@ -63,7 +63,7 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
     }
     @Override
     public Boolean checkCredentials(String user, String pw) throws Exception {
-        String directoryPath = "profiles";
+        String directoryPath = "data/profiles";
         File directory = new File(directoryPath);
 
         if (directory.isDirectory()) {
@@ -145,7 +145,7 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
     public void deleteUser(UserLite userLite) throws Exception {
         this.dataRepository.getConnectedUsers().remove(userLite);
         // Si le fichier existe dans le dossier profiles alors on le supprime
-        String profilesDirectory = "profiles";
+        String profilesDirectory = "data/profiles";
         File directory = new File(profilesDirectory);
         if (directory.isDirectory()) {
             File[] files = directory.listFiles(); // Liste des fichiers du répertoire
@@ -170,7 +170,7 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
     @Override
     public void updateUser(User user) throws Exception {
         // Récupérer l'utilisateur à modifier dans les fichiers du dossier profiles
-        String profilesDirectory = "profiles";
+        String profilesDirectory = "data/profiles";
         File directory = new File(profilesDirectory);
         if (directory.isDirectory()) {
             File[] files = directory.listFiles(); // Liste des fichiers du répertoire
@@ -196,7 +196,7 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
     @Override
     public void deleteAllUsers() {
         this.dataRepository.getConnectedUsers().clear();
-        String profilesDirectory = "profiles";
+        String profilesDirectory = "data/profiles";
         File directory = new File(profilesDirectory);
         if (directory.isDirectory()) {
             File[] files = directory.listFiles(); // Liste des fichiers du répertoire
