@@ -25,18 +25,30 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
 
     public DataTrackServicesImpl(DataRepository dataRepository) {
         this.dataRepository = dataRepository;
+        System.out.println("DataTrackServices constructor");
         //lire tous les fichiers .ser dans le dossier tracks et les ajouter à la liste des tracks
         String tracksDirectory = "tracks";
         File directory = new File(tracksDirectory);
-        try(FileInputStream fileInputStream = new FileInputStream(directory);
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
-            Object obj = objectInputStream.readObject();
-            if (obj instanceof Track) {
-                Track track = (Track) obj;
-                this.dataRepository.tracks.add(track);
+        //Lire tous les fichiers .ser du dossier
+        try {
+            File[] files = directory.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    return name.toLowerCase().endsWith(".ser");
+                }
+            });
+
+            for (File file : files) {
+                try (FileInputStream fileInputStream = new FileInputStream(file);
+                     ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+                    Object obj = objectInputStream.readObject();
+                    if (obj instanceof Track) {
+                        Track track = (Track) obj;
+                        this.dataRepository.tracks.add(track);
+                    }
+                }
             }
         } catch (Exception ex) {
-            System.out.println("Erreur lors de la lecture des tracks : " + ex.getMessage());
+            System.out.println("Erreur lors de la lecture des fichiers .ser dans le dossier tracks : " + ex.getMessage());
         }
     }
 
@@ -148,9 +160,10 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
             tracklites.add(track.toTrackLite());
         }
         for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
-            for (TrackLite trackLite : entry.getValue()) {
-                tracklites.add(trackLite);
-            }
+            if(entry.getValue() != null)
+                for (TrackLite trackLite : entry.getValue()) {
+                    tracklites.add(trackLite);
+                }
         }
         return tracklites;
     }

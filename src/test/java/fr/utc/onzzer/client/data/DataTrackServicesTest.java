@@ -58,7 +58,7 @@ public class DataTrackServicesTest {
             Assertions.fail("Erreur lors de la création du profil : " + e.getMessage());
         }
         // Créez une piste (Track) pour le test
-        Track track = new Track(UUID.randomUUID(), user.getId(), "artist", "album", false);
+        Track track = new Track(UUID.randomUUID(), "new Byte[]".getBytes() ,user.getId(), "artist", "album", false);
         // Créez une piste (Track) pour le test
        // Track track2 = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album");
 
@@ -95,7 +95,7 @@ public class DataTrackServicesTest {
     @Test
     void testGetTrack() {
         // Créez une piste (Track) pour le test
-        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album", false);
+        Track track = new Track(UUID.randomUUID(),"dfqzd".getBytes() , UUID.randomUUID(), "artist", "album", false);
         try {
             // Appelez la méthode saveTrack avec la piste créée
             dataTrackServices.saveTrack(track);
@@ -111,24 +111,76 @@ public class DataTrackServicesTest {
             Assertions.fail("Erreur lors de la récupération de la piste : " + e.getMessage());
         }
     }
-
     @Test
-    void testGetTrackLites() {
+    void testGetTracks(){
         // Créez une piste (Track) pour le test
-        Track track = new Track(UUID.randomUUID(), UUID.randomUUID(), "artist", "album", true);
+        Track track = new Track(UUID.randomUUID(), "dfqzd".getBytes(), UUID.randomUUID(), "artist", "album", false);
         try {
             // Appelez la méthode saveTrack avec la piste créée
             dataTrackServices.saveTrack(track);
         } catch (Exception e) {
             Assertions.fail("Erreur lors de la sauvegarde de la piste : " + e.getMessage());
         }
-
+        ArrayList<Track> tracks = dataTrackServices.getTracks();
+        System.out.println(tracks);
         try {
-            // Appelez la méthode getTrack avec l'UUID de la piste créée
-            ArrayList<TrackLite> traclites= dataTrackServices.getTrackLites();
+            //Si le son est present dans la liste des tracks alors assert = true
+            boolean assert1 = false;
+            for (Track track1 : tracks) {
+                if (track1.getId().equals(track.getId())) {
+                    assert1 = true;
+                }
+            }
+            Assertions.assertTrue(assert1);
+        } catch (Exception e) {
+            Assertions.fail("Erreur lors de la récupération de la piste : " + e.getMessage());
+        }
+
+    }
+    @Test
+    void testGetMyTrackLites(){
+        // Créez une piste (Track) pour le test
+        Track track = new Track(UUID.randomUUID(), "dfqzd".getBytes(), UUID.randomUUID(), "artist", "album", false);
+        try {
+            // Appelez la méthode saveTrack avec la piste créée
+            dataTrackServices.saveTrack(track);
+        } catch (Exception e) {
+            Assertions.fail("Erreur lors de la sauvegarde de la piste : " + e.getMessage());
+        }
+        ArrayList<TrackLite> tracks = dataTrackServices.getMyTrackLites();
+        System.out.println(tracks);
+        try {
+            //Si le son est present dans la liste des tracks alors assert = true
+            boolean assert1 = false;
+            for (TrackLite track1 : tracks) {
+                if (track1.getId().equals(track.getId())) {
+                    assert1 = true;
+                }
+            }
+            Assertions.assertTrue(assert1);
+        } catch (Exception e) {
+            Assertions.fail("Erreur lors de la récupération de la piste : " + e.getMessage());
+        }
+    }
+
+    @Test
+    void testGetTrackLites() {
+        // Créez une piste (Track) pour le test
+        Track track = new Track(UUID.randomUUID(), "bfzuqfz".getBytes(),UUID.randomUUID(), "artist", "album", true);
+        try {
+            // Appelez la méthode saveTrack avec la piste créée
+            dataTrackServices.saveTrack(track);
+        } catch (Exception e) {
+            Assertions.fail("Erreur lors de la sauvegarde de la piste : " + e.getMessage());
+        }
+        System.out.println(track.getId());
+        ArrayList<TrackLite> traclites = dataTrackServices.getTrackLites();
+        System.out.println(traclites);
+        try {
             //Si le son est present dans la liste des traclites alors assert = true
             boolean assert1 = false;
             for (TrackLite traclite : traclites) {
+                System.out.println(traclite.getId());
                 if (traclite.getId().equals(track.getId())) {
                     assert1 = true;
                 }
