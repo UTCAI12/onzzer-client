@@ -38,11 +38,12 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
 
         messageHandlers.put(SocketMessagesTypes.USER_CONNECT, (message, sender) -> {
             // If type is USER_CONNECT, we can get the object from the message, we know that it's a UserLite, so must be cast into UserLite
-            UserLite userLiteConnected = (UserLite) message.object;
+            HashMap<UserLite, List<TrackLite>> connectData = (HashMap<UserLite, List<TrackLite>> ) message.object;
+            // UserLite userLiteConnected = connectData.keySet().iterator().next();
 
             // call method
             try {
-                this.clientRequestHandler.userConnect(userLiteConnected);
+                this.clientRequestHandler.userConnect(connectData);
             } catch (Exception e) {
                 System.out.println("Can't connect to server");
             }
@@ -131,7 +132,9 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
 
     @Override
     public void connect(UserLite user, List<TrackLite> trackList) throws ConnectException {
-        this.sendServer(SocketMessagesTypes.USER_CONNECT, user);
+        HashMap<UserLite, List<TrackLite>> response = new HashMap<>();
+        response.put(user, trackList);
+        this.sendServer(SocketMessagesTypes.USER_CONNECT, response);
     }
 
     @Override
