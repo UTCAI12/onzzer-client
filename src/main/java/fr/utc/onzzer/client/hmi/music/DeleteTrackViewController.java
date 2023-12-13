@@ -31,17 +31,12 @@ public class DeleteTrackViewController {
         this(controller);
         Track trackItem= this.dataTrackServices.getTrack(trackId);
         this.track = trackItem;
-        this.txtTitle.setText(trackItem.getTitle());
-        this.txtAuthor.setText(trackItem.getAuthor());
-        this.txtAlbum .setText(trackItem.getAlbum());
+
     }
 
     public DeleteTrackViewController(GlobalController controller, Track track) {
         this(controller);
         this.track = track;
-        this.txtTitle.setText(track.getTitle());
-        this.txtAuthor.setText(track.getAuthor());
-        this.txtAlbum .setText(track.getAlbum());
     }
 
     private Track track;
@@ -57,6 +52,16 @@ public class DeleteTrackViewController {
 
     @FXML
     private Button btnDelete;
+
+
+
+    @FXML
+    public void initialize() {
+        this.txtTitle.setText(this.track.getTitle() == null ? "No Title" : this.track.getTitle());
+        this.txtAuthor.setText(this.track.getAuthor() == null ? "No Author" : this.track.getAuthor());
+        this.txtAlbum.setText(this.track.getAlbum() == null ? "No Album" : this.track.getAlbum());
+    }
+
     @FXML
     public void onClickDeleteTrack() {
         this.dataTrackServices.deleteTrack(track.getId());

@@ -3,11 +3,13 @@ package fr.utc.onzzer.client.hmi.main;
 import fr.utc.onzzer.client.MainClient;
 import fr.utc.onzzer.client.data.DataServicesProvider;
 import fr.utc.onzzer.client.data.DataUserServices;
+import fr.utc.onzzer.client.data.DataTrackServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.client.hmi.component.IconButton;
 import fr.utc.onzzer.client.hmi.music.services.ViewMusicServices;
 import fr.utc.onzzer.common.dataclass.Track;
 import fr.utc.onzzer.common.dataclass.TrackLite;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,6 +30,8 @@ public class MyTrackController {
 
     private final GlobalController controller;
 
+    private final DataTrackServices dataTrackServices;
+    private final GlobalController globalController;
     @FXML
     private TableView<TrackLite> trackList;
 
@@ -44,6 +48,9 @@ public class MyTrackController {
     private TableColumn<TrackLite, Void> columnActions;
 
     public MyTrackController(GlobalController controller) {
+        this.globalController = controller;
+        this.dataTrackServices = globalController.getDataServicesProvider().getDataTrackServices();
+
         this.controller = controller;
     }
 
@@ -133,7 +140,7 @@ public class MyTrackController {
                         // Adding start listening button.
                         IconButton btnListening = new IconButton(IconButton.ICON_LISTENING);
 
-                        btnRemove.setOnAction((ActionEvent event) -> {
+                        btnListening.setOnAction((ActionEvent event) -> {
                             TrackLite track = getTableView().getItems().get(getIndex());
                             onListeningTrack(track);
                         });
@@ -171,7 +178,6 @@ public class MyTrackController {
     }
 
     private void onRemoveButtonClick(TrackLite track) {
-
         try {
             // Opening delete track view from the ihm music module.
             ViewMusicServices viewMusicServices = this.controller.getViewMusicServices();
