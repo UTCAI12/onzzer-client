@@ -139,7 +139,11 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
 
     @Override
     public void editUser(UserLite user) throws Exception {
-
+        try{
+            this.sendServer(SocketMessagesTypes.USER_UPDATE, user);
+        } catch (Exception e){
+            throw new Exception("Error sending user update request: " + e.getMessage(), e);
+        }
     }
 
     @Override
