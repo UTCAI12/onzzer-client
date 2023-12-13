@@ -19,6 +19,7 @@
             <TableColumn fx:id="columnTitle" editable="false" minWidth="-1.0" prefWidth="-1.0" resizable="false" text="Titre" />
             <TableColumn fx:id="columnAuthor" editable="false" minWidth="-1.0" prefWidth="-1.0" resizable="false" text="Artiste" />
             <TableColumn fx:id="columnAlbum" editable="false" minWidth="-1.0" prefWidth="-1.0" resizable="false" text="Album" />
+            <TableColumn fx:id="columnShare" editable="false" minWidth="-1.0" prefWidth="-1.0" resizable="false" text="Partagé" />
             <TableColumn fx:id="columnActions" editable="false" minWidth="-1.0" prefWidth="-1.0" resizable="false" text="Actions" />
         </columns>
         <VBox.margin>

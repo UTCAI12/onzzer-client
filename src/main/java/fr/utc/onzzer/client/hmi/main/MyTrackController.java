@@ -9,6 +9,7 @@ import fr.utc.onzzer.client.hmi.component.IconButton;
 import fr.utc.onzzer.client.hmi.music.services.ViewMusicServices;
 import fr.utc.onzzer.common.dataclass.Track;
 import fr.utc.onzzer.common.dataclass.TrackLite;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -33,19 +34,22 @@ public class MyTrackController {
     private final DataTrackServices dataTrackServices;
     private final GlobalController globalController;
     @FXML
-    private TableView<TrackLite> trackList;
+    private TableView<Track> trackList;
 
     @FXML
-    private TableColumn<TrackLite, String> columnTitle;
+    private TableColumn<Track, String> columnTitle;
 
     @FXML
-    private TableColumn<TrackLite, String> columnAuthor;
+    private TableColumn<Track, String> columnAuthor;
 
     @FXML
-    private TableColumn<TrackLite, String> columnAlbum;
+    private TableColumn<Track, String> columnAlbum;
 
     @FXML
-    private TableColumn<TrackLite, Void> columnActions;
+    private TableColumn<Track, String> columnShare;
+
+    @FXML
+    private TableColumn<Track, Void> columnActions;
 
     public MyTrackController(GlobalController controller) {
         this.globalController = controller;
@@ -70,6 +74,7 @@ public class MyTrackController {
         columnTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         columnAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
         columnAlbum.setCellValueFactory(new PropertyValueFactory<>("album"));
+        columnShare.setCellValueFactory(cellData -> new SimpleStringProperty( cellData.getValue().getPrivateTrack()?  "Non Partagé" : "Partagé"));
         columnActions.setCellFactory(getActionCellFactory());
 
         // Make the table responsive.
@@ -84,6 +89,7 @@ public class MyTrackController {
             columnAuthor.setPrefWidth(width);
             columnAlbum.setPrefWidth(width);
             columnActions.setPrefWidth(width);
+            columnShare.setPrefWidth(width);
         });
 
         // Refresh the whole list.
@@ -97,16 +103,16 @@ public class MyTrackController {
 
         try {
 
-            ObservableList<TrackLite> items = this.trackList.getItems();
+            ObservableList<Track> items = this.trackList.getItems();
             items.clear();
 
             // Adding tracks to the list.
             List<Track> tracks = dataUserServices.getUser().getTrackList();
-            tracks.stream().map(Track::toTrackLite).forEach(items::add);
+            items.addAll(tracks);
 
             // TODO : To remove.
             for (int i = 0; i < 100; i++) {
-                items.add(new TrackLite(UUID.randomUUID(), UUID.randomUUID(), "title", "author", "author"));
+                items.add(new Track(UUID.randomUUID(), UUID.randomUUID(), "title", "author",true));
             }
 
         } catch (Exception exception) {
@@ -114,10 +120,10 @@ public class MyTrackController {
         }
     }
 
-    private Callback<TableColumn<TrackLite, Void>, TableCell<TrackLite, Void>> getActionCellFactory() {
+    private Callback<TableColumn<Track, Void>, TableCell<Track, Void>> getActionCellFactory() {
         return new Callback<>() {
             @Override
-            public TableCell<TrackLite, Void> call(final TableColumn<TrackLite, Void> param) {
+            public TableCell<Track, Void> call(final TableColumn<Track, Void> param) {
                 return new TableCell<>() {
                     private final HBox hbox = new HBox();
                     {
@@ -125,7 +131,7 @@ public class MyTrackController {
                         IconButton btnEvaluate = new IconButton(IconButton.ICON_EVALUATE);
 
                         btnEvaluate.setOnAction((ActionEvent event) -> {
-                            TrackLite track = getTableView().getItems().get(getIndex());
+                            Track track = getTableView().getItems().get(getIndex());
                             onEvaluateButtonClick(track);
                         });
 
@@ -133,7 +139,7 @@ public class MyTrackController {
                         IconButton btnRemove = new IconButton(IconButton.ICON_DELETE);
 
                         btnRemove.setOnAction((ActionEvent event) -> {
-                            TrackLite track = getTableView().getItems().get(getIndex());
+                            Track track = getTableView().getItems().get(getIndex());
                             onRemoveButtonClick(track);
                         });
 
@@ -141,7 +147,7 @@ public class MyTrackController {
                         IconButton btnListening = new IconButton(IconButton.ICON_LISTENING);
 
                         btnListening.setOnAction((ActionEvent event) -> {
-                            TrackLite track = getTableView().getItems().get(getIndex());
+                            Track track = getTableView().getItems().get(getIndex());
                             onListeningTrack(track);
                         });
 
@@ -165,7 +171,7 @@ public class MyTrackController {
         };
     }
 
-    private void onListeningTrack(TrackLite track) {
+    private void onListeningTrack(Track track) {
 
         try {
             Stage stage = MainClient.getStage();
@@ -177,7 +183,7 @@ public class MyTrackController {
         }
     }
 
-    private void onRemoveButtonClick(TrackLite track) {
+    private void onRemoveButtonClick(Track track) {
         try {
             // Opening delete track view from the ihm music module.
             ViewMusicServices viewMusicServices = this.controller.getViewMusicServices();
@@ -187,7 +193,7 @@ public class MyTrackController {
         }
     }
 
-    private void onEvaluateButtonClick(TrackLite track) {
+    private void onEvaluateButtonClick(Track track) {
         // Actually, there is no view to evaluate a track.
         // We need to have this information (who's doing that, what code can be called).
     }
