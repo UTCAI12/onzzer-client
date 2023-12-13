@@ -66,6 +66,15 @@ public class SearchViewController {
         this.dataUserServices.addListener(user -> {
             Platform.runLater(this::refreshTrackList);
         }, UserLite.class, ModelUpdateTypes.DELETE_USER);
+        this.dataTrackServices.addListener(track -> {
+            Platform.runLater(this::refreshTrackList);
+        }, TrackLite.class, ModelUpdateTypes.NEW_TRACK);
+        this.dataTrackServices.addListener(track -> {
+            Platform.runLater(this::refreshTrackList);
+        }, TrackLite.class, ModelUpdateTypes.DELETE_TRACK);
+        this.dataTrackServices.addListener(track -> {
+            Platform.runLater(this::refreshTrackList);
+        }, TrackLite.class, ModelUpdateTypes.UPDATE_TRACK);
     }
 
     public void initialize() {
