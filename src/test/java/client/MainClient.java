@@ -46,6 +46,7 @@ public class MainClient {
         final UserLite userLite = new UserLite(user.getId(), user.getUsername());
         List<Track> tracks = dataServicesProvider.getDataTrackServices().getTracks();
         tracks.stream().filter(x -> !x.getPrivateTrack()).map(Track::toTrackLite).forEach(items::add);
+        System.out.println("items = " + items);
         comm.connect(userLite, items);
 
         final MainController controller = new MainController(dataServicesProvider, comm);
