@@ -76,7 +76,7 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
             this.sendServer(SocketMessagesTypes.USER_PING, null);
         });
         messageHandlers.put(SocketMessagesTypes.SERVER_STOPPED, (message, sender) -> {
-            System.out.println("I have received a SERVER_STOPPED message from server!");
+//            System.out.println("I have received a SERVER_STOPPED message from server!");
             this.clientRequestHandler.serverStopped();
         });
         messageHandlers.put(SocketMessagesTypes.GET_TRACK, (message, sender) -> {
