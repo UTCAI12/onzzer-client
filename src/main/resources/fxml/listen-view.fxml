@@ -9,13 +9,14 @@
 
 <Pane prefHeight="260.0" prefWidth="1440.0" styleClass="global-footer" stylesheets="@../styles/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
+      <Button fx:id="closeButton" layoutX="1374.0" layoutY="13.0" mnemonicParsing="false" onAction="#onCloseButton" styleClass="button-close" text="X" />
       <VBox alignment="CENTER" layoutX="217.0" layoutY="26.0" spacing="10">
          <VBox alignment="CENTER" spacing="10">
             <HBox alignment="CENTER" spacing="900">
                <Text fx:id="txtCurrentTime" fill="WHITE" text="-" />
                <Text fx:id="txtTrackDuration" fill="WHITE" text="-" />
             </HBox>
-            <Slider fx:id="sliderTrackDuration" prefHeight="14.0" prefWidth="1000.0"/>
+            <Slider fx:id="sliderTrackDuration" prefHeight="14.0" prefWidth="1000.0" />
          </VBox>
          <VBox alignment="CENTER" spacing="20">
             <VBox alignment="CENTER" spacing="10">
@@ -30,9 +31,9 @@
 
             <HBox alignment="CENTER" spacing="20">
                <children>
-                  <Button fx:id="btnPrevious" styleClass="button-download" mnemonicParsing="false" onAction="#onClickPreviousTrack" text="musique précédente" />
-                  <Button fx:id="buttonPlayTrack" styleClass="button-download" mnemonicParsing="false" onAction="#onClickPlayPause" text="bouton play pause" />
-                  <Button fx:id="btnNext" styleClass="button-download" mnemonicParsing="false" onAction="#onClickNextTrack" text="musique suivante" />
+                  <Button fx:id="btnPrevious" mnemonicParsing="false" onAction="#onClickPreviousTrack" styleClass="button-download" text="musique précédente" />
+                  <Button fx:id="buttonPlayTrack" mnemonicParsing="false" onAction="#onClickPlayPause" styleClass="button-download" text="bouton play pause" />
+                  <Button fx:id="btnNext" mnemonicParsing="false" onAction="#onClickNextTrack" styleClass="button-download" text="musique suivante" />
                </children>
             </HBox>
          </VBox>
