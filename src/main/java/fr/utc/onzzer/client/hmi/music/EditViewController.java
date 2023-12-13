@@ -105,8 +105,6 @@ public class EditViewController {
         author = track.getAuthor();
         isPrivate = track.getPrivateTrack();
         TrackLite trackLite = track.toTrackLite();
-        this.musicServices.unpublishTrack(trackLite);
-        this.trackServices.deleteTrack(trackId);
         this.oldAudio = track.getAudio();
     }
 
@@ -160,9 +158,9 @@ public class EditViewController {
         if (!hasErrors) {
             fr.utc.onzzer.common.dataclass.Track track = new Track(trackID, oldAudio, user.getId(), title, author, isPrivate);
             track.setAlbum(album);
-            this.trackServices.saveTrack(track);
+            this.trackServices.updateTrack(track);
             TrackLite tracklite = track.toTrackLite();
-            this.musicServices.publishTrack(tracklite);
+            this.musicServices.updateTrack(tracklite);
             Stage stage = (Stage) this.btnSave.getScene().getWindow();
             stage.close();
         }
