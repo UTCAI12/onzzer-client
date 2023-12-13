@@ -203,7 +203,7 @@ public class DataUserServicesTest {
 
         try {
             // Appel de la méthode exportProfile avec l'utilisateur créé
-            dataUserServices.exportProfile(user, "/home/malo/Documents/projets/ai12/" + user.getId() + ".ser");
+            dataUserServices.exportProfile(user, "/home/malo/Documents/" + user.getId() + ".ser");
         } catch (Exception e) {
             Assertions.fail("Erreur lors de l'export du profil : " + e.getMessage());
         }

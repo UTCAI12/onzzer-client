@@ -11,6 +11,7 @@ onzzer-client.iml
 ## Ajout d'une entrée pour ne pas garder les profiles enregistrés sur le git
 profiles
 tracks
+data/*
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml

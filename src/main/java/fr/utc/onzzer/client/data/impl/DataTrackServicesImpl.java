@@ -25,25 +25,47 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
 
     public DataTrackServicesImpl(DataRepository dataRepository) {
         this.dataRepository = dataRepository;
-        //lire tous les fichiers .ser dans le dossier tracks et les ajouter à la liste des tracks
-        String tracksDirectory = "tracks";
+        System.out.println("DataTrackServices constructor");
+        //Verifier que le dossier data/tracks existe, sinon le créer
+        String tracksDirectory = "data";
         File directory = new File(tracksDirectory);
-        try(FileInputStream fileInputStream = new FileInputStream(directory);
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
-            Object obj = objectInputStream.readObject();
-            if (obj instanceof Track) {
-                Track track = (Track) obj;
-                this.dataRepository.tracks.add(track);
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+        tracksDirectory = "data/tracks";
+        directory = new File(tracksDirectory);
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+        //Lire tous les fichiers .ser du dossier
+        try {
+            File[] files = directory.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    return name.toLowerCase().endsWith(".ser");
+                }
+            });
+
+            for (File file : files) {
+                try (FileInputStream fileInputStream = new FileInputStream(file);
+                     ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+                    Object obj = objectInputStream.readObject();
+                    if (obj instanceof Track) {
+                        Track track = (Track) obj;
+                        this.dataRepository.tracks.add(track);
+                    }
+                }
             }
         } catch (Exception ex) {
-            System.out.println("Erreur lors de la lecture des tracks : " + ex.getMessage());
+            System.out.println("Erreur lors de la lecture des fichiers .ser dans le dossier tracks : " + ex.getMessage());
         }
+
+
     }
 
     @Override
     public void saveTrack(Track track) throws Exception {
         // On enregistre un fichier .ser contenant le track dans le dossier tracks
-        String tracksDirectory = "tracks";
+        String tracksDirectory = "data/tracks";
         File directory = new File(tracksDirectory);
         if(!directory.exists()){
             directory.mkdir();
@@ -134,9 +156,10 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
     public ArrayList<TrackLite> getOtherTrackLites() {
         ArrayList<TrackLite> tracklites = new ArrayList<TrackLite>();
         for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
-            for (TrackLite trackLite : entry.getValue()) {
-                tracklites.add(trackLite);
-            }
+            if(entry.getValue() != null)
+                for (TrackLite trackLite : entry.getValue()) {
+                    tracklites.add(trackLite);
+                };
         }
         return tracklites;
     }
@@ -148,9 +171,10 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
             tracklites.add(track.toTrackLite());
         }
         for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
-            for (TrackLite trackLite : entry.getValue()) {
-                tracklites.add(trackLite);
-            }
+            if(entry.getValue() != null)
+                for (TrackLite trackLite : entry.getValue()) {
+                    tracklites.add(trackLite);
+                }
         }
         return tracklites;
     }
@@ -194,32 +218,46 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
 
 
     @Override
-    public void publishedTrack(TrackLite trackLite) {
+    public void publishedTrack(TrackLite trackLite){
+        boolean found = false;
         //Modifier dans la hashmap des userLite / tracklites
         for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
             if (entry.getKey().getId() == trackLite.getUserId()) {
+                if(entry.getValue() == null){
+                    entry.setValue(new ArrayList<TrackLite>());
+                }
                 //on ajoute le track à la liste des tracks de l'utilisateur
                 entry.getValue().add(trackLite);
+                found = true;
+                this.notify(trackLite, TrackLite.class, ModelUpdateTypes.NEW_TRACK);
             }
         }
-        this.notify(trackLite, TrackLite.class, ModelUpdateTypes.NEW_TRACK);
+        if(!found){
+            System.out.println("User not found");
+        }
     }
 
 
     @Override
-    public void unpublishedTrack(TrackLite trackLite) {
+    public void unpublishedTrack(TrackLite trackLite){
+        boolean found = false;
         //Modifier dans la hashmap des userLite / tracklites
         for (Map.Entry<UserLite, List<TrackLite>> entry : this.dataRepository.connectedUsers.entrySet()) {
             if (entry.getKey().getId() == trackLite.getUserId()) {
-                //on remove le track à la liste des tracks de l'utilisateur
-                for (TrackLite trackLite1 : entry.getValue()) {
-                    if (trackLite1.getId() == trackLite.getId()) {
-                        entry.getValue().remove(trackLite1);
-                        this.notify(trackLite, TrackLite.class, ModelUpdateTypes.DELETE_TRACK);
-                        break;
+                if(entry.getValue() != null)
+                    //on remove le track à la liste des tracks de l'utilisateur
+                    for (TrackLite trackLite1 : entry.getValue()) {
+                        if (trackLite1.getId() == trackLite.getId()) {
+                            entry.getValue().remove(trackLite1);
+                            found = true;
+                            this.notify(trackLite, TrackLite.class, ModelUpdateTypes.DELETE_TRACK);
+                            break;
+                        }
                     }
                 }
-            }
+        }
+        if(!found){
+            System.out.println("Track not found");
         }
     }
 
