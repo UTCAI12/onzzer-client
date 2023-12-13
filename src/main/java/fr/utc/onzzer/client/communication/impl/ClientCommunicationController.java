@@ -6,6 +6,7 @@ import fr.utc.onzzer.client.data.DataServicesProvider;
 import fr.utc.onzzer.common.dataclass.*;
 import fr.utc.onzzer.common.dataclass.communication.SocketMessage;
 import fr.utc.onzzer.common.dataclass.communication.SocketMessagesTypes;
+import javafx.util.Pair;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -195,9 +196,7 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
 
     @Override
     public void addComment(UUID trackId, Comment comment) throws Exception {
-        ArrayList<Object> commentDto = new ArrayList<Object>();
-        commentDto.add(trackId);
-        commentDto.add(comment);
+        Pair<UUID, Comment> commentDto = new Pair<>(trackId, comment);
         try {
             this.sendServer(SocketMessagesTypes.PUBLISH_COMMENT, commentDto);
         } catch (Exception e){
