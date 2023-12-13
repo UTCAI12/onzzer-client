@@ -190,7 +190,13 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
 
     @Override
     public void addRating(UUID trackId, Rating rating) throws Exception {
-
+        HashMap<UUID, Rating> ratingDto = new HashMap<>();
+        ratingDto.put(trackId, rating);
+        try {
+            this.sendServer(SocketMessagesTypes.PUBLISH_RATING, ratingDto);
+        } catch (Exception e){
+            throw new Exception("Error sending publish rating request: " + e.getMessage(), e);
+        }
     }
 
     @Override
