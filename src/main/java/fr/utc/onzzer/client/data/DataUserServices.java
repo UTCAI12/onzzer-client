@@ -22,4 +22,5 @@ public interface DataUserServices extends Service {
     void updateUser(User user) throws Exception;
     void deleteAllUsers();
     void logOut();
+    public void removeUser(UserLite userLite) throws Exception;
 }

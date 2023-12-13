@@ -235,4 +235,9 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
 
     }
 
+    @Override
+    public void removeUser(UserLite userLite) throws Exception {
+        this.dataRepository.getConnectedUsers().remove(userLite);
+    }
+
 }
