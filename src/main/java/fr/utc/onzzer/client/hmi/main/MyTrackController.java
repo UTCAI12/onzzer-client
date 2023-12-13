@@ -94,20 +94,14 @@ public class MyTrackController {
 
         DataServicesProvider dataServicesProvider = this.controller.getDataServicesProvider();
         DataUserServices dataUserServices = dataServicesProvider.getDataUserServices();
-
         try {
 
             ObservableList<TrackLite> items = this.trackList.getItems();
             items.clear();
 
             // Adding tracks to the list.
-            List<Track> tracks = dataUserServices.getUser().getTrackList();
+            List<Track> tracks = dataTrackServices.getTracks();
             tracks.stream().map(Track::toTrackLite).forEach(items::add);
-
-            // TODO : To remove.
-            for (int i = 0; i < 100; i++) {
-                items.add(new TrackLite(UUID.randomUUID(), UUID.randomUUID(), "title", "author", "author"));
-            }
 
         } catch (Exception exception) {
             exception.printStackTrace();

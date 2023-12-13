@@ -106,18 +106,6 @@ public class SearchViewController {
     private void refreshTrackList() {
         // Get the tracks that are currently accessible on the network
         tracks = FXCollections.observableArrayList(dataTrackServices.getTrackLites());
-
-        // =============== DEBUG =============== //
-        List<UserLite> users = this.dataUserServices.getConnectedUsers().keySet().stream().toList();
-        UserLite user1 = users.get(0);
-        UserLite user2 = users.get(1);
-        this.tracks.add(new TrackLite(UUID.randomUUID(), user1.getId(), "Doomsday", "Jared Benjamin", null));
-        this.tracks.add(new TrackLite(UUID.randomUUID(), user2.getId(), "Human", "Apashe", "2023"));
-        this.tracks.add(new TrackLite(UUID.randomUUID(), user2.getId(), "Phoenix", "AViVA", "Rise"));
-        this.tracks.add(new TrackLite(UUID.randomUUID(), user1.getId(), "Strangers", "Kenya Grace", null));
-        this.tracks.add(new TrackLite(UUID.randomUUID(), user1.getId(), "I'm Just Ken", "Ryan Gosling", "Yes"));
-        // =============== DEBUG =============== //
-
         onSearchFieldChanged();
     }
 
