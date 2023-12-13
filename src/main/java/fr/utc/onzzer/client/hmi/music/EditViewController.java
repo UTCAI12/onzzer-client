@@ -47,6 +47,8 @@ public class EditViewController {
 
     private boolean isPrivate;
 
+    private byte[] oldAudio;
+
     private String fileName;
 
     private Path filePath;
@@ -105,6 +107,7 @@ public class EditViewController {
         TrackLite trackLite = track.toTrackLite();
         this.musicServices.unpublishTrack(trackLite);
         this.trackServices.deleteTrack(trackId);
+        this.oldAudio = track.getAudio();
     }
 
     @FXML
@@ -133,12 +136,12 @@ public class EditViewController {
         if(extension.equals("mp3")) {
             noFileError.setVisible(false);
             wrongFileError.setVisible(false);
-            this.filePath = Paths.get(file.getPath());
+            this.oldAudio = Files.readAllBytes(this.filePath);
         }
         else {
             wrongFileError.setVisible(true);
             noFileError.setVisible(false);
-            this.filePath = null;
+            this.oldAudio = null;
         }
         fileNameLabel.setText(fileName);
     }
@@ -155,7 +158,7 @@ public class EditViewController {
         User user = this.userServices.getUser();
         UUID trackID = UUID.randomUUID();
         if (!hasErrors) {
-            fr.utc.onzzer.common.dataclass.Track track = new Track(trackID, filePath.toString(), user.getId(), title, author, isPrivate);
+            fr.utc.onzzer.common.dataclass.Track track = new Track(trackID, oldAudio, user.getId(), title, author, isPrivate);
             track.setAlbum(album);
             this.trackServices.saveTrack(track);
             TrackLite tracklite = track.toTrackLite();
@@ -172,14 +175,14 @@ public class EditViewController {
             ValidationUtil.showError(this.inputGroupTitle);
         }
         else ValidationUtil.hideError(this.inputGroupTitle);
-        if (filePath==null){
+        if (oldAudio==null){
             wrongFileError.setVisible(false);
             noFileError.setVisible(true);
             fileNameLabel.setText(" ");
         }
         else noFileError.setVisible(false);
 
-        return title.hasError() | filePath==null;
+        return title.hasError() | oldAudio==null;
     }
 
     private ValidationResult<String> checkTitle() {
