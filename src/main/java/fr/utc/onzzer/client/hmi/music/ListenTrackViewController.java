@@ -1,10 +1,12 @@
 package fr.utc.onzzer.client.hmi.music;
+import fr.utc.onzzer.client.MainClient;
 import fr.utc.onzzer.client.data.DataTrackServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.common.dataclass.Track;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
@@ -71,6 +73,9 @@ public class ListenTrackViewController {
 
     @FXML
     private Slider sliderTrackDuration;
+
+    @FXML
+    private Button closeButton;
 
     private MediaPlayer mediaPlayer;
 
@@ -179,5 +184,13 @@ public class ListenTrackViewController {
         trackIndex = index;
 
         initializeTrack();
+    }
+
+    @FXML
+    public void onCloseButton() {
+        BorderPane borderPane = (BorderPane) MainClient.getStage().getScene().getRoot();
+        this.mediaPlayer.stop();
+        this.mediaPlayer = null;
+        borderPane.setBottom(null);
     }
 }
