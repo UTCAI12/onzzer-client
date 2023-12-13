@@ -66,17 +66,6 @@ public class SearchViewController {
         this.dataUserServices.addListener(user -> {
             Platform.runLater(this::refreshTrackList);
         }, UserLite.class, ModelUpdateTypes.DELETE_USER);
-
-        // =============== DEBUG =============== //
-        try {
-            UserLite user1 = new UserLite(UUID.randomUUID(), "Joker");
-            UserLite user2 = new UserLite(UUID.randomUUID(), "Batman");
-            this.dataUserServices.addUser(user1);
-            this.dataUserServices.addUser(user2);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        // =============== DEBUG =============== //
     }
 
     public void initialize() {
