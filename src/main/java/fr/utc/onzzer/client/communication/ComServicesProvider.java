@@ -2,8 +2,6 @@ package fr.utc.onzzer.client.communication;
 
 import fr.utc.onzzer.client.communication.impl.ClientCommunicationController;
 import fr.utc.onzzer.client.data.DataServicesProvider;
-import fr.utc.onzzer.common.dataclass.User;
-import fr.utc.onzzer.common.dataclass.UserLite;
 
 public class ComServicesProvider {
 
