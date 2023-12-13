@@ -1,12 +1,15 @@
 package fr.utc.onzzer.client.hmi.music;
 
 import fr.utc.onzzer.client.MainClient;
+import fr.utc.onzzer.client.communication.ComMusicServices;
+import fr.utc.onzzer.client.communication.ComServicesProvider;
 import fr.utc.onzzer.client.data.DataServicesProvider;
 import fr.utc.onzzer.client.data.DataTrackServices;
 import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.client.hmi.util.ValidationResult;
 import fr.utc.onzzer.client.hmi.util.ValidationUtil;
 import fr.utc.onzzer.common.dataclass.Track;
+import fr.utc.onzzer.common.dataclass.TrackLite;
 import fr.utc.onzzer.common.dataclass.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -32,6 +35,8 @@ import fr.utc.onzzer.client.hmi.GlobalController;
 public class UploadViewController {
     private final DataTrackServices trackServices;
     private final DataUserServices userServices;
+
+    private final ComMusicServices musicServices;
 
     private Path filePath;
 
@@ -67,8 +72,10 @@ public class UploadViewController {
 
     public UploadViewController(GlobalController controller) {
         DataServicesProvider dataServicesProvider = controller.getDataServicesProvider();
+        ComServicesProvider comServicesProvider = controller.getComServicesProvider();
         this.trackServices = dataServicesProvider.getDataTrackServices();
         this.userServices = dataServicesProvider.getDataUserServices();
+        this.musicServices = comServicesProvider.getComMusicServices();
     }
 
 
@@ -114,6 +121,8 @@ public class UploadViewController {
             fr.utc.onzzer.common.dataclass.Track track = new Track(trackID, filePath.toString(), user.getId(), title, author, isPrivate);
             track.setAlbum(album);
             this.trackServices.saveTrack(track);
+            TrackLite tracklite = track.toTrackLite();
+            this.musicServices.publishTrack(tracklite);
             Stage stage = (Stage) this.btnSave.getScene().getWindow();
             stage.close();
         }
