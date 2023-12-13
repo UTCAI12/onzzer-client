@@ -191,6 +191,25 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
     public void deleteTrack(UUID uuid){
         Track track = this.dataRepository.getTrackByID(uuid);
         this.dataRepository.tracks.remove(track);
+        //Retirer les fichiers .ser et .mp3 du dossier tracks
+        String tracksDirectory = "data/tracks";
+        File directory = new File(tracksDirectory);
+        if (directory.isDirectory()) {
+            File[] files = directory.listFiles(); // Liste des fichiers du répertoire
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isFile()) {
+                        // Manipulation de chaque fichier
+                        if (file.getName().equals(track.getId() + ".ser")) {
+                            file.delete();
+                        }
+                        if (file.getName().equals(track.getId() + ".mp3")) {
+                            file.delete();
+                        }
+                    }
+                }
+            }
+        }
         this.notify(track, Track.class, ModelUpdateTypes.DELETE_TRACK);
     }
 
