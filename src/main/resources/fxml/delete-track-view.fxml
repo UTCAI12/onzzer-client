@@ -42,19 +42,19 @@
                         <HBox>
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="body-text-bold" text="Titre : " />
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Dive" />
+                              <Text fx:id="txtTitle" strokeType="OUTSIDE" strokeWidth="0.0" text="Unknown" />
                            </children>
                         </HBox>
                         <HBox>
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="body-text-bold" text="Artiste : " />
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Olivia Dean" />
+                              <Text fx:id="txtAuthor" strokeType="OUTSIDE" strokeWidth="0.0" text="Unknown" />
                            </children>
                         </HBox>
                         <HBox>
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="body-text-bold" text="Album : " />
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
+                              <Text fx:id="txtAlbum" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
                            </children>
                         </HBox>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Cette action est définitive.">
@@ -63,7 +63,7 @@
                            </VBox.margin></Text>
                      </children>
                   </VBox>
-                  <Button mnemonicParsing="false" style="-fx-background-radius: 20;" styleClass="validate-button" text="Confirmer" />
+                  <Button fx:id="btnDelete" mnemonicParsing="false" style="-fx-background-radius: 20;" onAction="#onClickDeleteTrack" styleClass="validate-button" text="Confirmer" />
                </children>
             </VBox>
          </children>

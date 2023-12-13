@@ -7,6 +7,8 @@ import fr.utc.onzzer.client.hmi.main.LoginViewController;
 import fr.utc.onzzer.client.hmi.music.ListenTrackViewController;
 import fr.utc.onzzer.client.hmi.music.SearchViewController;
 import fr.utc.onzzer.client.hmi.music.UploadViewController;
+import fr.utc.onzzer.client.hmi.music.DeleteTrackViewController;
+
 import fr.utc.onzzer.client.hmi.music.services.ViewMusicServices;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -53,7 +55,7 @@ public class ViewMusicServicesImpl implements ViewMusicServices {
 
     @Override
     public void openDeleteTrack(UUID trackId) throws IOException {
-        LoginViewController controller = new LoginViewController(globalController);
+        DeleteTrackViewController controller = new DeleteTrackViewController(globalController,trackId);
         openInModal("Supprimer un morceau", "/fxml/delete-track-view.fxml", controller);
     }
 
