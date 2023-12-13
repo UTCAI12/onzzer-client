@@ -104,11 +104,6 @@ public class MyTrackController {
             List<Track> tracks = dataUserServices.getUser().getTrackList();
             tracks.stream().map(Track::toTrackLite).forEach(items::add);
 
-            // TODO : To remove.
-            for (int i = 0; i < 100; i++) {
-                items.add(new TrackLite(UUID.randomUUID(), UUID.randomUUID(), "title", "author", "author"));
-            }
-
         } catch (Exception exception) {
             exception.printStackTrace();
         }
