@@ -182,6 +182,12 @@ public class MyTrackController {
     }
 
     private void onEvaluateButtonClick(TrackLite track) {
+        try{
+        ViewMusicServices viewMusicServices = this.controller.getViewMusicServices();
+        viewMusicServices.openEditTrack(track.getId());
+    } catch (Exception exception) {
+        exception.printStackTrace();
+    }
         // Actually, there is no view to evaluate a track.
         // We need to have this information (who's doing that, what code can be called).
     }
