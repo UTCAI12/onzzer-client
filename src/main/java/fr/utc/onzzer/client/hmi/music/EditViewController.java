@@ -104,7 +104,6 @@ public class EditViewController {
         album = track.getAlbum();
         author = track.getAuthor();
         isPrivate = track.getPrivateTrack();
-        TrackLite trackLite = track.toTrackLite();
         this.oldAudio = track.getAudio();
     }
 
