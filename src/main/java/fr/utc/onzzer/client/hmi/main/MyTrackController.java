@@ -9,6 +9,7 @@ import fr.utc.onzzer.client.hmi.component.IconButton;
 import fr.utc.onzzer.client.hmi.music.services.ViewMusicServices;
 import fr.utc.onzzer.common.dataclass.Track;
 import fr.utc.onzzer.common.dataclass.TrackLite;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -29,9 +30,8 @@ import java.util.UUID;
 public class MyTrackController {
 
     private final GlobalController controller;
-
     private final DataTrackServices dataTrackServices;
-    private final GlobalController globalController;
+
     @FXML
     private TableView<TrackLite> trackList;
 
@@ -48,9 +48,7 @@ public class MyTrackController {
     private TableColumn<TrackLite, Void> columnActions;
 
     public MyTrackController(GlobalController controller) {
-        this.globalController = controller;
-        this.dataTrackServices = globalController.getDataServicesProvider().getDataTrackServices();
-
+        this.dataTrackServices = controller.getDataServicesProvider().getDataTrackServices();
         this.controller = controller;
     }
 
@@ -92,20 +90,22 @@ public class MyTrackController {
 
     private void refreshMusicList() {
 
-        DataServicesProvider dataServicesProvider = this.controller.getDataServicesProvider();
-        DataUserServices dataUserServices = dataServicesProvider.getDataUserServices();
         try {
 
             ObservableList<TrackLite> items = this.trackList.getItems();
             items.clear();
 
             // Adding tracks to the list.
-            List<Track> tracks = dataTrackServices.getTracks();
+            List<Track> tracks = this.dataTrackServices.getTracks();
             tracks.stream().map(Track::toTrackLite).forEach(items::add);
 
         } catch (Exception exception) {
             exception.printStackTrace();
         }
+    }
+
+    private void asyncRefreshTracks() {
+        Platform.runLater(this::refreshMusicList);
     }
 
     private Callback<TableColumn<TrackLite, Void>, TableCell<TrackLite, Void>> getActionCellFactory() {
@@ -182,13 +182,11 @@ public class MyTrackController {
     }
 
     private void onEvaluateButtonClick(TrackLite track) {
-        try{
-        ViewMusicServices viewMusicServices = this.controller.getViewMusicServices();
-        viewMusicServices.openEditTrack(track.getId());
-    } catch (Exception exception) {
-        exception.printStackTrace();
-    }
-        // Actually, there is no view to evaluate a track.
-        // We need to have this information (who's doing that, what code can be called).
+        try {
+            ViewMusicServices viewMusicServices = this.controller.getViewMusicServices();
+            viewMusicServices.openEditTrack(track.getId());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 }
