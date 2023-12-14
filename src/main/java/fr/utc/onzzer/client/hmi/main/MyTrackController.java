@@ -1,8 +1,6 @@
 package fr.utc.onzzer.client.hmi.main;
 
 import fr.utc.onzzer.client.MainClient;
-import fr.utc.onzzer.client.data.DataServicesProvider;
-import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.client.data.DataTrackServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.client.hmi.component.IconButton;
@@ -11,7 +9,6 @@ import fr.utc.onzzer.common.dataclass.ModelUpdateTypes;
 import fr.utc.onzzer.common.dataclass.Track;
 import fr.utc.onzzer.common.dataclass.TrackLite;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,7 +23,6 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.util.List;
-import java.util.UUID;
 
 public class MyTrackController {
 
@@ -62,7 +58,7 @@ public class MyTrackController {
         this.addListeners();
 
         // Refresh the whole list.
-        this.refreshMusicList();
+        this.refreshTrackList();
     }
 
     private void initializeTrackList() {
@@ -99,23 +95,23 @@ public class MyTrackController {
         // Due to a lack of time, the whole list is refresh even if the change is
         // about only one track. Could be improved.
 
-        this.dataTrackServices.addListener(track -> this.asyncRefreshTracks(),
+        this.dataTrackServices.addListener(track -> this.asyncRefreshTrackList(),
                 Track.class, ModelUpdateTypes.NEW_TRACK);
 
-        this.dataTrackServices.addListener(track -> this.asyncRefreshTracks(),
+        this.dataTrackServices.addListener(track -> this.asyncRefreshTrackList(),
                 Track.class, ModelUpdateTypes.NEW_TRACKS);
 
-        this.dataTrackServices.addListener(track -> this.asyncRefreshTracks(),
+        this.dataTrackServices.addListener(track -> this.asyncRefreshTrackList(),
                 Track.class, ModelUpdateTypes.DELETE_TRACK);
 
-        this.dataTrackServices.addListener(track -> this.asyncRefreshTracks(),
+        this.dataTrackServices.addListener(track -> this.asyncRefreshTrackList(),
                 Track.class, ModelUpdateTypes.DELETE_ALL_TRACKS);
 
-        this.dataTrackServices.addListener(track -> this.asyncRefreshTracks(),
+        this.dataTrackServices.addListener(track -> this.asyncRefreshTrackList(),
                 Track.class, ModelUpdateTypes.UPDATE_TRACK);
     }
 
-    private void refreshMusicList() {
+    private void refreshTrackList() {
 
         try {
 
@@ -131,8 +127,8 @@ public class MyTrackController {
         }
     }
 
-    private void asyncRefreshTracks() {
-        Platform.runLater(this::refreshMusicList);
+    private void asyncRefreshTrackList() {
+        Platform.runLater(this::refreshTrackList);
     }
 
     private Callback<TableColumn<TrackLite, Void>, TableCell<TrackLite, Void>> getActionCellFactory() {
