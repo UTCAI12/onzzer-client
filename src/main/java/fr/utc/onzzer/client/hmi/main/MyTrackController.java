@@ -7,6 +7,7 @@ import fr.utc.onzzer.client.data.DataTrackServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.client.hmi.component.IconButton;
 import fr.utc.onzzer.client.hmi.music.services.ViewMusicServices;
+import fr.utc.onzzer.common.dataclass.ModelUpdateTypes;
 import fr.utc.onzzer.common.dataclass.Track;
 import fr.utc.onzzer.common.dataclass.TrackLite;
 import javafx.application.Platform;
@@ -53,7 +54,15 @@ public class MyTrackController {
     }
 
     public void initialize() {
+
+        // Initialize the view.
         this.initializeTrackList();
+
+        // Adding listeners.
+        this.addListeners();
+
+        // Refresh the whole list.
+        this.refreshMusicList();
     }
 
     private void initializeTrackList() {
@@ -83,9 +92,27 @@ public class MyTrackController {
             columnAlbum.setPrefWidth(width);
             columnActions.setPrefWidth(width);
         });
+    }
 
-        // Refresh the whole list.
-        this.refreshMusicList();
+    private void addListeners() {
+
+        // Due to a lack of time, the whole list is refresh even if the change is
+        // about only one track. Could be improved.
+
+        this.dataTrackServices.addListener(track -> this.asyncRefreshTracks(),
+                Track.class, ModelUpdateTypes.NEW_TRACK);
+
+        this.dataTrackServices.addListener(track -> this.asyncRefreshTracks(),
+                Track.class, ModelUpdateTypes.NEW_TRACKS);
+
+        this.dataTrackServices.addListener(track -> this.asyncRefreshTracks(),
+                Track.class, ModelUpdateTypes.DELETE_TRACK);
+
+        this.dataTrackServices.addListener(track -> this.asyncRefreshTracks(),
+                Track.class, ModelUpdateTypes.DELETE_ALL_TRACKS);
+
+        this.dataTrackServices.addListener(track -> this.asyncRefreshTracks(),
+                Track.class, ModelUpdateTypes.UPDATE_TRACK);
     }
 
     private void refreshMusicList() {
