@@ -2,7 +2,6 @@ package fr.utc.onzzer.client.hmi.music.services.impl;
 
 import fr.utc.onzzer.client.MainClient;
 import fr.utc.onzzer.client.hmi.GlobalController;
-import fr.utc.onzzer.client.hmi.main.LoginViewController;
 import fr.utc.onzzer.client.hmi.music.EditViewController;
 
 
@@ -42,14 +41,14 @@ public class ViewMusicServicesImpl implements ViewMusicServices {
 
     @Override
     public void openCreateTrack() throws IOException {
-        UploadViewController controller = new UploadViewController(globalController);
-        openInModal("Nouveau morceau", "/fxml/addmusic-view.fxml", controller);
+        AddTrackViewController controller = new AddTrackViewController(globalController);
+        openInModal("Nouveau morceau", "/fxml/add-track-view.fxml", controller);
     }
 
     @Override
     public void openEditTrack(UUID trackId) throws Exception {
         EditViewController controller = new EditViewController(globalController, trackId);
-        openInModal("Modifier un morceau", "/fxml/editmusic-view.fxml", controller);
+        openInModal("Modifier un morceau", "/fxml/edit-track-view.fxml", controller);
     }
 
     @Override
@@ -84,7 +83,7 @@ public class ViewMusicServicesImpl implements ViewMusicServices {
         fxmlLoader.setController(controller);
 
         // Set the content of the popup stage
-        Scene popupScene = new Scene(fxmlLoader.load(), 307, 365);
+        Scene popupScene = new Scene(fxmlLoader.load());
         popupStage.setScene(popupScene);
 
         // Set the position relative to the primary stage
