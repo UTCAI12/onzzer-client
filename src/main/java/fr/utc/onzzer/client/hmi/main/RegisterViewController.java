@@ -1,21 +1,19 @@
 package fr.utc.onzzer.client.hmi.main;
 
 import fr.utc.onzzer.client.MainClient;
+import fr.utc.onzzer.client.data.DataServicesProvider;
 import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.client.hmi.util.ValidationResult;
 import fr.utc.onzzer.client.hmi.util.ValidationUtil;
 import fr.utc.onzzer.common.dataclass.User;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -24,11 +22,9 @@ import java.util.UUID;
 public class RegisterViewController {
 
     private final GlobalController controller;
-    private final DataUserServices services;
 
     public RegisterViewController(GlobalController controller) {
         this.controller = controller;
-        this.services = this.controller.getDataServicesProvider().getDataUserServices();
     }
 
     @FXML
@@ -65,6 +61,9 @@ public class RegisterViewController {
     @FXML
     private void onRegistrationButtonClick() throws IOException {
 
+        DataServicesProvider provider = this.controller.getDataServicesProvider();
+        DataUserServices dataUserServices = provider.getDataUserServices();
+
         // Removing old errors.
         this.registerError.setVisible(false);
         this.registerError.setManaged(false);
@@ -79,7 +78,7 @@ public class RegisterViewController {
         try {
 
             // Creating a user profile.
-            this.services.createProfile(user);
+            dataUserServices.createProfile(user);
 
             // Opening the login view.
             this.openLoginView();
@@ -226,18 +225,8 @@ public class RegisterViewController {
     }
 
     private void openLoginView() throws IOException {
-
-        // Opening the login view.
-        Stage stage = MainClient.getStage();
-        Scene current = stage.getScene();
-
-        FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/login-view.fxml"));
-        LoginViewController loginViewController = new LoginViewController(this.controller);
-        fxmlLoader.setController(loginViewController);
-
-        Scene scene = new Scene(fxmlLoader.load(), current.getWidth(), current.getHeight());
-
-        stage.setScene(scene);
+        IHMMainServices services = this.controller.getIHMMainServices();
+        services.openLoginView();
     }
 
     private ValidationResult<User> checkErrors(Node parent) {
