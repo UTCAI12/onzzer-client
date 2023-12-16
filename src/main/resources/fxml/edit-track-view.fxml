@@ -1,39 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="365.0" prefWidth="307.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="TOP_CENTER" prefWidth="400.0" spacing="10.0" styleClass="pane-popup" stylesheets="@../styles/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button fx:id="btnUpload" layoutX="79.0" layoutY="39.0" mnemonicParsing="false" onAction="#onClickUpload" text="Importer un fichier (.mp3)" />
-      <CheckBox fx:id="checkboxShare" layoutX="116.0" layoutY="274.0" mnemonicParsing="false" text="Partager" />
-      <Button fx:id="btnSave" layoutX="78.0" layoutY="316.0" mnemonicParsing="false" onAction="#onClickSave" prefHeight="26.0" prefWidth="144.0" text="Sauvegarder" />
-      <VBox fx:id="inputGroupTitle" layoutX="69.0" layoutY="88.0" prefHeight="47.0" prefWidth="169.0">
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="h1" text="Modifier une musique">
+         <VBox.margin>
+            <Insets bottom="25.0" />
+         </VBox.margin>
+      </Text>
+      <VBox prefHeight="47.0" prefWidth="169.0" spacing="5.0">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Title*" />
-            <TextField fx:id="titleField" styleClass="input" />
-            <Label prefHeight="17.0" prefWidth="163.0" styleClass="error" text="Le titre ne peut pas être vide!" textFill="RED" visible="false" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Titre *" />
+            <TextField fx:id="txtTitle" styleClass="input-dark" />
+            <Text fx:id="titleError" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="error" text="Veuillez saisir un titre" visible="false" />
          </children>
       </VBox>
-      <VBox fx:id="inputGroupArtist" layoutX="72.0" layoutY="153.0" prefHeight="47.0" prefWidth="169.0">
+      <VBox prefHeight="47.0" prefWidth="169.0" spacing="5.0">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Artiste" />
-            <TextField fx:id="artistField" styleClass="input" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Artiste" />
+            <TextField fx:id="txtAuthor" styleClass="input-dark" />
          </children>
       </VBox>
-      <VBox fx:id="inputGroupAlbum" layoutX="72.0" layoutY="213.0" prefHeight="47.0" prefWidth="169.0">
+      <VBox prefHeight="47.0" prefWidth="169.0" spacing="5.0">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Album" />
-            <TextField fx:id="albumField" styleClass="input" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Album" />
+            <TextField fx:id="txtAlbum" styleClass="input-dark" />
          </children>
       </VBox>
-      <Label fx:id="noFileError" layoutX="79.0" layoutY="292.0" text="Pas de fichier sélectionné!" textFill="RED" visible="false" />
-      <Label fx:id="wrongFileError" layoutX="75.0" layoutY="292.0" text="Le fichier n'est pas un mp3!" textFill="RED" visible="false" />
-      <Label fx:id="fileNameLabel" layoutX="80.0" layoutY="65.0" prefHeight="17.0" prefWidth="155.0" />
+      <CheckBox fx:id="chkShare" mnemonicParsing="false" prefWidth="350.0" text="Partager">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </CheckBox>
+      <Button mnemonicParsing="false" onAction="#onClickSave" prefWidth="150.0" styleClass="button-light" text="Sauvegarder">
+         <VBox.margin>
+            <Insets top="25.0" />
+         </VBox.margin>
+      </Button>
    </children>
-</Pane>
+   <padding>
+      <Insets bottom="50.0" left="25.0" right="25.0" top="25.0" />
+   </padding>
+</VBox>

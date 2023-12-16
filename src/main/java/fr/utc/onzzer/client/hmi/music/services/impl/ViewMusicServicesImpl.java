@@ -2,7 +2,7 @@ package fr.utc.onzzer.client.hmi.music.services.impl;
 
 import fr.utc.onzzer.client.MainClient;
 import fr.utc.onzzer.client.hmi.GlobalController;
-import fr.utc.onzzer.client.hmi.music.EditViewController;
+import fr.utc.onzzer.client.hmi.music.EditTrackViewController;
 
 
 import fr.utc.onzzer.client.hmi.music.*;
@@ -47,7 +47,7 @@ public class ViewMusicServicesImpl implements ViewMusicServices {
 
     @Override
     public void openEditTrack(UUID trackId) throws Exception {
-        EditViewController controller = new EditViewController(globalController, trackId);
+        EditTrackViewController controller = new EditTrackViewController(globalController, trackId);
         openInModal("Modifier un morceau", "/fxml/edit-track-view.fxml", controller);
     }
 

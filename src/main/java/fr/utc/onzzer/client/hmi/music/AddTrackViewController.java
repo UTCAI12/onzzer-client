@@ -10,9 +10,7 @@ import fr.utc.onzzer.common.dataclass.TrackLite;
 import fr.utc.onzzer.common.dataclass.User;
 import fr.utc.onzzer.client.hmi.GlobalController;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
@@ -20,24 +18,21 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
 public class AddTrackViewController {
     @FXML
-    private Button btnUpload;
+    private Text errNoFile;
     @FXML
-    private Text noFileError;
+    private Text errWrongFile;
     @FXML
-    private Text wrongFileError;
-    @FXML
-    private Text fileNameLabel;
+    private Text txtFileName;
     @FXML
     private TextField txtTitle;
     @FXML
-    private Text titleError;
+    private Text errTitle;
     @FXML
     private TextField txtAuthor;
     @FXML
@@ -59,8 +54,15 @@ public class AddTrackViewController {
     }
 
     @FXML
-    public void onClickUpload(ActionEvent actionEvent) throws IOException {
-        Stage stage = (Stage) this.btnUpload.getScene().getWindow();
+    public void initialize() {
+        errNoFile.managedProperty().bind(errNoFile.visibleProperty());
+        errWrongFile.managedProperty().bind(errWrongFile.visibleProperty());
+        errTitle.managedProperty().bind(errTitle.visibleProperty());
+    }
+
+    @FXML
+    public void onClickUpload() {
+        Stage stage = (Stage) txtTitle.getScene().getWindow();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Fichier Audio");
         File file = fileChooser.showOpenDialog(stage);
@@ -71,20 +73,20 @@ public class AddTrackViewController {
 
         String fileName = file.getName();
         if(fileName.endsWith(".mp3")) {
-            noFileError.setVisible(false);
-            wrongFileError.setVisible(false);
+            errNoFile.setVisible(false);
+            errWrongFile.setVisible(false);
             this.filePath = Paths.get(file.getPath());
         } else {
-            wrongFileError.setVisible(true);
-            noFileError.setVisible(false);
+            errWrongFile.setVisible(true);
+            errNoFile.setVisible(false);
             this.filePath = null;
         }
 
-        fileNameLabel.setText(fileName);
+        txtFileName.setText(fileName);
     }
 
     @FXML
-    public void onClickSave(ActionEvent actionEvent) throws Exception {
+    public void onClickSave() throws Exception {
         // If the form has error, do not do anything.
         if (!validateForm()) {
             return;
@@ -105,23 +107,23 @@ public class AddTrackViewController {
             this.musicServices.publishTrack(tracklite);
         }
 
-        Stage stage = (Stage) this.btnUpload.getScene().getWindow();
+        Stage stage = (Stage) txtTitle.getScene().getWindow();
         stage.close();
     }
 
-    private boolean validateForm() throws IOException {
+    private boolean validateForm() {
         // Audio file
         if (filePath == null){
-            wrongFileError.setVisible(false);
-            noFileError.setVisible(true);
-            fileNameLabel.setText("");
+            errWrongFile.setVisible(false);
+            errNoFile.setVisible(true);
+            txtFileName.setText("");
         } else {
-            noFileError.setVisible(false);
+            errNoFile.setVisible(false);
         }
 
         // Title
         boolean hasTitleError = txtTitle.getText().isBlank();
-        titleError.setVisible(hasTitleError);
+        errTitle.setVisible(hasTitleError);
 
         return !(hasTitleError || filePath == null);
     }

@@ -9,50 +9,50 @@
 
 <VBox alignment="TOP_CENTER" spacing="10.0" styleClass="pane-popup" stylesheets="@../styles/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="h1" text="Nouvelle Musique">
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="h1" text="Nouvelle musique">
          <VBox.margin>
             <Insets bottom="25.0" />
          </VBox.margin>
       </Text>
       <VBox alignment="TOP_CENTER" spacing="5.0">
          <children>
-            <Button fx:id="btnUpload" mnemonicParsing="false" onAction="#onClickUpload" prefWidth="350.0" styleClass="button-light" text="+ Importer un fichier (.mp3)" />
-            <Text fx:id="noFileError" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="error" text="Veuillez sélectionner un fichier" visible="false" />
-            <Text fx:id="wrongFileError" layoutX="105.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="error" text="Le fichier doit être au format MP3" visible="false" />
-            <Text fx:id="fileNameLabel" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" visible="false" />
+            <Button mnemonicParsing="false" onAction="#onClickUpload" prefWidth="350.0" styleClass="button-light" text="+ Importer un fichier (.mp3)" />
+            <Text fx:id="errNoFile" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="error" text="Veuillez sélectionner un fichier" visible="false" />
+            <Text fx:id="errWrongFile" layoutX="105.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="error" text="Le fichier doit être au format MP3" visible="false" />
+            <Text fx:id="txtFileName" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" />
          </children>
       </VBox>
-      <VBox fx:id="inputGroupTitle" spacing="5.0">
+      <VBox spacing="5.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Titre *" />
             <TextField fx:id="txtTitle" styleClass="input-dark" />
-            <Text fx:id="titleError" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="error" text="Veuillez saisir un titre" visible="false" />
+            <Text fx:id="errTitle" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="error" text="Veuillez saisir un titre" visible="false" />
          </children>
       </VBox>
-      <VBox fx:id="inputGroupArtist" spacing="5.0">
+      <VBox spacing="5.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Artiste" />
             <TextField fx:id="txtAuthor" styleClass="input-dark" />
          </children>
       </VBox>
-      <VBox fx:id="inputGroupAlbum" prefHeight="47.0" prefWidth="169.0" spacing="5.0">
+      <VBox prefHeight="47.0" prefWidth="169.0" spacing="5.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Album" />
             <TextField fx:id="txtAlbum" styleClass="input-dark" />
          </children>
       </VBox>
-      <CheckBox fx:id="chkShare" mnemonicParsing="false" prefWidth="350.0" styleClass="label" text="Partager">
+      <CheckBox fx:id="chkShare" mnemonicParsing="false" prefWidth="350.0" text="Partager">
          <VBox.margin>
             <Insets top="10.0" />
          </VBox.margin>
       </CheckBox>
-      <Button fx:id="btnSave" mnemonicParsing="false" onAction="#onClickSave" prefHeight="26.0" prefWidth="144.0" styleClass="button-light" text="Sauvegarder">
+      <Button mnemonicParsing="false" onAction="#onClickSave" prefHeight="26.0" prefWidth="144.0" styleClass="button-light" text="Sauvegarder">
          <VBox.margin>
             <Insets top="25.0" />
          </VBox.margin>
       </Button>
    </children>
    <padding>
-      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+      <Insets bottom="50.0" left="25.0" right="25.0" top="25.0" />
    </padding>
 </VBox>
