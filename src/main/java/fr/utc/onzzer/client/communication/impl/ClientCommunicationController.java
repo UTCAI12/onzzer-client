@@ -106,7 +106,7 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
             try {
                 this.clientRequestHandler.receiveTrack(track);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                System.err.println("Track not found");
             }
         });
         try  {
