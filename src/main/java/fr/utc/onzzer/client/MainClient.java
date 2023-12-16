@@ -9,8 +9,6 @@ import java.io.IOException;
 
 public class MainClient extends Application {
 
-    private static final String APP_TITLE = "Onzzer";
-
     private static Stage stage;
 
     @Override
