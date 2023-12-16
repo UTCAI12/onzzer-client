@@ -41,7 +41,7 @@ public class ClientSocketManager extends Thread {
             while (true) {
                 try {
                     SocketMessage receivedMessage = (SocketMessage) in.readObject();
-                    System.out.println("Client: received "+ receivedMessage);
+//                    System.out.println("Client: received "+ receivedMessage);
                     this.clientController.onMessage(receivedMessage, this);
                 } catch (java.net.SocketException e) {
                     return;
