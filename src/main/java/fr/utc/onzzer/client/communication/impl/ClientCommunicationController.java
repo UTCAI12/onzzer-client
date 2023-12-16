@@ -205,9 +205,7 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
 
     @Override
     public void addComment(UUID trackId, Comment comment) throws Exception {
-        ArrayList<Object> commentDto = new ArrayList<Object>();
-        commentDto.add(trackId);
-        commentDto.add(comment);
+        Pair<UUID, Comment> commentDto = new Pair<>(trackId, comment);
         try {
             this.sendServer(SocketMessagesTypes.PUBLISH_COMMENT, commentDto);
         } catch (Exception e){
