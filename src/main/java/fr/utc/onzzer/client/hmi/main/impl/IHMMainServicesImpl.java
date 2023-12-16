@@ -14,16 +14,12 @@ public class IHMMainServicesImpl implements IHMMainServices {
 
     private static final String APP_TITLE = "Onzzer";
 
-    private final GlobalController controller;
-
     private final LoginViewController loginViewController;
     private final RegisterViewController registerViewController;
     private final MainViewController mainViewController;
     private final MyTrackController myTrackController;
 
     public IHMMainServicesImpl(GlobalController controller) {
-        this.controller = controller;
-
         this.loginViewController = new LoginViewController(controller);
         this.registerViewController = new RegisterViewController(controller);
         this.mainViewController = new MainViewController(controller);
