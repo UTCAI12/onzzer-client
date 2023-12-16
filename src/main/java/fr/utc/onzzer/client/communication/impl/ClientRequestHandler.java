@@ -62,8 +62,6 @@ public class ClientRequestHandler {
     }
 
     void receiveTrack(Track track) throws Exception {
-        UUID uuid = track.getId();
-        this.dataServicesProvider.getDataTrackServices().addTrackToLibrary(uuid);
-        this.dataServicesProvider.getDataTrackServices().updateTrack(track);
+        this.dataServicesProvider.getDataTrackServices().saveTrack(track);
     }
 }
