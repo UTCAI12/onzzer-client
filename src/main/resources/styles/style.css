@@ -183,16 +183,15 @@
 	-fx-fill: -fx-color-white;
 }
 
-.validate-button{
+.validate-button {
 	-fx-background-color: -fx-color-red;
 	-fx-background-radius: 20;
 	-fx-padding: 5 40 5 40;
 	-fx-font-weight: bold;
-	-fx-opacity: 0.7;
 }
 
-.validate-button:hover{
-	-fx-opacity: 1;
+.validate-button:hover {
+	-fx-opacity: 0.8;
 }
 
 .error {
