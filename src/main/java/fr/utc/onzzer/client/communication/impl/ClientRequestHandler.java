@@ -62,6 +62,6 @@ public class ClientRequestHandler {
     }
 
     void receiveTrack(Track track) throws Exception {
-        this.dataServicesProvider.getDataTrackServices().saveTrack(track);
+        this.dataServicesProvider.getDataTrackServices().updateTrack(track);
     }
 }
