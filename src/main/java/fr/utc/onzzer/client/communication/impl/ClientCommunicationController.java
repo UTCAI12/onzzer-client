@@ -6,6 +6,7 @@ import fr.utc.onzzer.client.data.DataServicesProvider;
 import fr.utc.onzzer.common.dataclass.*;
 import fr.utc.onzzer.common.dataclass.communication.SocketMessage;
 import fr.utc.onzzer.common.dataclass.communication.SocketMessagesTypes;
+import javafx.util.Pair;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -190,7 +191,12 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
 
     @Override
     public void addRating(UUID trackId, Rating rating) throws Exception {
-
+        Pair<UUID, Rating> ratingDto = new Pair<>(trackId, rating);
+        try {
+            this.sendServer(SocketMessagesTypes.PUBLISH_RATING, ratingDto);
+        } catch (Exception e){
+            throw new Exception("Error sending publish rating request: " + e.getMessage(), e);
+        }
     }
 
     @Override
