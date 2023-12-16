@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LoginViewController {
@@ -244,7 +245,10 @@ public class LoginViewController {
 
         UserLite userLite = user.toUserLite();
 
-        List<TrackLite> trackLiteList = user.getTrackList().stream()
+        List<Track> tracks = controller.getDataServicesProvider().getDataTrackServices().getTracks();
+        List<TrackLite> publicTrackLites = tracks
+                .stream()
+                .filter(x -> !x.getPrivateTrack())
                 .map(Track::toTrackLite)
                 .toList();
 
@@ -252,7 +256,7 @@ public class LoginViewController {
         userServices.addListener(this::onLoginSucceeded, UserLite.class, ModelUpdateTypes.NEW_USERS);
 
         // Connecting to the server.
-        comServices.connect(userLite, trackLiteList);
+        comServices.connect(userLite, publicTrackLites);
     }
 
     private void onLoginSucceeded(UserLite user) {

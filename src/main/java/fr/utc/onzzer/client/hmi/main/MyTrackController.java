@@ -2,15 +2,15 @@ package fr.utc.onzzer.client.hmi.main;
 
 import fr.utc.onzzer.client.MainClient;
 import fr.utc.onzzer.client.data.DataServicesProvider;
-import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.client.data.DataTrackServices;
+import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.client.hmi.component.IconButton;
 import fr.utc.onzzer.client.hmi.music.services.ViewMusicServices;
+import fr.utc.onzzer.common.dataclass.ModelUpdateTypes;
 import fr.utc.onzzer.common.dataclass.Track;
-import fr.utc.onzzer.common.dataclass.TrackLite;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,14 +25,13 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.util.List;
-import java.util.UUID;
 
 public class MyTrackController {
 
     private final GlobalController controller;
-
     private final DataTrackServices dataTrackServices;
-    private final GlobalController globalController;
+    private final DataUserServices dataUserServices;
+
     @FXML
     private TableView<Track> trackList;
 
@@ -52,14 +51,25 @@ public class MyTrackController {
     private TableColumn<Track, Void> columnActions;
 
     public MyTrackController(GlobalController controller) {
-        this.globalController = controller;
-        this.dataTrackServices = globalController.getDataServicesProvider().getDataTrackServices();
 
         this.controller = controller;
+
+        DataServicesProvider provider = controller.getDataServicesProvider();
+
+        this.dataTrackServices = provider.getDataTrackServices();
+        this.dataUserServices = provider.getDataUserServices();
     }
 
     public void initialize() {
+
+        // Initialize the view.
         this.initializeTrackList();
+
+        // Adding listeners.
+        this.addListeners();
+
+        // Refresh the whole list.
+        this.refreshTrackList();
     }
 
     private void initializeTrackList() {
@@ -91,15 +101,30 @@ public class MyTrackController {
             columnActions.setPrefWidth(width);
             columnShare.setPrefWidth(width);
         });
-
-        // Refresh the whole list.
-        this.refreshMusicList();
     }
 
-    private void refreshMusicList() {
+    private void addListeners() {
 
-        DataServicesProvider dataServicesProvider = this.controller.getDataServicesProvider();
-        DataUserServices dataUserServices = dataServicesProvider.getDataUserServices();
+        // Due to a lack of time, the whole list is refresh even if the change is
+        // about only one track. Could be improved.
+
+        this.dataTrackServices.addListener(track -> this.asyncRefreshTrackList(),
+                Track.class, ModelUpdateTypes.NEW_TRACK);
+
+        this.dataTrackServices.addListener(track -> this.asyncRefreshTrackList(),
+                Track.class, ModelUpdateTypes.NEW_TRACKS);
+
+        this.dataTrackServices.addListener(track -> this.asyncRefreshTrackList(),
+                Track.class, ModelUpdateTypes.DELETE_TRACK);
+
+        this.dataTrackServices.addListener(track -> this.asyncRefreshTrackList(),
+                Track.class, ModelUpdateTypes.DELETE_ALL_TRACKS);
+
+        this.dataTrackServices.addListener(track -> this.asyncRefreshTrackList(),
+                Track.class, ModelUpdateTypes.UPDATE_TRACK);
+    }
+
+    private void refreshTrackList() {
 
         try {
 
@@ -107,17 +132,16 @@ public class MyTrackController {
             items.clear();
 
             // Adding tracks to the list.
-            List<Track> tracks = dataUserServices.getUser().getTrackList();
+            List<Track> tracks = this.dataTrackServices.getTracks();
             items.addAll(tracks);
-
-            // TODO : To remove.
-            for (int i = 0; i < 100; i++) {
-                items.add(new Track(UUID.randomUUID(), UUID.randomUUID(), "title", "author",true));
-            }
 
         } catch (Exception exception) {
             exception.printStackTrace();
         }
+    }
+
+    private void asyncRefreshTrackList() {
+        Platform.runLater(this::refreshTrackList);
     }
 
     private Callback<TableColumn<Track, Void>, TableCell<Track, Void>> getActionCellFactory() {
@@ -194,7 +218,11 @@ public class MyTrackController {
     }
 
     private void onEvaluateButtonClick(Track track) {
-        // Actually, there is no view to evaluate a track.
-        // We need to have this information (who's doing that, what code can be called).
+        try {
+            ViewMusicServices viewMusicServices = this.controller.getViewMusicServices();
+            viewMusicServices.openEditTrack(track.getId());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 }

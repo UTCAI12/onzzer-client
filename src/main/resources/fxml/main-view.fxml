@@ -1,22 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
-<?import java.net.URL?>
-<?import javafx.geometry.Insets?>
-<?import javafx.geometry.Rectangle2D?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<BorderPane id="root-pane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane id="root-pane" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
    <center>
    </center>
    <stylesheets>
@@ -41,7 +33,10 @@
                      </ImageView>
                   </HBox>
                </HBox>
-               <Separator styleClass="separator-dark" />
+               <Separator styleClass="separator-dark">
+                  <VBox.margin>
+                     <Insets bottom="8.0" top="8.0" />
+                  </VBox.margin></Separator>
                <HBox>
                   <Button fx:id="ourMusic" mnemonicParsing="false" onAction="#handleViewOurMusic" text="Vos musique" HBox.hgrow="ALWAYS">
                      <VBox.margin>
@@ -83,8 +78,8 @@
                   <Insets right="25.0" />
                </HBox.margin>
             </Separator>
-            <VBox alignment="TOP_CENTER" minWidth="250.0" styleClass="h1">
-               <Label maxWidth="1.7976931348623157E308" text="Utilisateurs" />
+            <VBox alignment="TOP_CENTER" minWidth="250.0">
+               <Label maxWidth="1.7976931348623157E308" text="Utilisateurs" styleClass="h1" />
                <Separator styleClass="separator-dark" VBox.vgrow="ALWAYS" />
                <HBox>
                   <TextField fx:id="searchField" maxWidth="1.7976931348623157E308" minHeight="-Infinity" onKeyPressed="#handleSearch" prefHeight="30.0" promptText="Rechercher..." HBox.hgrow="ALWAYS">

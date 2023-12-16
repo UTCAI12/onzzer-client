@@ -66,17 +66,15 @@ public class SearchViewController {
         this.dataUserServices.addListener(user -> {
             Platform.runLater(this::refreshTrackList);
         }, UserLite.class, ModelUpdateTypes.DELETE_USER);
-
-        // =============== DEBUG =============== //
-        try {
-            UserLite user1 = new UserLite(UUID.randomUUID(), "Joker");
-            UserLite user2 = new UserLite(UUID.randomUUID(), "Batman");
-            this.dataUserServices.addUser(user1);
-            this.dataUserServices.addUser(user2);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        // =============== DEBUG =============== //
+        this.dataTrackServices.addListener(track -> {
+            Platform.runLater(this::refreshTrackList);
+        }, TrackLite.class, ModelUpdateTypes.NEW_TRACK);
+        this.dataTrackServices.addListener(track -> {
+            Platform.runLater(this::refreshTrackList);
+        }, TrackLite.class, ModelUpdateTypes.DELETE_TRACK);
+        this.dataTrackServices.addListener(track -> {
+            Platform.runLater(this::refreshTrackList);
+        }, TrackLite.class, ModelUpdateTypes.UPDATE_TRACK);
     }
 
     public void initialize() {
@@ -106,18 +104,6 @@ public class SearchViewController {
     private void refreshTrackList() {
         // Get the tracks that are currently accessible on the network
         tracks = FXCollections.observableArrayList(dataTrackServices.getTrackLites());
-
-        // =============== DEBUG =============== //
-        List<UserLite> users = this.dataUserServices.getConnectedUsers().keySet().stream().toList();
-        UserLite user1 = users.get(0);
-        UserLite user2 = users.get(1);
-        this.tracks.add(new TrackLite(UUID.randomUUID(), user1.getId(), "Doomsday", "Jared Benjamin", null));
-        this.tracks.add(new TrackLite(UUID.randomUUID(), user2.getId(), "Human", "Apashe", "2023"));
-        this.tracks.add(new TrackLite(UUID.randomUUID(), user2.getId(), "Phoenix", "AViVA", "Rise"));
-        this.tracks.add(new TrackLite(UUID.randomUUID(), user1.getId(), "Strangers", "Kenya Grace", null));
-        this.tracks.add(new TrackLite(UUID.randomUUID(), user1.getId(), "I'm Just Ken", "Ryan Gosling", "Yes"));
-        // =============== DEBUG =============== //
-
         onSearchFieldChanged();
     }
 

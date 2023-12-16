@@ -32,16 +32,38 @@ import java.util.UUID;
 import fr.utc.onzzer.client.hmi.GlobalController;
 
 
-public class UploadViewController {
+public class EditViewController {
     private final DataTrackServices trackServices;
     private final DataUserServices userServices;
-
     private final ComMusicServices musicServices;
+
+    private String title;
+
+    private String album;
+
+    private String author;
+
+    private UUID oldTrackId;
+
+    private boolean isPrivate;
+
+    private byte[] oldAudio;
+
+    private String fileName;
 
     private Path filePath;
 
     @FXML
     private Label noFileError;
+
+    @FXML
+    private TextField titleField;
+
+    @FXML
+    private TextField artistField;
+
+    @FXML
+    private TextField albumField;
 
     @FXML
     private Label fileNameLabel;
@@ -70,12 +92,27 @@ public class UploadViewController {
     @FXML
     private CheckBox chkShare;
 
-    public UploadViewController(GlobalController controller) {
+    public EditViewController(GlobalController controller, UUID trackId) throws Exception {
+        oldTrackId = trackId;
         DataServicesProvider dataServicesProvider = controller.getDataServicesProvider();
         ComServicesProvider comServicesProvider = controller.getComServicesProvider();
         this.trackServices = dataServicesProvider.getDataTrackServices();
         this.userServices = dataServicesProvider.getDataUserServices();
         this.musicServices = comServicesProvider.getComMusicServices();
+        Track track = trackServices.getTrack(trackId);
+        title = track.getTitle();
+        album = track.getAlbum();
+        author = track.getAuthor();
+        isPrivate = track.getPrivateTrack();
+        this.oldAudio = track.getAudio();
+    }
+
+    @FXML
+    public void initialize(){
+        this.titleField.setText(title);
+        this.albumField.setText(album);
+        this.artistField.setText(author);
+        this.checkboxShare.setSelected(!isPrivate);
     }
 
 
@@ -96,12 +133,12 @@ public class UploadViewController {
         if(extension.equals("mp3")) {
             noFileError.setVisible(false);
             wrongFileError.setVisible(false);
-            this.filePath = Paths.get(file.getPath());
+            this.oldAudio = Files.readAllBytes(this.filePath);
         }
         else {
             wrongFileError.setVisible(true);
             noFileError.setVisible(false);
-            this.filePath = null;
+            this.oldAudio = null;
         }
         fileNameLabel.setText(fileName);
     }
@@ -118,11 +155,11 @@ public class UploadViewController {
         User user = this.userServices.getUser();
         UUID trackID = UUID.randomUUID();
         if (!hasErrors) {
-            fr.utc.onzzer.common.dataclass.Track track = new Track(trackID, filePath.toString(), user.getId(), title, author, isPrivate);
+            fr.utc.onzzer.common.dataclass.Track track = new Track(trackID, oldAudio, user.getId(), title, author, isPrivate);
             track.setAlbum(album);
-            this.trackServices.saveTrack(track);
+            this.trackServices.updateTrack(track);
             TrackLite tracklite = track.toTrackLite();
-            this.musicServices.publishTrack(tracklite);
+            this.musicServices.updateTrack(tracklite);
             Stage stage = (Stage) this.btnSave.getScene().getWindow();
             stage.close();
         }
@@ -135,14 +172,14 @@ public class UploadViewController {
             ValidationUtil.showError(this.inputGroupTitle);
         }
         else ValidationUtil.hideError(this.inputGroupTitle);
-        if (filePath==null){
+        if (oldAudio==null){
             wrongFileError.setVisible(false);
             noFileError.setVisible(true);
             fileNameLabel.setText(" ");
         }
         else noFileError.setVisible(false);
 
-        return title.hasError() | filePath==null;
+        return title.hasError() | oldAudio==null;
     }
 
     private ValidationResult<String> checkTitle() {

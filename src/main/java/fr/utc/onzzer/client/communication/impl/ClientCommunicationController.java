@@ -3,9 +3,14 @@ package fr.utc.onzzer.client.communication.impl;
 import fr.utc.onzzer.client.communication.ComMainServices;
 import fr.utc.onzzer.client.communication.ComMusicServices;
 import fr.utc.onzzer.client.data.DataServicesProvider;
-import fr.utc.onzzer.common.dataclass.*;
+import fr.utc.onzzer.common.dataclass.Comment;
+import fr.utc.onzzer.common.dataclass.Rating;
+import fr.utc.onzzer.common.dataclass.Track;
+import fr.utc.onzzer.common.dataclass.TrackLite;
+import fr.utc.onzzer.common.dataclass.UserLite;
 import fr.utc.onzzer.common.dataclass.communication.SocketMessage;
 import fr.utc.onzzer.common.dataclass.communication.SocketMessagesTypes;
+import javafx.util.Pair;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -76,7 +81,7 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
             this.sendServer(SocketMessagesTypes.USER_PING, null);
         });
         messageHandlers.put(SocketMessagesTypes.SERVER_STOPPED, (message, sender) -> {
-            System.out.println("I have received a SERVER_STOPPED message from server!");
+//            System.out.println("I have received a SERVER_STOPPED message from server!");
             this.clientRequestHandler.serverStopped();
         });
         messageHandlers.put(SocketMessagesTypes.GET_TRACK, (message, sender) -> {
@@ -139,7 +144,11 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
 
     @Override
     public void editUser(UserLite user) throws Exception {
-
+        try{
+            this.sendServer(SocketMessagesTypes.USER_UPDATE, user);
+        } catch (Exception e){
+            throw new Exception("Error sending user update request: " + e.getMessage(), e);
+        }
     }
 
     @Override
@@ -190,14 +199,17 @@ public class ClientCommunicationController implements ComMainServices, ComMusicS
 
     @Override
     public void addRating(UUID trackId, Rating rating) throws Exception {
-
+        Pair<UUID, Rating> ratingDto = new Pair<>(trackId, rating);
+        try {
+            this.sendServer(SocketMessagesTypes.PUBLISH_RATING, ratingDto);
+        } catch (Exception e){
+            throw new Exception("Error sending publish rating request: " + e.getMessage(), e);
+        }
     }
 
     @Override
     public void addComment(UUID trackId, Comment comment) throws Exception {
-        ArrayList<Object> commentDto = new ArrayList<Object>();
-        commentDto.add(trackId);
-        commentDto.add(comment);
+        Pair<UUID, Comment> commentDto = new Pair<>(trackId, comment);
         try {
             this.sendServer(SocketMessagesTypes.PUBLISH_COMMENT, commentDto);
         } catch (Exception e){

@@ -3,11 +3,10 @@ package fr.utc.onzzer.client.hmi.music.services.impl;
 import fr.utc.onzzer.client.MainClient;
 import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.client.hmi.main.LoginViewController;
+import fr.utc.onzzer.client.hmi.music.EditViewController;
 
-import fr.utc.onzzer.client.hmi.music.ListenTrackViewController;
-import fr.utc.onzzer.client.hmi.music.SearchViewController;
-import fr.utc.onzzer.client.hmi.music.UploadViewController;
-import fr.utc.onzzer.client.hmi.music.DeleteTrackViewController;
+
+import fr.utc.onzzer.client.hmi.music.*;
 
 import fr.utc.onzzer.client.hmi.music.services.ViewMusicServices;
 import javafx.fxml.FXMLLoader;
@@ -44,13 +43,13 @@ public class ViewMusicServicesImpl implements ViewMusicServices {
     @Override
     public void openCreateTrack() throws IOException {
         UploadViewController controller = new UploadViewController(globalController);
-        openInModal("Nouveau morceau", "/fxml/add_music-view.fxml", controller);
+        openInModal("Nouveau morceau", "/fxml/addmusic-view.fxml", controller);
     }
 
     @Override
-    public void openEditTrack(UUID trackId) throws IOException {
-        LoginViewController controller = new LoginViewController(globalController);
-        openInModal("Modifier un morceau", "/fxml/edit-track-view.fxml", controller);
+    public void openEditTrack(UUID trackId) throws Exception {
+        EditViewController controller = new EditViewController(globalController, trackId);
+        openInModal("Modifier un morceau", "/fxml/editmusic-view.fxml", controller);
     }
 
     @Override
