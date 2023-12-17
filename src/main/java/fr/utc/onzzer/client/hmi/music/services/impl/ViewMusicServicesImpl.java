@@ -2,8 +2,7 @@ package fr.utc.onzzer.client.hmi.music.services.impl;
 
 import fr.utc.onzzer.client.MainClient;
 import fr.utc.onzzer.client.hmi.GlobalController;
-import fr.utc.onzzer.client.hmi.main.LoginViewController;
-import fr.utc.onzzer.client.hmi.music.EditViewController;
+import fr.utc.onzzer.client.hmi.music.EditTrackViewController;
 
 
 import fr.utc.onzzer.client.hmi.music.*;
@@ -21,9 +20,11 @@ import java.util.UUID;
 
 public class ViewMusicServicesImpl implements ViewMusicServices {
     private final GlobalController globalController;
+    private final ListenViewController listenController;
 
     public ViewMusicServicesImpl(GlobalController globalController) {
         this.globalController = globalController;
+        this.listenController = new ListenViewController(globalController);
     }
 
     @Override
@@ -42,14 +43,14 @@ public class ViewMusicServicesImpl implements ViewMusicServices {
 
     @Override
     public void openCreateTrack() throws IOException {
-        UploadViewController controller = new UploadViewController(globalController);
-        openInModal("Nouveau morceau", "/fxml/addmusic-view.fxml", controller);
+        AddTrackViewController controller = new AddTrackViewController(globalController);
+        openInModal("Nouveau morceau", "/fxml/add-track-view.fxml", controller);
     }
 
     @Override
     public void openEditTrack(UUID trackId) throws Exception {
-        EditViewController controller = new EditViewController(globalController, trackId);
-        openInModal("Modifier un morceau", "/fxml/editmusic-view.fxml", controller);
+        EditTrackViewController controller = new EditTrackViewController(globalController, trackId);
+        openInModal("Modifier un morceau", "/fxml/edit-track-view.fxml", controller);
     }
 
     @Override
@@ -65,8 +66,8 @@ public class ViewMusicServicesImpl implements ViewMusicServices {
 
         // Load the view and controller
         FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/listen-view.fxml"));
-        ListenTrackViewController controller = new ListenTrackViewController(globalController, trackId);
-        fxmlLoader.setController(controller);
+        listenController.setTrack(trackId);
+        fxmlLoader.setController(listenController);
 
         // Update the displayed scene
         borderPane.setBottom(fxmlLoader.load());
@@ -84,7 +85,7 @@ public class ViewMusicServicesImpl implements ViewMusicServices {
         fxmlLoader.setController(controller);
 
         // Set the content of the popup stage
-        Scene popupScene = new Scene(fxmlLoader.load(), 307, 365);
+        Scene popupScene = new Scene(fxmlLoader.load());
         popupStage.setScene(popupScene);
 
         // Set the position relative to the primary stage

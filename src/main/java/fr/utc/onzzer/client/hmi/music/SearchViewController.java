@@ -24,6 +24,7 @@ import javafx.scene.layout.HBox;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class SearchViewController {
@@ -49,14 +50,13 @@ public class SearchViewController {
     private TableColumn<TrackLite, UUID> columnActions;
 
     private final GlobalController globalController;
-    private final DataTrackServices dataTrackServices;
     private final DataUserServices dataUserServices;
     private ObservableList<TrackLite> tracks;
 
     public SearchViewController(GlobalController globalController) {
         // Get the controllers and services
         this.globalController = globalController;
-        this.dataTrackServices = globalController.getDataServicesProvider().getDataTrackServices();
+        DataTrackServices dataTrackServices = globalController.getDataServicesProvider().getDataTrackServices();
         this.dataUserServices = globalController.getDataServicesProvider().getDataUserServices();
 
         // Adding listeners to know when the users list changes
@@ -66,13 +66,13 @@ public class SearchViewController {
         this.dataUserServices.addListener(user -> {
             Platform.runLater(this::refreshTrackList);
         }, UserLite.class, ModelUpdateTypes.DELETE_USER);
-        this.dataTrackServices.addListener(track -> {
+        dataTrackServices.addListener(track -> {
             Platform.runLater(this::refreshTrackList);
         }, TrackLite.class, ModelUpdateTypes.NEW_TRACK);
-        this.dataTrackServices.addListener(track -> {
+        dataTrackServices.addListener(track -> {
             Platform.runLater(this::refreshTrackList);
         }, TrackLite.class, ModelUpdateTypes.DELETE_TRACK);
-        this.dataTrackServices.addListener(track -> {
+        dataTrackServices.addListener(track -> {
             Platform.runLater(this::refreshTrackList);
         }, TrackLite.class, ModelUpdateTypes.UPDATE_TRACK);
     }
@@ -103,7 +103,8 @@ public class SearchViewController {
 
     private void refreshTrackList() {
         // Get the tracks that are currently accessible on the network
-        tracks = FXCollections.observableArrayList(dataTrackServices.getTrackLites());
+        List<TrackLite> trackLites = dataUserServices.getConnectedUsers().values().stream().filter(Objects::nonNull).flatMap(List::stream).toList();
+        tracks = FXCollections.observableArrayList(trackLites);
         onSearchFieldChanged();
     }
 

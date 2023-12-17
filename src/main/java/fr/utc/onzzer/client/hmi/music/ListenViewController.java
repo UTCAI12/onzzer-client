@@ -1,4 +1,5 @@
 package fr.utc.onzzer.client.hmi.music;
+
 import fr.utc.onzzer.client.MainClient;
 import fr.utc.onzzer.client.data.DataTrackServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
@@ -18,19 +19,28 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class ListenTrackViewController {
-    private final GlobalController controller;
+public class ListenViewController {
 
     private final DataTrackServices dataTrackServices;
+    private Track track;
+    private int trackIndex;
+    private ArrayList<Track> trackArrayList;
 
-    private ListenTrackViewController(GlobalController controller) {
-        this.controller = controller;
-        this.dataTrackServices = this.controller.getDataServicesProvider().getDataTrackServices();
-        this.trackArrayList = this.dataTrackServices.getTracks();
+    private MediaPlayer mediaPlayer;
+    private Media sound;
+    private boolean isUserChangingSlider = false;
+
+    public ListenViewController(GlobalController controller) {
+        this.dataTrackServices = controller.getDataServicesProvider().getDataTrackServices();
     }
 
-    public ListenTrackViewController(GlobalController controller, UUID trackId) {
+    public ListenViewController(GlobalController controller, UUID trackId) {
         this(controller);
+        setTrack(trackId);
+    }
+
+    public void setTrack(UUID trackId) {
+        this.trackArrayList = this.dataTrackServices.getTracks();
         try {
             this.track = this.dataTrackServices.getTrack(trackId);
         } catch (Exception e) {
@@ -39,53 +49,27 @@ public class ListenTrackViewController {
         this.trackIndex = trackArrayList.indexOf(track);
     }
 
-    public ListenTrackViewController(GlobalController controller, Track track) {
-        this(controller);
-        this.track = track;
-        this.trackIndex = trackArrayList.indexOf(track);
-    }
-
-    private Track track;
-
-    private int trackIndex;
-
-    private ArrayList<Track> trackArrayList;
-
     @FXML
     private Text txtTitle;
-
     @FXML
     private Text txtAuthor;
-
     @FXML
     private Text txtAlbum;
-
     @FXML
     private Text txtCurrentTime;
-
     @FXML
     private Text txtTrackDuration;
-
     @FXML
     private Button btnPrevious;
-
     @FXML
     private Button buttonPlayTrack;
-
     @FXML
     private Button btnNext;
-
     @FXML
     private Slider sliderTrackDuration;
-
     @FXML
     private Button closeButton;
 
-    private MediaPlayer mediaPlayer;
-
-    private Media sound;
-
-    private boolean isUserChangingSlider = false;
 
     private void initializeTrack() {
         File file = null;
@@ -98,6 +82,12 @@ public class ListenTrackViewController {
         this.txtTitle.setText(this.track.getTitle() == null ? "No Title" : this.track.getTitle());
         this.txtAuthor.setText(this.track.getAuthor() == null ? "No Author" : this.track.getAuthor());
         this.txtAlbum.setText(this.track.getAlbum() == null ? "No Album" : this.track.getAlbum());
+
+        if (this.mediaPlayer != null) {
+            this.mediaPlayer.stop();
+            this.mediaPlayer.dispose();
+            this.mediaPlayer = null;
+        }
 
         this.sound = new Media(file.toURI().toString());
         this.mediaPlayer = new MediaPlayer(sound);
@@ -166,8 +156,10 @@ public class ListenTrackViewController {
     private void onClickPlayPause() {
         if (this.mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED) {
             this.mediaPlayer.play();
+            buttonPlayTrack.setText("Pause");
         } else if (this.mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             this.mediaPlayer.pause();
+            buttonPlayTrack.setText("Lecture");
         }
     }
 
@@ -194,7 +186,9 @@ public class ListenTrackViewController {
     public void onCloseButton() {
         BorderPane borderPane = (BorderPane) MainClient.getStage().getScene().getRoot();
         this.mediaPlayer.stop();
+        this.mediaPlayer.dispose();
         this.mediaPlayer = null;
         borderPane.setBottom(null);
     }
+
 }
