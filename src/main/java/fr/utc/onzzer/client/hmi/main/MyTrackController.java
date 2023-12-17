@@ -29,8 +29,6 @@ import java.util.List;
 public class MyTrackController {
 
     private final GlobalController controller;
-    private final DataTrackServices dataTrackServices;
-    private final DataUserServices dataUserServices;
 
     @FXML
     private TableView<Track> trackList;
@@ -51,22 +49,16 @@ public class MyTrackController {
     private TableColumn<Track, Void> columnActions;
 
     public MyTrackController(GlobalController controller) {
-
         this.controller = controller;
 
-        DataServicesProvider provider = controller.getDataServicesProvider();
-
-        this.dataTrackServices = provider.getDataTrackServices();
-        this.dataUserServices = provider.getDataUserServices();
+        // Adding listeners.
+        this.addListeners();
     }
 
     public void initialize() {
 
         // Initialize the view.
         this.initializeTrackList();
-
-        // Adding listeners.
-        this.addListeners();
 
         // Refresh the whole list.
         this.refreshTrackList();
@@ -108,23 +100,29 @@ public class MyTrackController {
         // Due to a lack of time, the whole list is refresh even if the change is
         // about only one track. Could be improved.
 
-        this.dataTrackServices.addListener(track -> this.asyncRefreshTrackList(),
+        DataServicesProvider provider = this.controller.getDataServicesProvider();
+        DataTrackServices dataTrackServices = provider.getDataTrackServices();
+
+        dataTrackServices.addListener(track -> this.asyncRefreshTrackList(),
                 Track.class, ModelUpdateTypes.NEW_TRACK);
 
-        this.dataTrackServices.addListener(track -> this.asyncRefreshTrackList(),
+        dataTrackServices.addListener(track -> this.asyncRefreshTrackList(),
                 Track.class, ModelUpdateTypes.NEW_TRACKS);
 
-        this.dataTrackServices.addListener(track -> this.asyncRefreshTrackList(),
+        dataTrackServices.addListener(track -> this.asyncRefreshTrackList(),
                 Track.class, ModelUpdateTypes.DELETE_TRACK);
 
-        this.dataTrackServices.addListener(track -> this.asyncRefreshTrackList(),
+        dataTrackServices.addListener(track -> this.asyncRefreshTrackList(),
                 Track.class, ModelUpdateTypes.DELETE_ALL_TRACKS);
 
-        this.dataTrackServices.addListener(track -> this.asyncRefreshTrackList(),
+        dataTrackServices.addListener(track -> this.asyncRefreshTrackList(),
                 Track.class, ModelUpdateTypes.UPDATE_TRACK);
     }
 
     private void refreshTrackList() {
+
+        DataServicesProvider provider = this.controller.getDataServicesProvider();
+        DataTrackServices dataTrackServices = provider.getDataTrackServices();
 
         try {
 
@@ -132,7 +130,7 @@ public class MyTrackController {
             items.clear();
 
             // Adding tracks to the list.
-            List<Track> tracks = this.dataTrackServices.getTracks();
+            List<Track> tracks = dataTrackServices.getTracks();
             items.addAll(tracks);
 
         } catch (Exception exception) {

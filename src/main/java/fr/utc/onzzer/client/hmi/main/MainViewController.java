@@ -14,14 +14,12 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -33,9 +31,6 @@ import java.util.Map;
 public class MainViewController {
 
     private final GlobalController controller;
-    private DataUserServices dataUserServices;
-    private DataServicesProvider dataServicesProvider;
-    private ComServicesProvider comServicesProvider;
 
     @FXML
     private TextField searchField;
@@ -57,15 +52,14 @@ public class MainViewController {
 
     public MainViewController(GlobalController controller) {
         this.controller = controller;
+
+        this.addListeners();
+
         this.usersList = new ListView<>();
         this.searchField = new TextField();
     }
 
     public void initialize() {
-
-        this.dataServicesProvider = this.controller.getDataServicesProvider();
-        this.comServicesProvider = this.controller.getComServicesProvider();
-        this.dataUserServices = this.dataServicesProvider.getDataUserServices();
 
         // Initializing username.
         this.initializeUsername();
@@ -77,31 +71,10 @@ public class MainViewController {
         this.initializeTrackList();
     }
 
-    @FXML
-    private void handleAddMusic(ActionEvent event) {
-        try {
-            this.controller.getViewMusicServices().openCreateTrack();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    private void addListeners() {
 
-    private void initializeUsername() {
-
-        try {
-            User user = this.dataUserServices.getUser();
-            this.username.setText(user.getUsername());
-        } catch (Exception e) {
-            e.printStackTrace();
-            this.username.setText("error");
-        }
-    }
-
-
-    private void initializeUserList() {
-
-        // Refresh the user list with the connected users.
-        this.refreshUsersList();
+        DataServicesProvider provider = this.controller.getDataServicesProvider();
+        DataUserServices dataUserServices = provider.getDataUserServices();
 
         // Adding a listener to get the new user connected and to add it to the list.
         dataUserServices.addListener(user -> {
@@ -116,6 +89,35 @@ public class MainViewController {
                 this.usersList.getItems().remove(user.getUsername());
             });
         }, UserLite.class, ModelUpdateTypes.DELETE_USER);
+    }
+
+    @FXML
+    private void handleAddMusic(ActionEvent event) {
+        try {
+            this.controller.getViewMusicServices().openCreateTrack();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initializeUsername() {
+
+        DataServicesProvider provider = this.controller.getDataServicesProvider();
+        DataUserServices dataUserServices = provider.getDataUserServices();
+
+        try {
+            User user = dataUserServices.getUser();
+            this.username.setText(user.getUsername());
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.username.setText("error");
+        }
+    }
+
+    private void initializeUserList() {
+
+        // Refresh the user list with the connected users.
+        this.refreshUsersList();
 
         // Removing focus on list view.
         this.usersList.setMouseTransparent(false);
@@ -123,6 +125,9 @@ public class MainViewController {
     }
 
     private void refreshUsersList() {
+
+        DataServicesProvider provider = this.controller.getDataServicesProvider();
+        DataUserServices dataUserServices = provider.getDataUserServices();
 
         Map<UserLite, List<TrackLite>> connectedUsers = dataUserServices.getConnectedUsers();
         Collection<UserLite> users = connectedUsers.keySet();
@@ -214,23 +219,10 @@ public class MainViewController {
 
     private void showMyTrackView() {
 
-        // Get the JavaFx parent element
-        Stage stage = MainClient.getStage();
-        Scene scene = stage.getScene();
-
-        BorderPane borderPane = (BorderPane) scene.getRoot();
-
         try {
-
-            // Load the view and controller
-            FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/my-track-view.fxml"));
-            MyTrackController myTrackController = new MyTrackController(this.controller);
-            fxmlLoader.setController(myTrackController);
-
-            // Update the displayed scene
-            borderPane.setCenter(fxmlLoader.load());
-
-        } catch (Exception exception) {
+            IHMMainServices services = this.controller.getIHMMainServices();
+            services.openTrackList();
+        } catch (IOException exception) {
             exception.printStackTrace();
         }
     }
@@ -241,27 +233,14 @@ public class MainViewController {
         // Even if the disconnection fails, opening the login view to enable
         // the user to reconnect again.
         try {
-            ComMainServices services = this.comServicesProvider.getComMainServices();
+            ComServicesProvider provider = this.controller.getComServicesProvider();
+            ComMainServices services = provider.getComMainServices();
             services.disconnect();
         } catch (Exception exception) {
             exception.printStackTrace();
         } finally {
-            this.openLoginView();
+            IHMMainServices services = this.controller.getIHMMainServices();
+            services.openLoginView();
         }
-    }
-
-    private void openLoginView() throws IOException {
-
-        // Opening the login view.
-        Stage stage = MainClient.getStage();
-        Scene current = stage.getScene();
-
-        FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/login-view.fxml"));
-        LoginViewController loginViewController = new LoginViewController(this.controller);
-        fxmlLoader.setController(loginViewController);
-
-        Scene scene = new Scene(fxmlLoader.load(), current.getWidth(), current.getHeight());
-
-        stage.setScene(scene);
     }
 }
