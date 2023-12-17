@@ -21,14 +21,11 @@ public class DataRepository {
 
     public ArrayList<UUID> toDownloadTracks = new ArrayList<UUID>();
 
-    Track getTrackByID(UUID trackId){
-        int track = 0;
-        for (int i =0; i<tracks.size();i++){
-            if(tracks.get(i).getId()==trackId){
-                track = i;
-            }
-        }
-        return this.tracks.get(track);
+    Track getTrackByID(UUID trackId)  throws Exception  {
+        return tracks.stream()
+                .filter(t -> t.getId().equals(trackId))
+                .findFirst()
+                .orElseThrow(() -> new Exception("TrackId " + trackId + " does not exist in the data repository"));
     }
 
     HashMap<UserLite, List<TrackLite>> getConnectedUsers() {
