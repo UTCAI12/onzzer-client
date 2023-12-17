@@ -24,6 +24,7 @@ import javafx.scene.layout.HBox;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class SearchViewController {
@@ -103,7 +104,8 @@ public class SearchViewController {
 
     private void refreshTrackList() {
         // Get the tracks that are currently accessible on the network
-        tracks = FXCollections.observableArrayList(dataTrackServices.getTrackLites());
+        List<TrackLite> trackLites = dataUserServices.getConnectedUsers().values().stream().filter(Objects::nonNull).flatMap(List::stream).toList();
+        tracks = FXCollections.observableArrayList(trackLites);
         onSearchFieldChanged();
     }
 
