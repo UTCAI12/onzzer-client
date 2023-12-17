@@ -20,9 +20,11 @@ import java.util.UUID;
 
 public class ViewMusicServicesImpl implements ViewMusicServices {
     private final GlobalController globalController;
+    private final ListenViewController listenController;
 
     public ViewMusicServicesImpl(GlobalController globalController) {
         this.globalController = globalController;
+        this.listenController = new ListenViewController(globalController);
     }
 
     @Override
@@ -63,9 +65,9 @@ public class ViewMusicServicesImpl implements ViewMusicServices {
         BorderPane borderPane = (BorderPane) scene.getRoot();
 
         // Load the view and controller
-        FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/listen-view.fxml"));
-        ListenTrackViewController controller = new ListenTrackViewController(globalController, trackId);
-        fxmlLoader.setController(controller);
+        FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/listen-view2.fxml"));
+        listenController.setTrack(trackId);
+        fxmlLoader.setController(listenController);
 
         // Update the displayed scene
         borderPane.setBottom(fxmlLoader.load());
