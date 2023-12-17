@@ -100,13 +100,10 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
         }
         this.notify(track, Track.class, ModelUpdateTypes.NEW_TRACK);
     }
-
     @Override
     public void updateTrack(Track track) throws Exception {
-        //old track
-        Track old_track = this.dataRepository.getTrackByID(track.getId());
-        //Si la musique est déjà présente dans la liste des tracks, on la modifie
-        if(this.dataRepository.tracks.contains(old_track)){
+        try {
+            Track old_track = this.dataRepository.getTrackByID(track.getId());
             this.dataRepository.tracks.remove(old_track);
             this.dataRepository.tracks.add(track);
             this.notify(track, Track.class, ModelUpdateTypes.UPDATE_TRACK);
@@ -123,21 +120,20 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
                     }
                 }
             }
-        }else{
-            //Si le trackId est présent dans la liste des track à téléchargé, alors on le télécharge
-            if(this.dataRepository.toDownloadTracks.contains(track.getId())){
+        } catch (Exception e) {
+            if (this.dataRepository.toDownloadTracks.contains(track.getId())){
                 this.saveTrack(track);
                 this.dataRepository.toDownloadTracks.remove(track.getId());
-            }else{
+                this.notify(track, Track.class, ModelUpdateTypes.TRACK_READY_DOWNLOAD);
+            } else {
                 this.dataRepository.tracks.add(track);
-                this.notify(track, Track.class, ModelUpdateTypes.NEW_TRACK);
+                this.notify(track, Track.class, ModelUpdateTypes.TRACK_READY_PLAY);
             }
         }
-
     }
 
     @Override
-    public Track getTrack(UUID uuid){
+    public Track getTrack(UUID uuid) throws Exception {
         return dataRepository.getTrackByID(uuid);
     }
     @Override
@@ -188,7 +184,7 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
         this.notify(null, Track.class, ModelUpdateTypes.DELETE_ALL_TRACKS);
     }
     @Override
-    public void deleteTrack(UUID uuid){
+    public void deleteTrack(UUID uuid) throws Exception {
         Track track = this.dataRepository.getTrackByID(uuid);
         this.dataRepository.tracks.remove(track);
         //Retirer les fichiers .ser et .mp3 du dossier tracks
