@@ -29,9 +29,11 @@ public class DeleteTrackViewController {
 
     public DeleteTrackViewController(GlobalController controller, UUID trackId) {
         this(controller);
-        Track trackItem= this.dataTrackServices.getTrack(trackId);
-        this.track = trackItem;
-
+        try {
+            this.track = this.dataTrackServices.getTrack(trackId);
+        } catch (Exception e) {
+            System.err.println("Error while loading track : " + trackId);
+        }
     }
 
     public DeleteTrackViewController(GlobalController controller, Track track) {
@@ -64,7 +66,12 @@ public class DeleteTrackViewController {
 
     @FXML
     public void onClickDeleteTrack() {
-        this.dataTrackServices.deleteTrack(track.getId());
+        try {
+            this.dataTrackServices.deleteTrack(track.getId());
+        } catch (Exception e) {
+            System.err.println("Error while loading track : " + track.getId());
+        }
+
         Stage stage = (Stage) this.btnDelete.getScene().getWindow();
         stage.close();
     }
