@@ -1,17 +1,13 @@
 package fr.utc.onzzer.client;
 
 import fr.utc.onzzer.client.hmi.GlobalController;
-import fr.utc.onzzer.client.hmi.main.LoginViewController;
+import fr.utc.onzzer.client.hmi.main.IHMMainServices;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class MainClient extends Application {
-
-    private static final String APP_TITLE = "Onzzer";
 
     private static Stage stage;
 
@@ -25,16 +21,8 @@ public class MainClient extends Application {
         MainClient.stage = stage;
 
         // Loading the view.
-        FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/login-view.fxml"));
-
-        LoginViewController loginViewController = new LoginViewController(controller);
-        fxmlLoader.setController(loginViewController);
-
-        Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle(APP_TITLE);
-        stage.setScene(scene);
-        stage.setMaximized(true);
-        stage.show();
+        IHMMainServices services = controller.getIHMMainServices();
+        services.openApplication(stage);
     }
 
     public static void main(String[] args) {

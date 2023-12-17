@@ -11,19 +11,15 @@ import fr.utc.onzzer.client.hmi.util.ValidationUtil;
 import fr.utc.onzzer.common.dataclass.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class LoginViewController {
@@ -32,6 +28,7 @@ public class LoginViewController {
 
     public LoginViewController(GlobalController controller) {
         this.controller = controller;
+        this.addListeners();
     }
 
     @FXML
@@ -60,18 +57,8 @@ public class LoginViewController {
 
     @FXML
     private void onRegisterLabelClick() throws IOException {
-
-        Stage stage = MainClient.getStage();
-        Scene current = stage.getScene();
-
-        FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/register-view.fxml"));
-
-        RegisterViewController registerViewController = new RegisterViewController(this.controller);
-        fxmlLoader.setController(registerViewController);
-
-        Scene scene = new Scene(fxmlLoader.load(), current.getWidth(), current.getHeight());
-
-        stage.setScene(scene);
+        IHMMainServices services = this.controller.getIHMMainServices();
+        services.openRegisterView();
     }
 
     @FXML
@@ -238,6 +225,15 @@ public class LoginViewController {
         }
     }
 
+    private void addListeners() {
+
+        DataServicesProvider provider = this.controller.getDataServicesProvider();
+        DataUserServices dataUserServices = provider.getDataUserServices();
+
+        // Adding a listener to get the result of the connection.
+        dataUserServices.addListener(this::onLoginSucceeded, UserLite.class, ModelUpdateTypes.NEW_USERS);
+    }
+
     private void login(DataUserServices userServices, ComMainServices comServices) throws Exception {
 
         // Preparing data to send.
@@ -252,9 +248,6 @@ public class LoginViewController {
                 .map(Track::toTrackLite)
                 .toList();
 
-        // Adding a listener to get the result of the connection.
-        userServices.addListener(this::onLoginSucceeded, UserLite.class, ModelUpdateTypes.NEW_USERS);
-
         // Connecting to the server.
         comServices.connect(userLite, publicTrackLites);
     }
@@ -262,25 +255,12 @@ public class LoginViewController {
     private void onLoginSucceeded(UserLite user) {
         Platform.runLater(() -> {
             try {
-                this.openMainView();
+                IHMMainServices services = this.controller.getIHMMainServices();
+                services.openMainView();
             } catch (IOException exception) {
-                throw new RuntimeException(exception);
+                exception.printStackTrace();
             }
         });
-    }
-
-    private void openMainView() throws IOException {
-
-        Stage stage = MainClient.getStage();
-        Scene current = stage.getScene();
-
-        FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/main-view.fxml"));
-        MainViewController mainViewController = new MainViewController(this.controller);
-        fxmlLoader.setController(mainViewController);
-
-        Scene scene = new Scene(fxmlLoader.load(), current.getWidth(), current.getHeight());
-
-        stage.setScene(scene);
     }
 
     private void showGlobalError(String text) {

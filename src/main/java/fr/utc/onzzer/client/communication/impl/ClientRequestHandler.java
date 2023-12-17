@@ -31,7 +31,7 @@ public class ClientRequestHandler {
     }
 
     void userDisconnect(final UserLite userLite) throws Exception {
-        this.dataServicesProvider.getDataUserServices().deleteUser(userLite);
+        this.dataServicesProvider.getDataUserServices().removeUser(userLite);
     }
 
     void updateTrack(final TrackLite trackLite) {
@@ -62,8 +62,6 @@ public class ClientRequestHandler {
     }
 
     void receiveTrack(Track track) throws Exception {
-        UUID uuid = track.getId();
-        this.dataServicesProvider.getDataTrackServices().addTrackToLibrary(uuid);
         this.dataServicesProvider.getDataTrackServices().updateTrack(track);
     }
 }

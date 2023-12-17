@@ -41,7 +41,11 @@ public class ListenViewController {
 
     public void setTrack(UUID trackId) {
         this.trackArrayList = this.dataTrackServices.getTracks();
-        this.track = this.dataTrackServices.getTrack(trackId);
+        try {
+            this.track = this.dataTrackServices.getTrack(trackId);
+        } catch (Exception e) {
+            System.err.println("Error while loading track : " + trackId);
+        }
         this.trackIndex = trackArrayList.indexOf(track);
     }
 

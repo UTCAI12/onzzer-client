@@ -24,7 +24,11 @@ public class DeleteTrackViewController {
 
     public DeleteTrackViewController(GlobalController controller, UUID trackId) {
         this(controller);
-        this.track = this.dataTrackServices.getTrack(trackId);
+        try {
+            this.track = this.dataTrackServices.getTrack(trackId);
+        } catch (Exception e) {
+            System.err.println("Error while loading track : " + trackId);
+        }
     }
 
     public DeleteTrackViewController(GlobalController controller, Track track) {
@@ -49,7 +53,11 @@ public class DeleteTrackViewController {
     @FXML
     public void onClickDeleteTrack() throws Exception {
         // Suppression du fichier
-        this.dataTrackServices.deleteTrack(track.getId());
+        try {
+            this.dataTrackServices.deleteTrack(track.getId());
+        } catch (Exception e) {
+            System.err.println("Error while loading track : " + track.getId());
+        }
 
         // Envoi d'un message au serveur si le morceau est publique
         if (!track.getPrivateTrack()) {
