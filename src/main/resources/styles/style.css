@@ -74,7 +74,6 @@
 	-fx-text-fill: -fx-color-white;
 	-fx-font-weight: bold;
 	-fx-background-radius: 0;
-	-fx-min-height: 32px;
 }
 
 .list-cell {
