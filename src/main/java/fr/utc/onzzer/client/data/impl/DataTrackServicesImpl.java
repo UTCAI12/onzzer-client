@@ -37,7 +37,7 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
             directory.mkdir();
         }
         //Lire tous les fichiers .ser du dossier
-        try {
+        /*try {
             File[] files = directory.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
                     return name.toLowerCase().endsWith(".ser");
@@ -56,7 +56,7 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
             }
         } catch (Exception ex) {
             System.err.println("Erreur lors de la lecture des fichiers .ser : " + ex.getMessage());
-        }
+        }*/
 
 
     }
@@ -64,7 +64,7 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
     @Override
     public void saveTrack(Track track) throws Exception {
         // On enregistre un fichier .ser contenant le track dans le dossier tracks
-        String tracksDirectory = "data/tracks";
+        String tracksDirectory = "data/tracks" + File.separator + track.getUserId();
         File directory = new File(tracksDirectory);
         if(!directory.exists()){
             directory.mkdir();
@@ -185,7 +185,7 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
         Track track = this.dataRepository.getTrackByID(uuid);
         this.dataRepository.tracks.remove(track);
         //Retirer les fichiers .ser et .mp3 du dossier tracks
-        String tracksDirectory = "data/tracks";
+        String tracksDirectory = "data/tracks"+ File.separator + track.getUserId();
         File directory = new File(tracksDirectory);
         if (directory.isDirectory()) {
             File[] files = directory.listFiles(); // Liste des fichiers du répertoire

@@ -3,6 +3,7 @@ package fr.utc.onzzer.client.data.impl;
 import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.common.dataclass.ModelUpdateTypes;
 import fr.utc.onzzer.common.dataclass.TrackLite;
+import fr.utc.onzzer.common.dataclass.Track;
 import fr.utc.onzzer.common.dataclass.User;
 import fr.utc.onzzer.common.dataclass.UserLite;
 import fr.utc.onzzer.common.services.Listenable;
@@ -91,6 +92,34 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
                                 if (userFromFile.getPassword().equals(pw) && userFromFile.getUsername().equals(user)) {
                                     this.dataRepository.user = userFromFile;
                                     this.dataRepository.connectedUsers.put(userFromFile.toUserLite(),null);
+                                    //On lit les fichiers de tracks pour ajouter les tracks de l'utilisateur à la liste des tracks, si il existe pas on le créer
+                                    String tracksDirectory = "data/tracks"+File.separator+userFromFile.getId();
+                                    File directoryTracks = new File(tracksDirectory);
+                                    if (!directoryTracks.exists()) {
+                                        directoryTracks.mkdir();
+                                    }
+                                    if (directoryTracks.isDirectory()) {
+                                        File[] filesTracks = directory.listFiles(new FilenameFilter() {
+                                            public boolean accept(File dir, String name) {
+                                                return name.toLowerCase().endsWith(".ser");
+                                            }
+                                        });
+                                        if (filesTracks != null) {
+                                            for (File fileTrack : filesTracks) {
+                                                if (fileTrack.isFile()) {
+                                                    // Manipulation de chaque fichier
+                                                    try (FileInputStream fileInputStreamTrack = new FileInputStream(fileTrack)) {
+                                                        ObjectInputStream objStreamTrack = new ObjectInputStream(fileInputStreamTrack);
+                                                        Object objTrack = objStreamTrack.readObject();
+                                                        if (objTrack instanceof Track) {
+                                                            Track trackFromFile = (Track) objTrack;
+                                                            this.dataRepository.tracks.add(trackFromFile);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                     return true;
                                 }
                             }
