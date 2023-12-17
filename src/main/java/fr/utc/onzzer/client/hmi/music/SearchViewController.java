@@ -106,6 +106,7 @@ public class SearchViewController {
         // Get the tracks that are currently accessible on the network
         List<TrackLite> trackLites = dataUserServices.getConnectedUsers().values().stream().filter(Objects::nonNull).flatMap(List::stream).toList();
         tracks = FXCollections.observableArrayList(trackLites);
+        tracks = FXCollections.observableArrayList(dataTrackServices.getTrackLites());
         onSearchFieldChanged();
     }
 
