@@ -18,7 +18,6 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
 
     public DataUserServicesImpl(final DataRepository dataRepository) {
         this.dataRepository = dataRepository;
-        System.out.println("DataUserServicesImpl constructor");
 
         //Vérifier que le dossier data/profiles existe, sinon le créer
         String profilesDirectory = "data";
@@ -67,7 +66,6 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
              ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
 
             objectOut.writeObject(newClient); // Écriture de l'objet User sérialisé dans le fichier
-            System.out.println("Le profil de l'utilisateur a été créé avec succès à l'emplacement : " + filePath);
         } catch (Exception ex) {
             throw new Exception("Erreur lors de la création du profil : " + ex.getMessage());
         }
@@ -85,7 +83,6 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
                 for (File file : files) {
                     if (file.isFile()) {
                         // Manipulation de chaque fichier
-                        System.out.println("Nom du fichier : " + file.getPath());
                         try (FileInputStream fileInputStream = new FileInputStream(file)) {
                             ObjectInputStream objStream = new ObjectInputStream(fileInputStream);
                             Object obj = objStream.readObject();
@@ -115,7 +112,6 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
              ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
 
             objectOut.writeObject(user); // Écriture de l'objet User sérialisé dans le fichier
-            System.out.println("Le profil de l'utilisateur a été exporté avec succès à l'emplacement : " + filePath);
         } catch (Exception ex) {
             throw new Exception("Erreur lors de l'export du profil : " + ex.getMessage());
         }
@@ -165,7 +161,6 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
                 for (File file : files) {
                     if (file.isFile()) {
                         // Manipulation de chaque fichier
-                        System.out.println("Nom du fichier : " + file.getName());
                         if (file.getName().equals(userLite.getId() + ".ser")) {
                             file.delete();
                         }
@@ -190,7 +185,6 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
                 for (File file : files) {
                     if (file.isFile()) {
                         // Manipulation de chaque fichier
-                        System.out.println("Nom du fichier : " + file.getName());
                         if (file.getName().equals(user.getId() + ".ser")) {
                             // Suppression de l'ancien fichier
                             file.delete();
@@ -216,7 +210,6 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
                 for (File file : files) {
                     if (file.isFile()) {
                         // Manipulation de chaque fichier
-                        System.out.println("Nom du fichier : " + file.getName());
                         file.delete();
                         dataRepository.user = null;
 
