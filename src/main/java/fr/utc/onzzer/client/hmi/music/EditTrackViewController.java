@@ -32,7 +32,7 @@ public class EditTrackViewController {
     private final ComMusicServices comMusicServices;
     private final Track track;
 
-    public EditTrackViewController(GlobalController controller, UUID trackId) {
+    public EditTrackViewController(GlobalController controller, UUID trackId) throws Exception {
         DataServicesProvider dataServicesProvider = controller.getDataServicesProvider();
         ComServicesProvider comServicesProvider = controller.getComServicesProvider();
         this.dataTrackServices = dataServicesProvider.getDataTrackServices();

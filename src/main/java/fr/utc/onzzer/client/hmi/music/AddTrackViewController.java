@@ -65,6 +65,8 @@ public class AddTrackViewController {
         Stage stage = (Stage) txtTitle.getScene().getWindow();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Fichier Audio");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("AUDIO files (*.mp3)", "*.mp3");
+        fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showOpenDialog(stage);
 
         if (file == null) {
