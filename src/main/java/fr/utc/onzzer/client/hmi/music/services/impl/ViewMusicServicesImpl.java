@@ -65,7 +65,7 @@ public class ViewMusicServicesImpl implements ViewMusicServices {
         BorderPane borderPane = (BorderPane) scene.getRoot();
 
         // Load the view and controller
-        FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/listen-view2.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource("/fxml/listen-view.fxml"));
         listenController.setTrack(trackId);
         fxmlLoader.setController(listenController);
 
