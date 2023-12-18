@@ -25,7 +25,6 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
 
     public DataTrackServicesImpl(DataRepository dataRepository) {
         this.dataRepository = dataRepository;
-        System.out.println("DataTrackServices constructor");
         //Verifier que le dossier data/tracks existe, sinon le créer
         String tracksDirectory = "data";
         File directory = new File(tracksDirectory);
@@ -38,7 +37,7 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
             directory.mkdir();
         }
         //Lire tous les fichiers .ser du dossier
-        try {
+        /*try {
             File[] files = directory.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
                     return name.toLowerCase().endsWith(".ser");
@@ -56,8 +55,8 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
                 }
             }
         } catch (Exception ex) {
-            System.out.println("Erreur lors de la lecture des fichiers .ser dans le dossier tracks : " + ex.getMessage());
-        }
+            System.err.println("Erreur lors de la lecture des fichiers .ser : " + ex.getMessage());
+        }*/
 
 
     }
@@ -65,7 +64,7 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
     @Override
     public void saveTrack(Track track) throws Exception {
         // On enregistre un fichier .ser contenant le track dans le dossier tracks
-        String tracksDirectory = "data/tracks";
+        String tracksDirectory = "data/tracks" + File.separator + track.getUserId();
         File directory = new File(tracksDirectory);
         if(!directory.exists()){
             directory.mkdir();
@@ -75,7 +74,6 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
         try (FileOutputStream fileOut = new FileOutputStream(filePath);
              ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
             objectOut.writeObject(track); // Écriture de l'objet Track sérialisé dans le fichier
-            System.out.println("Le track a été créé avec succès à l'emplacement : " + filePath);
         } catch (Exception ex) {
             throw new Exception("Erreur lors de la création du track en fichier ser : " + ex.getMessage());
         }
@@ -83,7 +81,6 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
         String mp3FilePath = tracksDirectory + File.separator + track.getId() + ".mp3";
         try (FileOutputStream fileOut = new FileOutputStream(mp3FilePath)) {
             fileOut.write(track.getAudio());
-            System.out.println("Le track a été créé avec succès à l'emplacement : " + mp3FilePath);
         } catch (Exception ex) {
             throw new Exception("Erreur lors de la création du track en fichier mp3: " + ex.getMessage());
         }
@@ -188,7 +185,7 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
         Track track = this.dataRepository.getTrackByID(uuid);
         this.dataRepository.tracks.remove(track);
         //Retirer les fichiers .ser et .mp3 du dossier tracks
-        String tracksDirectory = "data/tracks";
+        String tracksDirectory = "data/tracks"+ File.separator + track.getUserId();
         File directory = new File(tracksDirectory);
         if (directory.isDirectory()) {
             File[] files = directory.listFiles(); // Liste des fichiers du répertoire
@@ -248,7 +245,7 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
             }
         }
         if(!found){
-            System.out.println("User not found");
+            System.err.println("User not found");
         }
     }
 
@@ -272,7 +269,7 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
                 }
         }
         if(!found){
-            System.out.println("Track not found");
+            System.err.println("Track not found");
         }
     }
 
