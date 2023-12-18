@@ -19,11 +19,8 @@ public class ClientRequestHandler {
 
     void userConnect(final HashMap<UserLite, List<TrackLite>> connectData) throws Exception {
         UserLite userLite = connectData.keySet().iterator().next();
-        List<TrackLite> trackList = connectData.get(userLite);
-        for(TrackLite t: trackList){
-            this.dataServicesProvider.getDataTrackServices().addTrackToLibrary(t.getId());
-        }
-        this.dataServicesProvider.getDataUserServices().addUser(userLite);
+        List<TrackLite> trackLites = new ArrayList<>(connectData.get(userLite));
+        this.dataServicesProvider.getDataUserServices().addUser(userLite, trackLites);
     }
 
     void userConnected(final List<UserLite> usersLite) {

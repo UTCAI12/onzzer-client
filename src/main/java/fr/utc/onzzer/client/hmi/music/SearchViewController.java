@@ -75,6 +75,9 @@ public class SearchViewController {
         dataTrackServices.addListener(track -> {
             Platform.runLater(this::refreshTrackList);
         }, TrackLite.class, ModelUpdateTypes.UPDATE_TRACK);
+        dataTrackServices.addListener(track -> {
+            Platform.runLater(this::refreshTrackList);
+        }, TrackLite.class, ModelUpdateTypes.NEW_TRACKS);
     }
 
     public void initialize() {

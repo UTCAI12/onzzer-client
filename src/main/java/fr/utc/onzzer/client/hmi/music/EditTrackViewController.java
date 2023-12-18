@@ -58,8 +58,14 @@ public class EditTrackViewController {
             return;
         }
 
-        String author = txtAuthor.getText().isBlank() ? null : txtAuthor.getText();
-        String album = txtAlbum.getText().isBlank() ? null : txtAlbum.getText();
+        String author = txtAuthor.getText();
+        if (author != null && txtAuthor.getText().isBlank()) {
+            author = null;
+        }
+        String album = txtAlbum.getText();
+        if (album != null && txtAlbum.getText().isBlank()) {
+            album = null;
+        }
 
         track.setTitle(txtTitle.getText());
         track.setAuthor(author);
