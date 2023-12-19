@@ -156,8 +156,8 @@ public class DataUserServicesImpl extends Listenable implements DataUserServices
     }
 
     @Override
-    public void addUser(UserLite userLite) throws Exception {
-        this.dataRepository.getConnectedUsers().put(userLite,null);
+    public void addUser(UserLite userLite, List<TrackLite> trackLites) throws Exception {
+        this.dataRepository.getConnectedUsers().put(userLite, trackLites);
         this.notify(userLite, UserLite.class, ModelUpdateTypes.NEW_USER);
     }
 

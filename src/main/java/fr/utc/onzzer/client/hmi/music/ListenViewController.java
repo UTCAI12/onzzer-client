@@ -123,6 +123,7 @@ public class ListenViewController {
         });
 
         this.mediaPlayer.play();
+        buttonPlayTrack.setText("Pause");
     }
 
     @FXML
@@ -175,6 +176,7 @@ public class ListenViewController {
 
     private void loadTrackAtIndex(int index) {
         this.mediaPlayer.stop();
+        this.mediaPlayer.dispose();
         this.mediaPlayer = null;
         track = trackArrayList.get(index);
         trackIndex = index;

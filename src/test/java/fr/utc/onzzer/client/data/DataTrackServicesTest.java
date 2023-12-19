@@ -176,7 +176,7 @@ public class DataTrackServicesTest {
         }
         //Ajouter l'utilisateur à ceux connecter
         try{
-            dataUserServices.addUser(user.toUserLite());
+            dataUserServices.addUser(user.toUserLite(), new ArrayList<>());
         } catch (Exception e) {
             Assertions.fail("Erreur lors de l'ajout de l'utilisateur : " + e.getMessage());
             return;
@@ -401,7 +401,7 @@ public class DataTrackServicesTest {
         Track track = new Track(UUID.randomUUID(), "du texte en musique".getBytes(), userDistant.getId(), "artist", "album", false);
         //Ajouter l'utilisateur Distant
         try{
-            dataUserServices.addUser(userDistant.toUserLite());
+            dataUserServices.addUser(userDistant.toUserLite(), new ArrayList<>());
         } catch (Exception e) {
             Assertions.fail("Erreur lors de l'ajout de l'utilisateur : " + e.getMessage());
             return;
@@ -438,7 +438,7 @@ public class DataTrackServicesTest {
         Track track = new Track(UUID.randomUUID(), "du texte en musique".getBytes(), userDistant.getId(), "artist", "album", false);
         //Ajouter l'utilisateur Distant
         try{
-            dataUserServices.addUser(userDistant.toUserLite());
+            dataUserServices.addUser(userDistant.toUserLite(), new ArrayList<>());
         } catch (Exception e) {
             Assertions.fail("Erreur lors de l'ajout de l'utilisateur : " + e.getMessage());
             return;

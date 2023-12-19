@@ -14,7 +14,7 @@ public interface DataUserServices extends Service {
     Boolean checkCredentials(String user, String pw) throws Exception;
     void exportProfile(User user, String filePath) throws Exception;
     User getUser() throws Exception;
-    void addUser(UserLite userLite) throws Exception;
+    void addUser(UserLite userLite, List<TrackLite> trackLites) throws Exception;
     void setConnectedUsers(final List<UserLite> connectedUsers);
     HashMap<UserLite, List<TrackLite>> getConnectedUsers();
 

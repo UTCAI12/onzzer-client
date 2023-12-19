@@ -5,7 +5,9 @@ import fr.utc.onzzer.client.data.DataTrackServices;
 import fr.utc.onzzer.client.data.DataUserServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.client.hmi.component.IconButton;
+import fr.utc.onzzer.client.hmi.music.services.ViewMusicServices;
 import fr.utc.onzzer.common.dataclass.ModelUpdateTypes;
+import fr.utc.onzzer.common.dataclass.Track;
 import fr.utc.onzzer.common.dataclass.TrackLite;
 import fr.utc.onzzer.common.dataclass.UserLite;
 
@@ -50,20 +52,23 @@ public class SearchViewController {
     private TableColumn<TrackLite, UUID> columnActions;
 
     private final GlobalController globalController;
+    private final DataTrackServices dataTrackServices;
     private final DataUserServices dataUserServices;
+    private final ViewMusicServices viewMusicServices;
     private ObservableList<TrackLite> tracks;
 
     public SearchViewController(GlobalController globalController) {
         // Get the controllers and services
         this.globalController = globalController;
-        DataTrackServices dataTrackServices = globalController.getDataServicesProvider().getDataTrackServices();
+        this.viewMusicServices = globalController.getViewMusicServices();
+        this.dataTrackServices = globalController.getDataServicesProvider().getDataTrackServices();
         this.dataUserServices = globalController.getDataServicesProvider().getDataUserServices();
 
         // Adding listeners to know when the users list changes
-        this.dataUserServices.addListener(user -> {
+        dataUserServices.addListener(user -> {
             Platform.runLater(this::refreshTrackList);
         }, UserLite.class, ModelUpdateTypes.NEW_USER);
-        this.dataUserServices.addListener(user -> {
+        dataUserServices.addListener(user -> {
             Platform.runLater(this::refreshTrackList);
         }, UserLite.class, ModelUpdateTypes.DELETE_USER);
         dataTrackServices.addListener(track -> {
@@ -75,6 +80,15 @@ public class SearchViewController {
         dataTrackServices.addListener(track -> {
             Platform.runLater(this::refreshTrackList);
         }, TrackLite.class, ModelUpdateTypes.UPDATE_TRACK);
+        dataTrackServices.addListener(track -> {
+            Platform.runLater(this::refreshTrackList);
+        }, TrackLite.class, ModelUpdateTypes.NEW_TRACKS);
+        dataTrackServices.addListener(track -> {
+            Platform.runLater(this::refreshTrackList);
+        }, Track.class, ModelUpdateTypes.TRACK_READY_PLAY);
+        dataTrackServices.addListener(track -> {
+            Platform.runLater(this::refreshTrackList);
+        }, Track.class, ModelUpdateTypes.TRACK_READY_DOWNLOAD);
     }
 
     public void initialize() {
@@ -125,6 +139,8 @@ public class SearchViewController {
                 tableTracks.getItems().add(track);
             }
         }
+
+        tableTracks.refresh();
     }
 
     @FXML
@@ -160,6 +176,14 @@ public class SearchViewController {
         }
     }
 
+    private void onListenButtonClick(UUID trackId) {
+        try {
+            this.viewMusicServices.openMediaPlayer(MainClient.getStage().getScene(), trackId);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
+
     private String getTrackUsername(TrackLite track) {
         return this.dataUserServices.getConnectedUsers()
                 .keySet()
@@ -176,10 +200,15 @@ public class SearchViewController {
             public void updateItem(UUID trackId, boolean empty) {
                 super.updateItem(trackId, empty);
 
-                IconButton btn = new IconButton(IconButton.ICON_DOWNLOAD);
+                boolean alreadyDownloaded = dataTrackServices.getTracks().stream().anyMatch(x -> x.getId().equals(trackId));
+                IconButton btn = new IconButton(alreadyDownloaded ? IconButton.ICON_LISTENING : IconButton.ICON_DOWNLOAD);
                 btn.setOnAction((ActionEvent event) -> {
                     TrackLite track = getTableView().getItems().get(getIndex());
-                    onDownloadButtonClick(track);
+                    if (alreadyDownloaded) {
+                        onListenButtonClick(trackId);
+                    } else {
+                        onDownloadButtonClick(track);
+                    }
                 });
 
                 HBox hbox = new HBox();
