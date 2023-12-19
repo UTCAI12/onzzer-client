@@ -6,8 +6,10 @@ import fr.utc.onzzer.client.data.DataTrackServices;
 import fr.utc.onzzer.client.hmi.GlobalController;
 import fr.utc.onzzer.client.hmi.music.services.ViewMusicServices;
 import fr.utc.onzzer.common.dataclass.ModelUpdateTypes;
+import fr.utc.onzzer.common.dataclass.Track;
 import fr.utc.onzzer.common.dataclass.TrackLite;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -32,6 +34,7 @@ public class DownloadViewController {
 
     private final ComMusicServices comMusicServices;
     private final ViewMusicServices viewMusicServices;
+    private final DataTrackServices dataTrackServices;
     private final TrackLite track;
 
     public DownloadViewController(GlobalController controller, TrackLite track) {
@@ -39,9 +42,10 @@ public class DownloadViewController {
         this.viewMusicServices = controller.getViewMusicServices();
         this.track = track;
 
-        DataTrackServices dataTrackServices = controller.getDataServicesProvider().getDataTrackServices();
-        dataTrackServices.addListener(this::onDownloadFinished, TrackLite.class, ModelUpdateTypes.NEW_TRACK);
-        dataTrackServices.addListener(this::onDownloadFinished, TrackLite.class, ModelUpdateTypes.UPDATE_TRACK);
+        this.dataTrackServices = controller.getDataServicesProvider().getDataTrackServices();
+        dataTrackServices.addListener(t -> {
+            Platform.runLater(() -> onDownloadFinished(t));
+        }, Track.class, ModelUpdateTypes.TRACK_READY_DOWNLOAD);
     }
 
     public void initialize() {
@@ -54,10 +58,10 @@ public class DownloadViewController {
         errDownload.managedProperty().bind(errDownload.visibleProperty());
     }
 
-    private void onDownloadFinished(TrackLite downloadedTrack) {
+    private void onDownloadFinished(Track downloadedTrack) {
         if (downloadedTrack.getId().equals(this.track.getId())) {
-            btnDownload.setText("Ecouter");
             btnDownload.setDisable(false);
+            btnDownload.setText("Ecouter");
             btnDownload.setOnAction(this::onClickListen);
         }
     }
@@ -67,6 +71,7 @@ public class DownloadViewController {
         errDownload.setVisible(false);
 
         try {
+            this.dataTrackServices.addTrackToLibrary(track.getId());
             this.comMusicServices.downloadTrack(track.getId());
             btnDownload.setDisable(true);
             btnDownload.setText("Téléchargement en cours...");

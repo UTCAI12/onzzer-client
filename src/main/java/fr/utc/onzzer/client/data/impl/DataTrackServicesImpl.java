@@ -119,6 +119,7 @@ public class DataTrackServicesImpl extends Listenable implements DataTrackServic
             }
         } catch (Exception e) {
             if (this.dataRepository.toDownloadTracks.contains(track.getId())){
+                track.setPrivateTrack(true);
                 this.saveTrack(track);
                 this.dataRepository.toDownloadTracks.remove(track.getId());
                 this.notify(track, Track.class, ModelUpdateTypes.TRACK_READY_DOWNLOAD);
