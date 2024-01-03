@@ -41,11 +41,9 @@ public class ClientSocketManager extends Thread {
             while (true) {
                 try {
                     SocketMessage receivedMessage = (SocketMessage) in.readObject();
-                    System.out.println("Client: received "+ receivedMessage);
+//                    System.out.println("Client: received "+ receivedMessage);
                     this.clientController.onMessage(receivedMessage, this);
                 } catch (java.net.SocketException e) {
-                    // If user disconnect without sending a DISCONNECT message, create one
-                    e.printStackTrace();
                     return;
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
@@ -61,6 +59,14 @@ public class ClientSocketManager extends Thread {
     @Override
     public void start() {
         super.start();
+    }
+
+    public void close() {
+        try {
+            this.socket.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

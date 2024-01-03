@@ -1,10 +1,148 @@
+#root-pane {
+    -fx-background-color: white;
+}
+
+/* music table */
+
+.table-view {
+    /* remove row alternate colors */
+    -fx-control-inner-background-alt: -fx-control-inner-background;
+    -fx-border-color: -fx-control-inner-background;
+    -fx-box-border: transparent;
+    -fx-padding: 0;
+    -fx-font-family: sans-serif;
+}
+
+.table-view:focused {
+    /* remove focus */
+    -fx-background-color: transparent , -fx-box-border, -fx-control-inner-background;
+    -fx-background-insets: -1.4, 0, 1;
+    -fx-background-radius: 1.4, 0, 0;
+    -fx-padding: 0;
+}
+
+.table-view .table-column {
+    /* center vertically */
+    -fx-alignment: CENTER-LEFT;
+}
+
 .table-view .column-header,
 .table-view .column-header .filler,
 .table-view .column-header-background .filler {
+    /* remove header background and border */
+    -fx-font-size: 20px;
     -fx-background-color: white;
+    -fx-font-weight: bold;
     -fx-border-width: 0;
+    -fx-alignment: CENTER-LEFT;
 }
 
-.table-view:focus {
-    outline: none;
+.table-row-cell {
+    /* display a bottom line in each row */
+    -fx-border-color: transparent transparent #dcdcdc transparent;
+    /* remove the line between borders */
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-row-cell:empty {
+    /* hide borders and background in empty rows */
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-row-cell:filled:selected {
+    /* hide row selection */
+    -fx-background: -fx-control-inner-background;
+    -fx-background-color: -fx-table-cell-border-color, -fx-background;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-table-cell-border-color: transparent;
+}
+
+/* user lists */
+
+#searchField {
+    -fx-font-weight: normal;
+    -fx-prompt-text-fill: gray;
+}
+
+/* make the list view fully transparent */
+.list-cell {
+    -fx-background-color: transparent;
+}
+.list-view {
+    -fx-background-color: transparent;
+}
+
+.nav-button {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-border-color: transparent;
+    -fx-background-radius: 8;
+    -fx-padding: 5 10;
+    -fx-font-size: 14px;
+    -fx-alignment: center;
+}
+
+.nav-button:hover {
+    -fx-background-color: #C5A3D1;
+}
+
+.nav-button:pressed {
+    -fx-background-color: #B490C0;
+}
+
+.table-view .column-header .label {
+    -fx-alignment: center-left;
+}
+
+.table-view .column-header.action-column .label {
+    -fx-alignment: center;
+}
+
+.table-view .column-header:last-child .label {
+    -fx-alignment: center;
+}
+
+/* improve scrollbar look */
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical {
+    -fx-padding: 3px;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #c0c0c0;
+    -fx-background-insets: 2;
+    -fx-background-radius: 10;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #a9a9a9;
+}
+
+.scroll-bar .track {
+    -fx-background-color: #f0f0f0;
+    -fx-background-insets: 2;
+    -fx-background-radius: 10;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-shape: " ";
+}
+
+.scroll-bar .increment-arrow:hover,
+.scroll-bar .decrement-arrow:hover {
+    -fx-background-color: transparent;
 }
